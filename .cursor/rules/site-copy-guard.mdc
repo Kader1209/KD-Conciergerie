@@ -1,0 +1,27 @@
+---
+description: Prevent internal or experimental wording in site copy
+alwaysApply: true
+---
+
+# Site Copy Guard
+
+- For all user-facing copy, write as if the final customer is reading it.
+- Do not mention internal work, tests, experiments, iterations, prototypes, drafts, UX strategy, or site optimization decisions in visible text.
+- Avoid meta phrases about the website itself unless the user explicitly asks for them.
+- Prefer customer-facing wording about service, property, booking, trust, comfort, location, or process.
+
+## Avoid
+
+- "le site est maintenant pensé..."
+- "nous testons..."
+- "version bêta"
+- "expérimentation"
+- "prototype"
+- "message lisible", "visuels premium", "parcours de conversion" when used as internal design commentary
+
+## Prefer
+
+- Practical benefits for the visitor
+- Clear booking or contact steps
+- Property and location value
+- Professional reassurance without talking about internal design choices

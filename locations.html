@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Locations disponibles KD Conciergerie - une sélection de biens présentés dans une grille premium et épurée." />
+  <title>Locations disponibles | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/signatura" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-muted: #fbfdff;
+      --text: #1f2937;
+      --muted: #617084;
+      --line: #e6ebf2;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --green: #0f766e;
+      --shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 18px 34px rgba(15, 23, 42, 0.1);
+      --radius: 16px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 48px;
+      --space-6: 64px;
+      --max: 1200px;
+      --site-header-h: 80px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    #favoris {
+      scroll-margin-top: calc(var(--site-header-h) + 24px);
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.05), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.05), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.page-ready {
+      opacity: 1;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+    }
+
+    body.sidebar-open,
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(248, 250, 252, 0.84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      transition: background 0.24s ease-in-out, box-shadow 0.24s ease-in-out, border-color 0.24s ease-in-out;
+    }
+
+    header.scrolled {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom-color: rgba(221, 228, 239, 0.96);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 5px;
+      border: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-name {
+      font-family: "Signatura", "Inter", sans-serif;
+      font-size: 32px;
+      line-height: 0.95;
+      color: #2563eb;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4em;
+      white-space: nowrap;
+    }
+
+    .brand-initials {
+      letter-spacing: -0.1em;
+    }
+
+    .brand-word {
+      letter-spacing: -0.045em;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(86vw, 360px);
+      height: 100dvh;
+      height: 100vh;
+      padding: 88px 14px 22px;
+      background: rgba(245, 248, 251, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: -10px 0 24px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transform: translate3d(100%, 0, 0);
+      pointer-events: none;
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 39;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      backface-visibility: hidden;
+    }
+
+    .nav-links.active {
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+    }
+
+    .nav-links__group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .nav-links__heading {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7c8a9e;
+      padding: 14px 16px 6px;
+    }
+
+    .nav-links__divider {
+      height: 1px;
+      margin: 12px 8px;
+      background: linear-gradient(90deg, transparent, rgba(30, 64, 175, 0.12), transparent);
+      flex-shrink: 0;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 54px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(30, 64, 175, 0.08);
+      font-weight: 500;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      transform: translateX(-2px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .menu-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(210, 219, 232, 0.9);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-1px);
+      background: #fff;
+      border-color: rgba(30, 64, 175, 0.18);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 38;
+      backface-visibility: hidden;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    main {
+      padding: calc(8px + var(--site-header-h)) 0 var(--space-6);
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .page-hero {
+      padding-top: 0;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f7fbff, #eef5ff);
+      border: 1px solid #dfe8f6;
+      color: #4d5f78;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    .hero-text {
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    .hero-insights {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .insight-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      color: #405269;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    }
+
+    .toolbar-shell {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .search-panel,
+    .filters-panel,
+    .smart-section,
+    .favorites-section {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 18px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .search-input-wrap {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .search-input:focus,
+    .filter-select:focus {
+      outline: none;
+      border-color: rgba(30, 64, 175, 0.35);
+      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.08);
+    }
+
+    .autocomplete-box {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      display: none;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      border-radius: 16px;
+      box-shadow: 0 18px 32px rgba(15, 23, 42, 0.1);
+      overflow: hidden;
+      z-index: 6;
+    }
+
+    .autocomplete-box.active {
+      display: block;
+    }
+
+    .autocomplete-item {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 0;
+      border-top: 1px solid rgba(238, 242, 247, 0.92);
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      color: var(--text);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .autocomplete-item:first-child {
+      border-top: 0;
+    }
+
+    .autocomplete-item:hover {
+      background: #f8fbff;
+      color: var(--blue);
+    }
+
+    .results-badge {
+      min-height: 54px;
+      padding: 0 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+      color: #223247;
+    }
+
+    .filters-panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .section-head h2,
+    .section-head h3 {
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .filter-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #43546a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .filter-select {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-chip {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      color: #334155;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .filter-chip:hover,
+    .filter-chip.active {
+      transform: translateY(-1px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.18);
+      color: var(--blue);
+    }
+
+    .smart-grid,
+    .favorites-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .favorites-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .favorites-tab {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      color: #334155;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .favorites-tab:hover {
+      border-color: rgba(30, 64, 175, 0.22);
+      color: var(--blue);
+    }
+
+    .favorites-tab[aria-selected="true"] {
+      background: rgba(30, 64, 175, 0.1);
+      border-color: rgba(30, 64, 175, 0.28);
+      color: var(--blue-deep);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .favorites-panel {
+      margin-top: 16px;
+    }
+
+    .favorites-reperes-intro {
+      margin-bottom: 14px;
+      max-width: 52ch;
+    }
+
+    .custom-bookmark-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .custom-bookmark-input {
+      flex: 1 1 220px;
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      font: inherit;
+      font-size: 0.92rem;
+    }
+
+    .custom-bookmark-input:focus {
+      outline: none;
+      border-color: rgba(30, 64, 175, 0.35);
+      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.08);
+    }
+
+    .custom-bookmark-add {
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.22);
+      background: linear-gradient(180deg, #fff, #f0f5ff);
+      color: var(--blue-deep);
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .custom-bookmark-add:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 64, 175, 0.35);
+    }
+
+    .custom-bookmarks-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .custom-bookmarks-list li {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .custom-bookmarks-list li > span:first-child {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .custom-bookmarks-list .custom-bookmark-remove {
+      flex: 0 0 auto;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      background: #fff;
+      color: #64748b;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .custom-bookmarks-list .custom-bookmark-remove:hover {
+      border-color: rgba(185, 28, 28, 0.25);
+      color: #b91c1c;
+    }
+
+    .smart-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      min-width: 0;
+    }
+
+    .smart-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+      border-color: rgba(30, 64, 175, 0.14);
+    }
+
+    .smart-card__main {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .smart-card__main img {
+      width: 88px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #f5f7fb;
+    }
+
+    .smart-card-copy {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .smart-card-copy strong {
+      font-size: 0.94rem;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .smart-card-copy span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .smart-card-share {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.14);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--blue-deep);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .smart-card-share:hover {
+      transform: scale(1.04);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.28);
+    }
+
+    .smart-card-share svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .cards-section {
+      margin-top: 20px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 28px;
+      align-items: stretch;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .location-card {
+      background: var(--surface);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      width: 100%;
+      max-width: none;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .location-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(30, 64, 175, 0.14);
+    }
+
+    .card-stretched-link {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-radius: var(--radius);
+      text-decoration: none;
+    }
+
+    .card-stretched-link:focus-visible {
+      outline: 2px solid rgba(30, 64, 175, 0.55);
+      outline-offset: 3px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .card-media,
+    .card-image {
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #f5f5f5;
+      pointer-events: none;
+    }
+
+    .card-gallery-host {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .card-favorite {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.94);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14);
+      transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+      z-index: 4;
+      color: #1f2937;
+      padding: 0;
+      pointer-events: auto;
+    }
+
+    .card-favorite:hover {
+      transform: scale(1.05);
+    }
+
+    .card-favorite svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: transparent;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .card-favorite.active {
+      background: #fff1f2;
+      color: #e11d48;
+      border-color: #fecdd3;
+    }
+
+    .card-favorite.active svg {
+      fill: currentColor;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      padding: 18px 16px 16px;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 11px;
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+
+    .card-description {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      min-height: 1.45em;
+    }
+
+    .card-location {
+      color: #4f5f73;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: #708095;
+      font-size: 0.76rem;
+      line-height: 1.4;
+    }
+
+    .card-price {
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-start;
+      min-height: 38px;
+      margin-top: auto;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #142c66;
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 600;
+      transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+      box-shadow: 0 10px 18px rgba(20, 44, 102, 0.14);
+    }
+
+    .location-card:hover .card-action {
+      transform: translateY(-1px);
+      background: #1a3a8b;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.54s ease, transform 0.54s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(18px);
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease-in-out, transform 0.22s ease-in-out;
+      z-index: 95;
+      backdrop-filter: blur(12px);
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    footer {
+      padding: var(--space-3) 0 var(--space-4);
+      border-top: 1px solid rgba(230, 235, 242, 0.92);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      color: #728195;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 980px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 36px;
+      }
+
+      .filters-grid,
+      .smart-grid,
+      .favorites-grid,
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: var(--space-4) 0 var(--space-5);
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .hero-insights,
+      .chip-list {
+        gap: 8px;
+      }
+
+      .nav-links a {
+        padding: 14px 16px;
+      }
+
+      .footer-row {
+        flex-direction: column;
+      }
+
+      .smart-card__main {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .smart-card__main img {
+        width: 72px;
+      }
+
+      .smart-card-share {
+        width: 40px;
+        height: 40px;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="./index.html">
+        <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+        <div class="brand-name"><span class="brand-initials">𝒦𝒟</span><span class="brand-word">𝒞𝑜𝓃𝒸𝒾𝑒𝓇𝑔𝑒𝓇𝒾𝑒</span></div>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Menu" aria-hidden="true">
+        <div class="nav-links__group">
+          <span class="nav-links__heading">Parcourir le site</span>
+          <a href="./index.html">Accueil</a>
+          <a href="./index.html#solutions">Solutions</a>
+          <a href="./index.html#premium">Premium</a>
+          <a href="./index.html#preuves">Preuves</a>
+          <a href="./estimation.html">Estimation</a>
+          <a href="./index.html#carte">Carte & alentours</a>
+          <a href="./index.html#faq">FAQ</a>
+          <a href="./index.html#contact">Contact</a>
+        </div>
+        <div class="nav-links__divider" role="presentation"></div>
+        <div class="nav-links__group">
+          <span class="nav-links__heading">Locations disponibles</span>
+          <a href="./locations.html" class="is-active">Voir le catalogue</a>
+        </div>
+        <div class="nav-links__divider" role="presentation"></div>
+        <div class="nav-links__group">
+          <span class="nav-links__heading">Favoris</span>
+          <a href="#favoris">Annonces enregistrées</a>
+          <a href="#favoris-reperes">Repères personnels</a>
+        </div>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="container">
+    <section class="page-hero reveal">
+      <div class="page-badge">Sélection KD</div>
+      <h1>Locations disponibles</h1>
+      <p class="hero-text">Découvrez nos biens soigneusement sélectionnés, présentés dans une grille claire, compacte et élégante pour une lecture immédiate.</p>
+      <div class="hero-insights" id="heroInsights"></div>
+    </section>
+
+    <section class="cards-section">
+      <div class="cards-grid" id="locationsGrid"></div>
+    </section>
+
+    <section class="toolbar-shell reveal">
+      <div class="search-panel">
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <input class="search-input" id="searchInput" type="search" placeholder="Rechercher un bien, une ville, un équipement..." autocomplete="off" />
+            <div class="autocomplete-box" id="searchSuggestions"></div>
+          </div>
+          <div class="results-badge" id="resultsCount">0 annonce</div>
+        </div>
+      </div>
+
+      <div class="filters-panel">
+        <div class="section-head">
+          <h2>Filtres dynamiques</h2>
+          <button class="filter-chip" type="button" id="resetFiltersBtn">Réinitialiser</button>
+        </div>
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label class="filter-label" for="locationFilter">Localisation</label>
+            <select class="filter-select" id="locationFilter">
+              <option value="">Toutes les localisations</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="typeFilter">Type de logement</label>
+            <select class="filter-select" id="typeFilter">
+              <option value="">Tous les types</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="priceFilter">Prix</label>
+            <select class="filter-select" id="priceFilter">
+              <option value="">Tous les prix</option>
+              <option value="100">Jusqu'à 100 EUR</option>
+              <option value="150">Jusqu'à 150 EUR</option>
+              <option value="200">Jusqu'à 200 EUR</option>
+              <option value="250">Jusqu'à 250 EUR</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">Équipements</span>
+            <div class="chip-list" id="equipmentChips"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="smart-section reveal">
+      <div class="section-head">
+        <h3>Recommandé pour vous</h3>
+        <span class="section-note">Basé sur vos clics, vues et favoris.</span>
+      </div>
+      <div class="smart-grid" id="recommendedGrid"></div>
+    </section>
+
+    <section class="favorites-section reveal" id="favoris">
+      <div class="section-head">
+        <h3>Mes favoris</h3>
+        <span class="section-note">Annonces enregistrées et repères personnels, à part.</span>
+      </div>
+      <div class="favorites-tabs" role="tablist" aria-label="Favoris">
+        <button type="button" class="favorites-tab" role="tab" id="favoritesTabListings" aria-selected="true" aria-controls="favoritesPanelListings">Annonces favorites</button>
+        <button type="button" class="favorites-tab" role="tab" id="favoritesTabReperes" aria-selected="false" aria-controls="favoritesPanelReperes">Repères personnels</button>
+      </div>
+      <div id="favoritesPanelListings" class="favorites-panel" role="tabpanel" aria-labelledby="favoritesTabListings">
+        <div class="smart-grid" id="favoritesGrid"></div>
+        <p class="section-note" id="favoritesEmpty">Aucune annonce favorite pour le moment.</p>
+      </div>
+      <div id="favoritesPanelReperes" class="favorites-panel" role="tabpanel" aria-labelledby="favoritesTabReperes" hidden>
+        <p class="section-note favorites-reperes-intro">Notez ici un lieu, une envie ou un rappel : ce n’est pas lié aux annonces du catalogue.</p>
+        <div class="custom-bookmark-form">
+          <input class="custom-bookmark-input" id="customBookmarkInput" type="text" maxlength="120" placeholder="Ex. : quartier préféré, dates souhaitées…" autocomplete="off" />
+          <button type="button" class="custom-bookmark-add" id="customBookmarkAddBtn">Ajouter</button>
+        </div>
+        <ul class="custom-bookmarks-list" id="customBookmarksList" aria-label="Vos repères"></ul>
+        <p class="section-note" id="customBookmarksEmpty">Aucun repère enregistré.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026 KD Conciergerie. Tous droits réservés.</span>
+      <span>Une présentation premium, claire et rassurante de nos locations.</span>
+    </div>
+  </footer>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script src="./site-intelligence.js?v=2"></script>
+  <script src="./locations-data.js?v=2"></script>
+  <script src="./offer-share.js?v=1"></script>
+  <script src="./property-image-zoom.js?v=5"></script>
+  <script src="./property-image-gallery.js?v=2"></script>
+  <script>
+    const fallbackSvg = encodeURIComponent(`
+      <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'>
+        <defs>
+          <linearGradient id='g' x1='0' x2='1'>
+            <stop offset='0%' stop-color='#eef4ff'/>
+            <stop offset='100%' stop-color='#edf9f6'/>
+          </linearGradient>
+        </defs>
+        <rect width='100%' height='100%' fill='url(#g)'/>
+        <text x='50%' y='48%' text-anchor='middle' font-size='46' fill='#1e3a8a' font-family='Inter, Arial, sans-serif'>KD Conciergerie</text>
+        <text x='50%' y='56%' text-anchor='middle' font-size='28' fill='#0f766e' font-family='Inter, Arial, sans-serif'>Image indisponible</text>
+      </svg>
+    `);
+    const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
+    const {
+      enrichListing,
+      getFavorites,
+      toggleFavorite,
+      isFavorite,
+      getSuggestions,
+      trackSearch,
+      filterListings,
+      getAvailableFilters,
+      getRecommendedListings,
+      getAnalyticsSummary,
+      trackListingEvent,
+      getCustomBookmarks,
+      addCustomBookmark,
+      removeCustomBookmark
+    } = window.KDSite;
+
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const header = document.querySelector("header");
+    const grid = document.getElementById("locationsGrid");
+    const heroInsights = document.getElementById("heroInsights");
+    const recommendedGrid = document.getElementById("recommendedGrid");
+    const favoritesGrid = document.getElementById("favoritesGrid");
+    const favoritesEmpty = document.getElementById("favoritesEmpty");
+    const favoritesTabListings = document.getElementById("favoritesTabListings");
+    const favoritesTabReperes = document.getElementById("favoritesTabReperes");
+    const favoritesPanelListings = document.getElementById("favoritesPanelListings");
+    const favoritesPanelReperes = document.getElementById("favoritesPanelReperes");
+    const customBookmarkInput = document.getElementById("customBookmarkInput");
+    const customBookmarkAddBtn = document.getElementById("customBookmarkAddBtn");
+    const customBookmarksList = document.getElementById("customBookmarksList");
+    const customBookmarksEmpty = document.getElementById("customBookmarksEmpty");
+    const searchInput = document.getElementById("searchInput");
+    const searchSuggestions = document.getElementById("searchSuggestions");
+    const resultsCount = document.getElementById("resultsCount");
+    const locationFilter = document.getElementById("locationFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const priceFilter = document.getElementById("priceFilter");
+    const equipmentChips = document.getElementById("equipmentChips");
+    const resetFiltersBtn = document.getElementById("resetFiltersBtn");
+    const uiFeedback = document.getElementById("uiFeedback");
+
+    const formatCurrency = (value) =>
+      typeof value === "number" && Number.isFinite(value)
+        ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value)
+        : "";
+
+    const fallbackLocations = (window.KD_LOCATIONS || []).map((location) =>
+      enrichListing({
+        id: location.id,
+        title: location.title,
+        shortDescription: location.shortDescription,
+        description: location.shortDescription,
+        location: location.location,
+        heroImage: location.heroImage,
+        gallery: location.gallery || [location.heroImage],
+        equipments: location.equipments || [],
+        type: location.type,
+        priceValue: location.priceValue,
+        price: location.priceValue ? `${formatCurrency(location.priceValue)} / nuit` : "Sur demande"
+      })
+    );
+
+    let listings = [...fallbackLocations];
+    let feedbackTimeout;
+    let searchTimeout;
+    const state = {
+      filters: {
+        query: "",
+        location: "",
+        type: "",
+        maxPrice: "",
+        equipments: []
+      }
+    };
+
+    const LOCAL_PETIT_COCON_GALLERY = [
+      "./Petit cocon/Pcocon1.png?v=4",
+      "./Petit cocon/Pcocon2.png?v=4",
+      "./Petit cocon/Pcocon3.png?v=4",
+      "./Petit cocon/Pcocon4.png?v=4",
+      "./Petit cocon/Pcocon5.png?v=4",
+      "./Petit cocon/Pcocon6.png?v=4",
+      "./Petit cocon/Pcocon7.png?v=4",
+      "./Petit cocon/Pcocon8.png?v=4",
+      "./Petit cocon/Pcocon9.png?v=4",
+      "./Petit cocon/Pcocon10.png?v=4"
+    ];
+    const LOCAL_PROXI_GALLERY = [
+      "./Proxi/Proxi 1.png",
+      "./Proxi/Proxi 2.png",
+      "./Proxi/Proxi 3.png",
+      "./Proxi/Proxi 4.png",
+      "./Proxi/Proxi 5.png"
+    ];
+
+    const detailHrefFor = (listingId) => `./location-detail.html?id=${listingId}`;
+
+    const escapeHtml = (value) =>
+      String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+    const openSidebar = () => {
+      sidebarOverlay.classList.add("active");
+      document.body.classList.add("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "false");
+      menuBtn.setAttribute("aria-expanded", "true");
+      menuBtn.setAttribute("aria-label", "Fermer le menu");
+      navLinks.classList.add("active");
+    };
+
+    const closeSidebar = () => {
+      navLinks.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "true");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.setAttribute("aria-label", "Ouvrir le menu");
+    };
+
+    const showFeedback = (message) => {
+      uiFeedback.textContent = message;
+      uiFeedback.classList.add("visible");
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
+    };
+
+    const setFavoritesTab = (tab, { updateUrl = true } = {}) => {
+      const isListings = tab === "listings";
+      favoritesTabListings.setAttribute("aria-selected", isListings ? "true" : "false");
+      favoritesTabReperes.setAttribute("aria-selected", isListings ? "false" : "true");
+      favoritesPanelListings.hidden = !isListings;
+      favoritesPanelReperes.hidden = isListings;
+      if (updateUrl) {
+        const nextHash = isListings ? "#favoris" : "#favoris-reperes";
+        if (window.location.hash !== nextHash) {
+          history.replaceState(null, "", nextHash);
+        }
+      }
+    };
+
+    favoritesTabListings.addEventListener("click", () => setFavoritesTab("listings"));
+    favoritesTabReperes.addEventListener("click", () => setFavoritesTab("reperes"));
+
+    const applyFavoritesHash = () => {
+      const h = window.location.hash;
+      if (h === "#favoris-reperes") setFavoritesTab("reperes", { updateUrl: false });
+      else if (h === "#favoris" || h === "#favoris-locations") setFavoritesTab("listings", { updateUrl: false });
+    };
+
+    window.addEventListener("hashchange", applyFavoritesHash);
+
+    const renderCustomBookmarks = () => {
+      const items = getCustomBookmarks();
+      customBookmarksList.innerHTML = "";
+      customBookmarksEmpty.style.display = items.length ? "none" : "block";
+      for (const item of items) {
+        const li = document.createElement("li");
+        const label = document.createElement("span");
+        label.textContent = item.title || "";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "custom-bookmark-remove";
+        btn.textContent = "Retirer";
+        btn.addEventListener("click", () => {
+          removeCustomBookmark(item.id);
+          renderCustomBookmarks();
+          showFeedback("Repère retiré");
+        });
+        li.appendChild(label);
+        li.appendChild(btn);
+        customBookmarksList.appendChild(li);
+      }
+    };
+
+    const addCustomBookmarkFromInput = () => {
+      const result = addCustomBookmark(customBookmarkInput.value);
+      if (!result.ok) {
+        showFeedback("Saisissez un texte");
+        return;
+      }
+      customBookmarkInput.value = "";
+      renderCustomBookmarks();
+      showFeedback("Repère ajouté");
+    };
+
+    customBookmarkAddBtn.addEventListener("click", addCustomBookmarkFromInput);
+    customBookmarkInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        addCustomBookmarkFromInput();
+      }
+    });
+
+    const setFallback = (img) => {
+      img.src = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;
+      img.style.objectFit = "cover";
+    };
+
+    const checkImageAvailability = (src) =>
+      new Promise((resolve) => {
+        const probe = new Image();
+        probe.onload = () => resolve(true);
+        probe.onerror = () => resolve(false);
+        probe.src = src;
+      });
+
+    const getListingImages = async (listing) => {
+      const fallbackImage = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;
+      const candidates = [...new Set([...(listing.gallery || []), listing.heroImage, listing.image].filter(Boolean))];
+      if (!candidates.length) return [fallbackImage];
+      const resolved = await Promise.all(
+        candidates.map(async (src) => ((await checkImageAvailability(src)) ? src : null))
+      );
+      const availableImages = resolved.filter(Boolean);
+      return availableImages.length ? availableImages : [fallbackImage];
+    };
+
+    const applyLocalApartmentImages = (listing) => {
+      const fingerprint = `${listing.id || ""} ${listing.title || ""}`.toLowerCase();
+      if (fingerprint.includes("petit") && fingerprint.includes("cocon")) {
+        return {
+          ...listing,
+          heroImage: LOCAL_PETIT_COCON_GALLERY[0],
+          gallery: [...LOCAL_PETIT_COCON_GALLERY]
+        };
+      }
+
+      if (fingerprint.includes("proximite")) {
+        return {
+          ...listing,
+          heroImage: LOCAL_PROXI_GALLERY[0],
+          gallery: [...LOCAL_PROXI_GALLERY]
+        };
+      }
+
+      return listing;
+    };
+
+    const normalizeRemoteListing = (row) => {
+      const gallery = [row.image_url, ...(row.images || [])].filter(Boolean);
+      const specs = [
+        row.location,
+        row.max_guests ? `${row.max_guests} voyageurs` : null,
+        row.bedrooms ? `${row.bedrooms} ch.` : null
+      ].filter(Boolean);
+
+      return enrichListing(
+        applyLocalApartmentImages({
+          id: row.id,
+          title: row.title || "Annonce",
+          shortDescription: row.description || specs.join(" • ") || "Description à venir.",
+          description: row.description || specs.join(" • ") || "Description à venir.",
+          location: row.location || "Port-de-Bouc",
+          heroImage: row.image_url || gallery[0] || `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`,
+          gallery: gallery.length ? gallery : [row.image_url].filter(Boolean),
+          type: row.type,
+          priceValue: Number(row.price) || null,
+          price: row.price ? `${formatCurrency(Number(row.price))} / nuit` : "Sur demande",
+          specs
+        })
+      );
+    };
+
+    const loadLocations = async () => {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&order=created_at.desc`, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error("Impossible de charger les annonces");
+        const rows = await response.json();
+        if (Array.isArray(rows) && rows.length) {
+          listings = rows
+            .filter((row) => row.type === "rental" || !row.type || row.location)
+            .map(normalizeRemoteListing)
+            .filter((row) => row.heroImage);
+        }
+      } catch (error) {
+        console.error(error);
+        listings = [...fallbackLocations];
+      }
+    };
+
+    const getFilteredListings = () =>
+      filterListings(listings, {
+        query: state.filters.query,
+        locations: state.filters.location ? [state.filters.location] : [],
+        types: state.filters.type ? [state.filters.type] : [],
+        equipments: state.filters.equipments,
+        maxPrice: state.filters.maxPrice
+      });
+
+    const updateResultsCount = (count) => {
+      resultsCount.textContent = `${count} ${count > 1 ? "annonces" : "annonce"}`;
+    };
+
+    const renderHeroInsights = () => {
+      const summary = getAnalyticsSummary();
+      heroInsights.innerHTML = `
+        <span class="insight-pill">${summary.favoritesCount} favori${summary.favoritesCount > 1 ? "s" : ""}</span>
+        <span class="insight-pill">${summary.views} vue${summary.views > 1 ? "s" : ""} enregistrée${summary.views > 1 ? "s" : ""}</span>
+        <span class="insight-pill">${summary.cardClicks} interaction${summary.cardClicks > 1 ? "s" : ""} principale${summary.cardClicks > 1 ? "s" : ""}</span>
+      `;
+    };
+
+    const renderSuggestions = () => {
+      const suggestions = getSuggestions(listings, state.filters.query);
+      if (!state.filters.query || !suggestions.length) {
+        searchSuggestions.classList.remove("active");
+        searchSuggestions.innerHTML = "";
+        return;
+      }
+
+      searchSuggestions.innerHTML = suggestions
+        .map((suggestion) => `<button class="autocomplete-item" type="button" data-value="${suggestion}">${suggestion}</button>`)
+        .join("");
+      searchSuggestions.classList.add("active");
+      searchSuggestions.querySelectorAll(".autocomplete-item").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const value = button.getAttribute("data-value") || "";
+          state.filters.query = value;
+          searchInput.value = value;
+          trackSearch(value);
+          renderSuggestions();
+          await renderAll();
+        });
+      });
+    };
+
+    const renderFilterControls = () => {
+      const options = getAvailableFilters(listings);
+      locationFilter.innerHTML = `<option value="">Toutes les localisations</option>${options.locations.map((location) => `<option value="${location}">${location}</option>`).join("")}`;
+      typeFilter.innerHTML = `<option value="">Tous les types</option>${options.types.map((type) => `<option value="${type}">${type}</option>`).join("")}`;
+
+      const topEquipments = options.equipments.slice(0, 8);
+      equipmentChips.innerHTML = topEquipments
+        .map((equipment) => `<button class="filter-chip ${state.filters.equipments.includes(equipment) ? "active" : ""}" type="button" data-equipment="${equipment}">${equipment}</button>`)
+        .join("");
+
+      equipmentChips.querySelectorAll(".filter-chip").forEach((chip) => {
+        chip.addEventListener("click", async () => {
+          const equipment = chip.getAttribute("data-equipment");
+          if (!equipment) return;
+          if (state.filters.equipments.includes(equipment)) {
+            state.filters.equipments = state.filters.equipments.filter((item) => item !== equipment);
+          } else {
+            state.filters.equipments = [...state.filters.equipments, equipment];
+          }
+          renderFilterControls();
+          await renderAll();
+        });
+      });
+
+      locationFilter.value = state.filters.location;
+      typeFilter.value = state.filters.type;
+      priceFilter.value = state.filters.maxPrice;
+    };
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    const buildSmartCard = async (listing, targetGrid, { share = false } = {}) => {
+      const hasMainImage = await checkImageAvailability(listing.heroImage || listing.image);
+      const safeTitle = escapeHtml(listing.title);
+      const card = document.createElement("article");
+      card.className = "smart-card reveal";
+
+      const main = document.createElement("a");
+      main.className = "smart-card__main";
+      main.href = detailHrefFor(listing.id);
+      main.innerHTML = `
+        <img src="${hasMainImage ? listing.heroImage || listing.image : `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`}" alt="${safeTitle}" loading="lazy" />
+        <div class="smart-card-copy">
+          <strong>${safeTitle}</strong>
+          <span>${escapeHtml(listing.location)} · ${escapeHtml(listing.type || "Appartement")}</span>
+          <span>${escapeHtml(listing.price || "Sur demande")}</span>
+        </div>
+      `;
+      main.addEventListener("click", () => trackListingEvent(listing.id, "cardClick"));
+      card.appendChild(main);
+
+      if (share) {
+        const shareBtn = document.createElement("button");
+        shareBtn.type = "button";
+        shareBtn.className = "smart-card-share";
+        shareBtn.setAttribute("aria-label", "Partager cette annonce");
+        shareBtn.setAttribute("aria-haspopup", "dialog");
+        shareBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+            <circle cx="18" cy="5" r="2.2" fill="currentColor"/>
+            <circle cx="6" cy="12" r="2.2" fill="currentColor"/>
+            <circle cx="18" cy="19" r="2.2" fill="currentColor"/>
+            <path d="M8.3 10.4 15.7 6.5M8.3 13.6 15.7 17.5" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" fill="none"/>
+          </svg>
+        `;
+        shareBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          window.KDOfferShare.open({ id: listing.id, title: listing.title, onFeedback: showFeedback });
+        });
+        card.appendChild(shareBtn);
+      }
+
+      targetGrid.appendChild(card);
+      revealObserver.observe(card);
+    };
+
+    const renderRecommendations = async () => {
+      recommendedGrid.innerHTML = "";
+      const recommended = getRecommendedListings(listings, { limit: 3 });
+      if (!recommended.length) {
+        recommendedGrid.innerHTML = `<p class="section-note">Vos recommandations apparaîtront après quelques interactions.</p>`;
+        return;
+      }
+      for (const listing of recommended) {
+        await buildSmartCard(listing, recommendedGrid);
+      }
+    };
+
+    const renderFavorites = async () => {
+      favoritesGrid.innerHTML = "";
+      const favorites = getFavorites();
+      const favoriteListings = listings.filter((listing) => favorites.has(listing.id));
+      favoritesEmpty.style.display = favoriteListings.length ? "none" : "block";
+      for (const listing of favoriteListings) {
+        await buildSmartCard(listing, favoritesGrid, { share: true });
+      }
+    };
+
+    const buildCard = async (listing) => {
+      const galleryImages = await getListingImages(listing);
+      const detailUrl = detailHrefFor(listing.id);
+      const t = escapeHtml(listing.title);
+      const desc = escapeHtml(listing.shortDescription || listing.description || "Description à venir.");
+      const loc = escapeHtml(listing.location);
+      const typ = escapeHtml(listing.type || "Appartement");
+      const price = escapeHtml(listing.price || "Sur demande");
+
+      const card = document.createElement("article");
+      card.className = "location-card reveal";
+      card.innerHTML = `
+        <a class="card-stretched-link" href="${detailUrl}" aria-label="Voir l'annonce : ${t}">
+          <span class="visually-hidden">Ouvrir la fiche complète de l’annonce</span>
+        </a>
+        <div class="card-media">
+          <button class="card-favorite ${isFavorite(listing.id) ? "active" : ""}" type="button" aria-label="Ajouter aux favoris" aria-pressed="${isFavorite(listing.id) ? "true" : "false"}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 20.5s-7-4.438-7-10.03C5 7.41 7.015 5.5 9.526 5.5c1.444 0 2.744.667 3.474 1.715C13.73 6.167 15.03 5.5 16.474 5.5 18.985 5.5 21 7.41 21 10.47 21 16.062 14 20.5 14 20.5H12Z"></path>
+            </svg>
+          </button>
+          <div class="card-gallery-host"></div>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">${t}</h2>
+          <p class="card-description">${desc}</p>
+          <div class="card-location">${loc}</div>
+          <div class="card-meta">
+            <span>${typ}</span>
+            <span class="card-price">${price}</span>
+          </div>
+          <span class="card-action" aria-hidden="true">Voir plus</span>
+        </div>
+      `;
+
+      const favoriteButton = card.querySelector(".card-favorite");
+      const stretchedLink = card.querySelector(".card-stretched-link");
+      const galleryHost = card.querySelector(".card-gallery-host");
+
+      window.PropertyImageGallery.mount(galleryHost, {
+        images: galleryImages,
+        title: listing.title,
+        subtitle: listing.location,
+        variant: "cover",
+        placeholder: `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`,
+        enableZoom: false
+      });
+
+      favoriteButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const result = toggleFavorite(listing.id);
+        favoriteButton.classList.toggle("active", result.isFavorite);
+        favoriteButton.setAttribute("aria-pressed", result.isFavorite ? "true" : "false");
+        showFeedback(result.isFavorite ? "Ajouté aux favoris" : "Retiré des favoris");
+        await renderAll();
+      });
+
+      stretchedLink.addEventListener("click", () => trackListingEvent(listing.id, "cardClick"));
+      grid.appendChild(card);
+      revealObserver.observe(card);
+    };
+
+    const renderListings = async () => {
+      grid.innerHTML = "";
+      const filteredListings = getFilteredListings();
+      updateResultsCount(filteredListings.length);
+
+      if (!filteredListings.length) {
+        grid.innerHTML = `<p class="section-note">Aucun bien ne correspond à votre recherche actuelle.</p>`;
+        return;
+      }
+
+      for (const listing of filteredListings) {
+        await buildCard(listing);
+      }
+    };
+
+    const renderAll = async () => {
+      renderHeroInsights();
+      renderSuggestions();
+      renderFilterControls();
+      await renderRecommendations();
+      await renderFavorites();
+      renderCustomBookmarks();
+      await renderListings();
+    };
+
+    menuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (navLinks.classList.contains("active")) closeSidebar();
+      else openSidebar();
+    });
+
+    sidebarOverlay.addEventListener("click", closeSidebar);
+    document.addEventListener("click", (event) => {
+      const insideSidebar = navLinks.contains(event.target) || menuBtn.contains(event.target);
+      if (!insideSidebar && navLinks.classList.contains("active")) closeSidebar();
+      if (!searchSuggestions.contains(event.target) && event.target !== searchInput) {
+        searchSuggestions.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeSidebar();
+      }
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const href = link.getAttribute("href") || "";
+        if (href === "#favoris") {
+          event.preventDefault();
+          closeSidebar();
+          setFavoritesTab("listings", { updateUrl: true });
+          window.setTimeout(() => {
+            document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 280);
+          return;
+        }
+        if (href === "#favoris-reperes") {
+          event.preventDefault();
+          closeSidebar();
+          setFavoritesTab("reperes", { updateUrl: true });
+          window.setTimeout(() => {
+            document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 280);
+          return;
+        }
+        closeSidebar();
+      });
+    });
+
+    const syncHeader = () => header.classList.toggle("scrolled", window.scrollY > 10);
+    window.addEventListener("scroll", syncHeader, { passive: true });
+    syncHeader();
+
+    searchInput.addEventListener("input", async (event) => {
+      state.filters.query = event.target.value.trim();
+      renderSuggestions();
+      window.clearTimeout(searchTimeout);
+      searchTimeout = window.setTimeout(() => {
+        if (state.filters.query.length >= 2) trackSearch(state.filters.query);
+      }, 260);
+      await renderListings();
+    });
+
+    locationFilter.addEventListener("change", async (event) => {
+      state.filters.location = event.target.value;
+      await renderAll();
+    });
+
+    typeFilter.addEventListener("change", async (event) => {
+      state.filters.type = event.target.value;
+      await renderAll();
+    });
+
+    priceFilter.addEventListener("change", async (event) => {
+      state.filters.maxPrice = event.target.value;
+      await renderAll();
+    });
+
+    resetFiltersBtn.addEventListener("click", async () => {
+      state.filters = { query: "", location: "", type: "", maxPrice: "", equipments: [] };
+      searchInput.value = "";
+      await renderAll();
+      showFeedback("Filtres réinitialisés");
+    });
+
+    const setupPageTransitions = () => {
+      requestAnimationFrame(() => document.body.classList.add("page-ready"));
+      document.querySelectorAll('a[href$=".html"], a[href^="./"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href");
+          if (!href || href.startsWith("#") || link.target === "_blank" || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 180);
+        });
+      });
+    };
+
+    revealObserver.observe(document.querySelector(".page-hero"));
+    setupPageTransitions();
+    loadLocations()
+      .then(renderAll)
+      .then(() => {
+        applyFavoritesHash();
+        if (window.location.hash === "#favoris" || window.location.hash === "#favoris-reperes" || window.location.hash === "#favoris-locations") {
+          document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+  </script>
+</body>
+</html>

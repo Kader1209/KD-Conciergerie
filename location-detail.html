@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Détail d'une location KD Conciergerie avec galerie, description, équipements et informations utiles." />
+  <title>Détail de la location | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/signatura" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #617084;
+      --line: #e6ebf2;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --green: #0f766e;
+      --shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 18px 34px rgba(15, 23, 42, 0.1);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 48px;
+      --space-6: 64px;
+      --max: 1200px;
+      --site-header-h: 80px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.05), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.05), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.page-ready {
+      opacity: 1;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+    }
+
+    body.sidebar-open,
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(248, 250, 252, 0.84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      transition: background 0.24s ease-in-out, box-shadow 0.24s ease-in-out, border-color 0.24s ease-in-out;
+    }
+
+    header.scrolled {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom-color: rgba(221, 228, 239, 0.96);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 5px;
+      border: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-name {
+      font-family: "Signatura", "Inter", sans-serif;
+      font-size: 32px;
+      line-height: 0.95;
+      color: #2563eb;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4em;
+      white-space: nowrap;
+    }
+
+    .brand-initials {
+      letter-spacing: -0.1em;
+    }
+
+    .brand-word {
+      letter-spacing: -0.045em;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(86vw, 360px);
+      height: 100dvh;
+      padding: 88px 14px 18px;
+      background: rgba(245, 248, 251, 0.9);
+      backdrop-filter: blur(18px);
+      border-left: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: -10px 0 24px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform 0.28s ease, visibility 0.28s ease;
+      z-index: 39;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 54px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(30, 64, 175, 0.08);
+      font-weight: 500;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      transform: translateX(-2px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .menu-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(210, 219, 232, 0.9);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-1px);
+      background: #fff;
+      border-color: rgba(30, 64, 175, 0.18);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+      z-index: 38;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), #173b8f);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(30, 64, 175, 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(30, 64, 175, 0.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(216, 225, 236, 0.96);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    main {
+      padding: calc(var(--space-5) + var(--site-header-h)) 0 var(--space-6);
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: visible;
+      overflow-y: visible;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      color: #43546a;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: transform 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .back-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .detail-gallery-wrap {
+      margin-top: var(--space-4);
+    }
+
+    .gallery-card {
+      background: var(--surface);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .detail-gallery-host {
+      width: 100%;
+      padding: 16px;
+    }
+
+    .detail-layout-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 40px;
+      align-items: start;
+      margin-top: var(--space-4);
+      overflow: visible;
+    }
+
+    .listing-main {
+      min-width: 0;
+      padding-bottom: var(--space-4);
+      overflow: visible;
+    }
+
+    .listing-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .listing-header-row h1 {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .listing-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .detail-share-btn {
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.14);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--blue-deep);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      padding: 0;
+    }
+
+    .detail-share-btn:hover {
+      transform: scale(1.04);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.28);
+      color: var(--blue);
+    }
+
+    .detail-share-btn svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .listing-kind {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .listing-specs {
+      font-size: 0.9rem;
+      color: #475569;
+      margin: 0 0 22px;
+      font-weight: 500;
+    }
+
+    .listing-highlights {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding-bottom: 26px;
+      border-bottom: 1px solid rgba(230, 235, 242, 0.96);
+    }
+
+    .listing-highlight {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .listing-highlight-icon {
+      flex: 0 0 40px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(30, 64, 175, 0.08);
+      display: grid;
+      place-items: center;
+      color: var(--blue-deep);
+    }
+
+    .listing-highlight-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .listing-highlight strong {
+      display: block;
+      font-size: 0.95rem;
+      color: #0f172a;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .listing-highlight p {
+      margin: 0;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .listing-about-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .listing-about-body {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .listing-about-body p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .listing-bullets {
+      margin: 0;
+      padding-left: 1.15rem;
+      color: #334155;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .listing-bullets li {
+      margin-bottom: 8px;
+    }
+
+    .listing-bullets li:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-booking-card {
+      position: sticky;
+      top: 92px;
+      background: var(--surface);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 20px 20px;
+      overflow: visible;
+    }
+
+    .booking-price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(230, 235, 242, 0.96);
+    }
+
+    .booking-price-row strong {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .booking-aside {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .booking-field {
+      margin-bottom: 14px;
+    }
+
+    .booking-field label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+
+    .booking-field input,
+    .booking-field select {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      font: inherit;
+      font-size: 0.88rem;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .booking-field select {
+      appearance: none;
+      padding-right: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+    }
+
+    .booking-field,
+    .booking-field-row {
+      overflow: visible;
+    }
+
+    .booking-date-shell {
+      position: relative;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    .booking-date-shell.is-open {
+      z-index: 55;
+    }
+
+    .booking-date-trigger {
+      position: relative;
+      width: 100%;
+      min-height: 46px;
+      padding: 0 40px 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      font: inherit;
+      font-size: 0.88rem;
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .booking-date-trigger:hover {
+      border-color: rgba(30, 64, 175, 0.22);
+    }
+
+    .booking-date-trigger:focus-visible {
+      outline: 2px solid rgba(30, 64, 175, 0.45);
+      outline-offset: 2px;
+    }
+
+    .booking-date-display {
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .booking-date-display.is-placeholder {
+      color: #94a3b8;
+    }
+
+    .booking-date-chevron {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    .booking-date-trigger .booking-date-chevron svg {
+      display: block;
+      transition: transform 0.32s cubic-bezier(0.34, 1.35, 0.64, 1);
+    }
+
+    .booking-date-shell.is-open .booking-date-chevron svg {
+      transform: rotate(180deg);
+    }
+
+    .booking-calendar-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      width: min(340px, calc(100vw - 24px));
+      max-width: calc(100vw - 24px);
+      box-sizing: border-box;
+      padding: 16px 14px 14px;
+      background: #fff;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      border-radius: 14px;
+      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.14);
+      z-index: 60;
+      overflow: visible;
+    }
+
+    .booking-date-shell[data-booking-date="arrive"] .booking-calendar-popover {
+      left: 0;
+      right: auto;
+    }
+
+    .booking-date-shell[data-booking-date="depart"] .booking-calendar-popover {
+      right: 0;
+      left: auto;
+    }
+
+    .booking-cal-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .booking-cal-nav-btn {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: rgba(248, 250, 252, 0.95);
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      padding: 0;
+    }
+
+    .booking-cal-nav-btn svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+
+    .booking-cal-nav-btn:hover:not(:disabled) {
+      background: #fff;
+      border-color: rgba(30, 64, 175, 0.2);
+      color: var(--blue);
+    }
+
+    .booking-cal-nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .booking-cal-select-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .booking-cal-select-row select {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 42px;
+      padding: 0 34px 0 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text);
+      background-color: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      cursor: pointer;
+    }
+
+    .booking-cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 2px;
+      margin-bottom: 8px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    .booking-cal-weekdays span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .booking-cal-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .booking-cal-empty {
+      min-height: 36px;
+    }
+
+    .booking-cal-day {
+      min-height: 36px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: rgba(248, 250, 252, 0.6);
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .booking-cal-day:hover:not(:disabled) {
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.15);
+      color: var(--blue);
+    }
+
+    .booking-cal-day.is-selected {
+      background: rgba(30, 64, 175, 0.16);
+      border-color: rgba(30, 64, 175, 0.35);
+      color: var(--blue-deep);
+    }
+
+    .booking-cal-day:disabled,
+    .booking-cal-day.is-disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+      background: transparent;
+    }
+
+    .booking-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .booking-footnote {
+      margin: 14px 0 0;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    .listing-stats-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .listing-stat-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748b;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f7fbff, #eef5ff);
+      border: 1px solid #dfe8f6;
+      color: #4d5f78;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-bottom: var(--space-3);
+    }
+
+    .detail-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .detail-top-copy {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .detail-favorite {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      background: rgba(255, 255, 255, 0.95);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      color: #334155;
+      transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .detail-favorite:hover {
+      transform: scale(1.04);
+      border-color: rgba(30, 64, 175, 0.2);
+      color: var(--blue);
+    }
+
+    .detail-favorite svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+      flex-shrink: 0;
+      stroke: currentColor;
+      stroke-width: 1.85;
+      fill: none;
+      transition: fill 0.22s ease, stroke 0.22s ease, transform 0.22s ease;
+    }
+
+    .detail-favorite:not(.active) svg path {
+      fill: none;
+    }
+
+    .detail-favorite.active {
+      background: #fff1f2;
+      color: #e11d48;
+      border-color: #fecdd3;
+    }
+
+    .detail-favorite.active svg path {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, 0.08);
+      border: 1px solid rgba(30, 64, 175, 0.12);
+      color: var(--blue-deep);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .detail-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: var(--space-3);
+    }
+
+    .detail-stat {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      color: #43546a;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .section-block + .section-block {
+      margin-top: 22px;
+    }
+
+    .section-block h2 {
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .section-block p,
+    .section-block li {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    .equipment-grid {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .equipment-item {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #fbfdff;
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      color: #42556d;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .info-item {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #fbfdff;
+      border: 1px solid rgba(230, 235, 242, 0.96);
+    }
+
+    .not-found {
+      margin-top: var(--space-5);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .recommended-section {
+      margin-top: var(--space-4);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 24px;
+    }
+
+    .recommended-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .recommended-head h2 {
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .recommended-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .recommended-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .recommended-card {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .recommended-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+      border-color: rgba(30, 64, 175, 0.14);
+    }
+
+    .recommended-card img {
+      width: 88px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #f5f7fb;
+    }
+
+    .recommended-card-copy {
+      display: grid;
+      gap: 6px;
+    }
+
+    .recommended-card-copy strong {
+      font-size: 0.94rem;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .recommended-card-copy span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(18px);
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease-in-out, transform 0.22s ease-in-out;
+      z-index: 90;
+      backdrop-filter: blur(12px);
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .detail-layout-split {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-booking-card {
+        position: relative;
+        top: auto;
+        max-width: 480px;
+      }
+
+      .recommended-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 0;
+      }
+
+      .content-card,
+      .info-card {
+        padding: 22px;
+      }
+
+      .equipment-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-card {
+        max-width: 100%;
+      }
+
+      .recommended-card {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .recommended-card img {
+        width: 72px;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="./index.html">
+        <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+        <div class="brand-name"><span class="brand-initials">𝒦𝒟</span><span class="brand-word">𝒞𝑜𝓃𝒸𝒾𝑒𝓇𝑔𝑒𝓇𝒾𝑒</span></div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="./index.html">Accueil</a>
+        <a href="./index.html#solutions">Solutions</a>
+        <a href="./estimation.html">Estimation</a>
+        <a href="./index.html#premium">Premium</a>
+        <a href="./locations.html" class="is-active">Locations disponibles</a>
+        <a href="./index.html#preuves">Preuves</a>
+        <a href="./index.html#carte">Carte & alentours</a>
+        <a href="./index.html#faq">FAQ</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="container">
+    <a class="back-link" href="./locations.html">← Retour aux locations</a>
+    <div id="detailMount"></div>
+  </main>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script src="./site-intelligence.js?v=2"></script>
+  <script src="./locations-data.js?v=2"></script>
+  <script src="./property-image-zoom.js?v=5"></script>
+  <script src="./property-image-gallery.js?v=2"></script>
+  <script src="./offer-share.js?v=1"></script>
+  <script>
+    const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
+    const { enrichListing, toggleFavorite, isFavorite, trackListingEvent, getRecommendedListings, getInteractions } = window.KDSite;
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const header = document.querySelector("header");
+    const mount = document.getElementById("detailMount");
+    const uiFeedback = document.getElementById("uiFeedback");
+
+    const openSidebar = () => {
+      navLinks.classList.add("active");
+      sidebarOverlay.classList.add("active");
+      document.body.classList.add("sidebar-open");
+    };
+
+    const closeSidebar = () => {
+      navLinks.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+    };
+
+    menuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (navLinks.classList.contains("active")) closeSidebar();
+      else openSidebar();
+    });
+
+    sidebarOverlay.addEventListener("click", closeSidebar);
+
+    document.addEventListener("click", (event) => {
+      const insideSidebar = navLinks.contains(event.target) || menuBtn.contains(event.target);
+      if (!insideSidebar && navLinks.classList.contains("active")) closeSidebar();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSidebar();
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeSidebar));
+
+    const syncHeader = () => {
+      header.classList.toggle("scrolled", window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", syncHeader, { passive: true });
+    syncHeader();
+
+    const params = new URLSearchParams(window.location.search);
+    const locationId = params.get("id");
+    const locations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
+    const currentLocation = locations.find((item) => item.id === locationId);
+    let catalog = [...locations];
+    let feedbackTimeout;
+
+    const formatPrice = (price) => {
+      if (price === null || price === undefined || price === "") return null;
+      const amount = Number(price);
+      return Number.isFinite(amount)
+        ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(amount)
+        : String(price);
+    };
+
+    const showFeedback = (message) => {
+      uiFeedback.textContent = message;
+      uiFeedback.classList.add("visible");
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
+    };
+
+    const escapeHtml = (value) =>
+      String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+    const listingKindLabel = (loc) => {
+      const t = (loc.type || "").toLowerCase();
+      if (t.includes("maison") || t.includes("villa")) return "Maison entière.";
+      if (t.includes("studio")) return "Studio.";
+      return "Appartement.";
+    };
+
+    const listingSpecsLine = (loc) => {
+      const parts = [];
+      const v = loc.maxGuests;
+      const br = loc.bedrooms;
+      const ba = loc.bathrooms;
+      if (typeof v === "number" && Number.isFinite(v) && v > 0) parts.push(`${v} voyageur${v > 1 ? "s" : ""} maximum`);
+      if (typeof br === "number" && Number.isFinite(br) && br > 0) parts.push(`${br} chambre${br > 1 ? "s" : ""}`);
+      if (typeof ba === "number" && Number.isFinite(ba) && ba > 0) parts.push(`${ba} salle${ba > 1 ? "s" : ""} de bain`);
+      if (parts.length) return parts.join(" • ");
+      return loc.location ? `À ${loc.location}` : "Caractéristiques précisées sur la fiche.";
+    };
+
+    const aboutParagraphs = (desc) => {
+      const raw = String(desc || "").trim();
+      if (!raw) return ["Description à venir."];
+      const blocks = raw.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+      if (blocks.length >= 2) return blocks;
+      const idx = raw.indexOf(". ");
+      if (idx > 50 && idx < raw.length - 30) {
+        return [raw.slice(0, idx + 1).trim(), raw.slice(idx + 2).trim()];
+      }
+      return [raw];
+    };
+
+    const LOCAL_PETIT_COCON_GALLERY = [
+      "./Petit cocon/Pcocon1.png?v=4",
+      "./Petit cocon/Pcocon2.png?v=4",
+      "./Petit cocon/Pcocon3.png?v=4",
+      "./Petit cocon/Pcocon4.png?v=4",
+      "./Petit cocon/Pcocon5.png?v=4",
+      "./Petit cocon/Pcocon6.png?v=4",
+      "./Petit cocon/Pcocon7.png?v=4",
+      "./Petit cocon/Pcocon8.png?v=4",
+      "./Petit cocon/Pcocon9.png?v=4",
+      "./Petit cocon/Pcocon10.png?v=4"
+    ];
+    const LOCAL_PROXI_GALLERY = [
+      "./Proxi/Proxi 1.png",
+      "./Proxi/Proxi 2.png",
+      "./Proxi/Proxi 3.png",
+      "./Proxi/Proxi 4.png",
+      "./Proxi/Proxi 5.png"
+    ];
+
+    const applyLocalApartmentImages = (listing) => {
+      const fingerprint = `${listing.id || ""} ${listing.title || ""}`.toLowerCase();
+      if (fingerprint.includes("petit") && fingerprint.includes("cocon")) {
+        return {
+          ...listing,
+          heroImage: LOCAL_PETIT_COCON_GALLERY[0],
+          gallery: [...LOCAL_PETIT_COCON_GALLERY]
+        };
+      }
+
+      if (fingerprint.includes("proximite")) {
+        return {
+          ...listing,
+          heroImage: LOCAL_PROXI_GALLERY[0],
+          gallery: [...LOCAL_PROXI_GALLERY]
+        };
+      }
+
+      return listing;
+    };
+
+    const normalizeRemoteLocation = (row) => {
+      const gallery = [row.image_url, ...(row.images || [])].filter(Boolean);
+      const equipments = [
+        row.max_guests ? `${row.max_guests} voyageurs` : null,
+        row.bedrooms ? `${row.bedrooms} chambre${row.bedrooms > 1 ? "s" : ""}` : null,
+        row.bathrooms ? `${row.bathrooms} salle${row.bathrooms > 1 ? "s" : ""} de bain` : null,
+        row.rental_duration ? `Durée ${row.rental_duration}` : null
+      ].filter(Boolean);
+      const priceLabel = formatPrice(row.price);
+
+      return enrichListing(applyLocalApartmentImages({
+        id: row.id,
+        title: row.title || "Annonce",
+        teaser: row.description || "Présentation détaillée du bien.",
+        location: row.location || "Port-de-Bouc",
+        heroImage: row.image_url || gallery[0] || "",
+        gallery: gallery.length ? gallery : [row.image_url].filter(Boolean),
+        fullDescription: row.description || "Description détaillée à venir.",
+        equipments: equipments.length ? equipments : ["WiFi", "Confort", "Séjour pratique"],
+        type: row.type || "Appartement",
+        priceValue: Number(row.price) || null,
+        bedrooms: row.bedrooms != null ? Number(row.bedrooms) : null,
+        bathrooms: row.bathrooms != null ? Number(row.bathrooms) : null,
+        maxGuests: row.max_guests != null ? Number(row.max_guests) : null,
+        usefulInfo: [
+          row.location ? `Localisation : ${row.location}` : null,
+          priceLabel ? `Tarif indicatif : ${priceLabel} / nuit` : null,
+          row.type ? `Type de bien : ${row.type}` : null
+        ].filter(Boolean)
+      }));
+    };
+
+    const loadRemoteLocation = async () => {
+      if (!locationId) return null;
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&id=eq.${encodeURIComponent(locationId)}`, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error("Impossible de charger le détail");
+        const rows = await response.json();
+        if (Array.isArray(rows) && rows.length) return normalizeRemoteLocation(rows[0]);
+      } catch (error) {
+        console.error(error);
+      }
+      return null;
+    };
+
+    const loadRemoteCatalog = async () => {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&order=created_at.desc`, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error("Impossible de charger les recommandations");
+        const rows = await response.json();
+        if (Array.isArray(rows) && rows.length) {
+          catalog = rows.map(normalizeRemoteLocation);
+        }
+      } catch (error) {
+        console.error(error);
+        catalog = [...locations];
+      }
+    };
+
+    const renderNotFound = () => {
+      mount.innerHTML = `
+        <section class="not-found">
+          <h1>Location introuvable</h1>
+          <p>Le bien demandé n'a pas été trouvé. Vous pouvez revenir à la page des locations pour consulter la sélection disponible.</p>
+          <div>
+            <a class="btn btn-primary" href="./locations.html">Voir les locations</a>
+          </div>
+        </section>
+      `;
+    };
+
+    const BOOKING_MONTHS_FR = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre"
+    ];
+    const BOOKING_DOW_FR = ["lun", "mar", "mer", "jeu", "ven", "sam", "dim"];
+
+    const bookingStartOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+    const bookingAddDays = (d, n) => {
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      x.setDate(x.getDate() + n);
+      return x;
+    };
+
+    const bookingToISO = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
+
+    const bookingFromISO = (s) => {
+      if (!s || typeof s !== "string") return null;
+      const p = s.split("-");
+      if (p.length !== 3) return null;
+      const y = Number(p[0]);
+      const m = Number(p[1]);
+      const day = Number(p[2]);
+      if (!y || !m || !day) return null;
+      const dt = new Date(y, m - 1, day);
+      if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== day) return null;
+      return dt;
+    };
+
+    const bookingFormatFR = (iso) => {
+      if (!iso) return "";
+      const d = bookingFromISO(iso);
+      if (!d) return "";
+      return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    };
+
+    const initBookingDatePickers = (root) => {
+      const shells = root.querySelectorAll("[data-booking-date]");
+      if (!shells.length) return;
+
+      const today = bookingStartOfDay(new Date());
+      let openShell = null;
+      let docClickBound = false;
+
+      const onDocClick = (e) => {
+        if (!openShell || openShell.contains(e.target)) return;
+        closeAll();
+      };
+
+      const onKey = (e) => {
+        if (e.key === "Escape") closeAll();
+      };
+
+      const closeAll = () => {
+        shells.forEach((sh) => {
+          const pop = sh.querySelector(".booking-calendar-popover");
+          const trig = sh.querySelector(".booking-date-trigger");
+          if (!pop || !trig) return;
+          pop.hidden = true;
+          trig.setAttribute("aria-expanded", "false");
+          sh.classList.remove("is-open");
+        });
+        openShell = null;
+        if (docClickBound) {
+          document.removeEventListener("click", onDocClick);
+          document.removeEventListener("keydown", onKey);
+          docClickBound = false;
+        }
+      };
+
+      shells.forEach((shell) => {
+        const mode = shell.getAttribute("data-booking-date");
+        const hidden = shell.querySelector('input[type="hidden"][name]');
+        const trigger = shell.querySelector(".booking-date-trigger");
+        const display = shell.querySelector(".booking-date-display");
+        const popover = shell.querySelector(".booking-calendar-popover");
+        const btnPrev = popover?.querySelector('[data-cal-dir="-1"]');
+        const btnNext = popover?.querySelector('[data-cal-dir="1"]');
+        const monthSel = popover?.querySelector(".booking-cal-month");
+        const yearSel = popover?.querySelector(".booking-cal-year");
+        const daysEl = popover?.querySelector(".booking-cal-days");
+        const weekdaysEl = popover?.querySelector(".booking-cal-weekdays");
+
+        if (!hidden || !trigger || !popover || !btnPrev || !btnNext || !monthSel || !yearSel || !daysEl || !weekdaysEl) return;
+
+        let view = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        const otherHidden = () => {
+          const other = root.querySelector(`[data-booking-date="${mode === "arrive" ? "depart" : "arrive"}"] input[type="hidden"][name]`);
+          return other && other.value ? other.value : "";
+        };
+
+        const minD = () => {
+          if (mode === "depart") {
+            const arr = bookingFromISO(otherHidden());
+            if (arr) return bookingAddDays(arr, 1);
+          }
+          return today;
+        };
+
+        const maxD = () => {
+          if (mode === "arrive") {
+            const dep = bookingFromISO(otherHidden());
+            if (dep) return bookingAddDays(dep, -1);
+          }
+          return null;
+        };
+
+        const fillMonthYearSelects = () => {
+          monthSel.innerHTML = BOOKING_MONTHS_FR.map((name, i) => `<option value="${i}">${name}</option>`).join("");
+          const y0 = today.getFullYear();
+          yearSel.innerHTML = "";
+          for (let y = y0; y <= y0 + 4; y += 1) {
+            yearSel.appendChild(new Option(String(y), String(y)));
+          }
+        };
+
+        const clampView = () => {
+          const min = minD();
+          const max = maxD();
+          let y = view.getFullYear();
+          let m = view.getMonth();
+          const first = new Date(y, m, 1);
+          const minFirst = new Date(min.getFullYear(), min.getMonth(), 1);
+          if (first < minFirst) {
+            view = new Date(min.getFullYear(), min.getMonth(), 1);
+            return;
+          }
+          if (max) {
+            const maxFirst = new Date(max.getFullYear(), max.getMonth(), 1);
+            if (first > maxFirst) view = new Date(max.getFullYear(), max.getMonth(), 1);
+          }
+        };
+
+        const syncViewFromSelects = () => {
+          const y = parseInt(yearSel.value, 10);
+          const m = parseInt(monthSel.value, 10);
+          if (!Number.isFinite(y) || !Number.isFinite(m)) return;
+          view = new Date(y, m, 1);
+          clampView();
+          render();
+        };
+
+        const render = () => {
+          clampView();
+          const y = view.getFullYear();
+          const m = view.getMonth();
+          monthSel.value = String(m);
+          yearSel.value = String(y);
+
+          const min = minD();
+          const max = maxD();
+
+          weekdaysEl.innerHTML = BOOKING_DOW_FR.map((wd) => `<span>${wd}</span>`).join("");
+
+          const first = new Date(y, m, 1);
+          const startPad = (first.getDay() + 6) % 7;
+          const dim = new Date(y, m + 1, 0).getDate();
+
+          const frag = document.createDocumentFragment();
+          for (let i = 0; i < startPad; i += 1) {
+            const cell = document.createElement("span");
+            cell.className = "booking-cal-empty";
+            frag.appendChild(cell);
+          }
+
+          for (let dayNum = 1; dayNum <= dim; dayNum += 1) {
+            const cellDate = new Date(y, m, dayNum);
+            const iso = bookingToISO(cellDate);
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "booking-cal-day";
+            btn.textContent = String(dayNum);
+            btn.dataset.iso = iso;
+
+            if (cellDate < min || (max && cellDate > max)) {
+              btn.disabled = true;
+              btn.classList.add("is-disabled");
+            }
+            if (hidden.value === iso) btn.classList.add("is-selected");
+            btn.addEventListener("click", () => pick(iso));
+            frag.appendChild(btn);
+          }
+          daysEl.replaceChildren(frag);
+
+          const prevMonthEnd = new Date(y, m, 0);
+          btnPrev.disabled = prevMonthEnd < min;
+          const nextMonthStart = new Date(y, m + 1, 1);
+          btnNext.disabled = !!(max && nextMonthStart > max);
+        };
+
+        const pick = (iso) => {
+          hidden.value = iso;
+          display.textContent = bookingFormatFR(iso);
+          display.classList.remove("is-placeholder");
+          closeAll();
+          if (mode === "arrive") {
+            const depShell = root.querySelector('[data-booking-date="depart"]');
+            const depInput = depShell?.querySelector('input[type="hidden"][name]');
+            const depDisp = depShell?.querySelector(".booking-date-display");
+            const arr = bookingFromISO(iso);
+            const dep = depInput ? bookingFromISO(depInput.value) : null;
+            if (arr && dep && dep <= arr) {
+              depInput.value = "";
+              if (depDisp) {
+                depDisp.textContent = "jj/mm/aaaa";
+                depDisp.classList.add("is-placeholder");
+              }
+            }
+          }
+        };
+
+        const open = () => {
+          closeAll();
+          openShell = shell;
+          const cur = bookingFromISO(hidden.value);
+          const min = minD();
+          const max = maxD();
+          if (cur && cur >= min && (!max || cur <= max)) {
+            view = new Date(cur.getFullYear(), cur.getMonth(), 1);
+          } else {
+            view = new Date(min.getFullYear(), min.getMonth(), 1);
+          }
+          fillMonthYearSelects();
+          clampView();
+          render();
+          popover.hidden = false;
+          trigger.setAttribute("aria-expanded", "true");
+          shell.classList.add("is-open");
+          if (!docClickBound) {
+            docClickBound = true;
+            requestAnimationFrame(() => {
+              document.addEventListener("click", onDocClick);
+              document.addEventListener("keydown", onKey);
+            });
+          }
+        };
+
+        fillMonthYearSelects();
+        monthSel.addEventListener("change", syncViewFromSelects);
+        yearSel.addEventListener("change", syncViewFromSelects);
+        btnPrev.addEventListener("click", () => {
+          view = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+          clampView();
+          render();
+        });
+        btnNext.addEventListener("click", () => {
+          view = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+          clampView();
+          render();
+        });
+        trigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!popover.hidden) {
+            closeAll();
+            return;
+          }
+          open();
+        });
+
+        if (hidden.value) {
+          display.textContent = bookingFormatFR(hidden.value);
+          display.classList.remove("is-placeholder");
+        } else {
+          display.textContent = "jj/mm/aaaa";
+          display.classList.add("is-placeholder");
+        }
+      });
+    };
+
+    const renderDetail = (location) => {
+      trackListingEvent(location.id, "view");
+      const stats = getInteractions().listings[location.id] || { views: 0, favoriteAdds: 0 };
+      const recommended = getRecommendedListings(catalog.length ? catalog : locations, { targetId: location.id, limit: 3 });
+      const galleryImages = location.gallery && location.gallery.length ? location.gallery.filter(Boolean) : [location.heroImage].filter(Boolean);
+      const titleSafe = escapeHtml(location.title);
+      const locSafe = escapeHtml(location.location || "");
+      const paras = aboutParagraphs(location.fullDescription).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+      const bullets = (location.equipments || [])
+        .map((item) => `<li>${escapeHtml(item)}</li>`)
+        .join("");
+      const priceRowHtml =
+        location.priceValue != null && Number.isFinite(Number(location.priceValue))
+          ? `<span><strong>${escapeHtml(formatPrice(location.priceValue))}</strong> / nuit</span>`
+          : `<span>${escapeHtml("Tarif sur demande")}</span>`;
+      const kind = escapeHtml(listingKindLabel(location));
+      const specs = escapeHtml(listingSpecsLine(location));
+      const highlightLoc = locSafe
+        ? `${locSafe} — commerces et accès facilités à proximité.`
+        : "Un cadre agréable pour votre séjour.";
+
+      mount.innerHTML = `
+        <section>
+          <div class="detail-gallery-wrap">
+            <div class="gallery-card">
+              <div class="detail-gallery-host" id="detailGalleryHost"></div>
+            </div>
+          </div>
+
+          <div class="detail-layout-split">
+            <div class="listing-main">
+              <div class="listing-header-row">
+                <h1>${titleSafe}</h1>
+                <div class="listing-header-actions">
+                  <button type="button" class="detail-share-btn" id="detailShareBtn" aria-label="Partager cette annonce">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                  </button>
+                  <button class="detail-favorite ${isFavorite(location.id) ? "active" : ""}" id="detailFavoriteBtn" type="button" aria-label="Ajouter aux favoris" aria-pressed="${isFavorite(location.id) ? "true" : "false"}">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <p class="listing-kind">${kind}</p>
+              <p class="listing-specs">${specs}</p>
+
+              <div class="listing-highlights">
+                <div class="listing-highlight">
+                  <span class="listing-highlight-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path fill="none" d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9z"/></svg>
+                  </span>
+                  <div>
+                    <strong>Espace nuit confortable</strong>
+                    <p>Literie et pièces pensées pour un repos agréable.</p>
+                  </div>
+                </div>
+                <div class="listing-highlight">
+                  <span class="listing-highlight-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path fill="none" d="M12 21c-4-3-7-6-7-10a7 7 0 1114 0c0 4-3 7-7 10z"/><circle fill="none" cx="12" cy="11" r="2"/></svg>
+                  </span>
+                  <div>
+                    <strong>Emplacement recherché</strong>
+                    <p>${highlightLoc}</p>
+                  </div>
+                </div>
+              </div>
+
+              <h2 class="listing-about-title">À propos de ce logement</h2>
+              <div class="listing-about-body">${paras}</div>
+              <ul class="listing-bullets">${bullets}</ul>
+
+              <div class="listing-stats-inline">
+                <span class="listing-stat-pill">${stats.views || 0} vue${(stats.views || 0) > 1 ? "s" : ""}</span>
+                <span class="listing-stat-pill">${stats.favoriteAdds || 0} favori${(stats.favoriteAdds || 0) > 1 ? "s" : ""}</span>
+              </div>
+            </div>
+
+            <aside class="detail-booking-card" aria-label="Tarif et disponibilité">
+              <div class="booking-price-row">
+                ${priceRowHtml}
+                <span class="booking-aside">Tarif indicatif</span>
+              </div>
+              <div class="booking-field-row">
+                <div class="booking-field">
+                  <label for="bookArriveTrigger">Arrivée</label>
+                  <div class="booking-date-shell" data-booking-date="arrive">
+                    <input type="hidden" id="bookArrive" name="arrive" value="" autocomplete="off" />
+                    <button type="button" class="booking-date-trigger" id="bookArriveTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookArriveCal">
+                      <span class="booking-date-display is-placeholder" id="bookArriveDisplay">jj/mm/aaaa</span>
+                      <span class="booking-date-chevron" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                    <div class="booking-calendar-popover" id="bookArriveCal" hidden role="dialog" aria-label="Choisir la date d'arrivée">
+                      <div class="booking-cal-toolbar">
+                        <button type="button" class="booking-cal-nav-btn" data-cal-dir="-1" aria-label="Mois précédent">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button type="button" class="booking-cal-nav-btn" data-cal-dir="1" aria-label="Mois suivant">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
+                      </div>
+                      <div class="booking-cal-select-row">
+                        <select class="booking-cal-month" aria-label="Mois"></select>
+                        <select class="booking-cal-year" aria-label="Année"></select>
+                      </div>
+                      <div class="booking-cal-weekdays"></div>
+                      <div class="booking-cal-days"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="booking-field">
+                  <label for="bookDepartTrigger">Départ</label>
+                  <div class="booking-date-shell" data-booking-date="depart">
+                    <input type="hidden" id="bookDepart" name="depart" value="" autocomplete="off" />
+                    <button type="button" class="booking-date-trigger" id="bookDepartTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookDepartCal">
+                      <span class="booking-date-display is-placeholder" id="bookDepartDisplay">jj/mm/aaaa</span>
+                      <span class="booking-date-chevron" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                    <div class="booking-calendar-popover" id="bookDepartCal" hidden role="dialog" aria-label="Choisir la date de départ">
+                      <div class="booking-cal-toolbar">
+                        <button type="button" class="booking-cal-nav-btn" data-cal-dir="-1" aria-label="Mois précédent">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                        </button>
+                        <button type="button" class="booking-cal-nav-btn" data-cal-dir="1" aria-label="Mois suivant">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                        </button>
+                      </div>
+                      <div class="booking-cal-select-row">
+                        <select class="booking-cal-month" aria-label="Mois"></select>
+                        <select class="booking-cal-year" aria-label="Année"></select>
+                      </div>
+                      <div class="booking-cal-weekdays"></div>
+                      <div class="booking-cal-days"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="booking-field">
+                <label for="bookGuests">Voyageurs</label>
+                <select id="bookGuests" name="guests">
+                  <option value="1">1 voyageur</option>
+                  <option value="2">2 voyageurs</option>
+                  <option value="3">3 voyageurs</option>
+                  <option value="4">4 voyageurs</option>
+                  <option value="5">5 voyageurs ou plus</option>
+                </select>
+              </div>
+              <p class="booking-footnote">Aucun montant ne sera débité pour le moment. Indiquez vos dates pour une demande de disponibilité.</p>
+            </aside>
+          </div>
+
+          <section class="recommended-section">
+            <div class="recommended-head">
+              <h2>Recommandé pour vous</h2>
+              <span class="recommended-note">Suggestions proches de ce bien selon vos interactions.</span>
+            </div>
+            <div class="recommended-grid" id="recommendedGrid">
+              ${recommended.length
+                ? recommended.map((item) => `
+                  <a class="recommended-card" href="./location-detail.html?id=${item.id}">
+                    <img src="${item.heroImage}" alt="${item.title}" loading="lazy" />
+                    <div class="recommended-card-copy">
+                      <strong>${item.title}</strong>
+                      <span>${item.location} · ${item.type || "Appartement"}</span>
+                      <span>${item.priceValue ? `${formatPrice(item.priceValue)} / nuit` : "Sur demande"}</span>
+                    </div>
+                  </a>
+                `).join("")
+                : `<p class="recommended-note">Vos suggestions apparaîtront après davantage d’interactions.</p>`}
+            </div>
+          </section>
+        </section>
+      `;
+
+      const detailFavoriteBtn = document.getElementById("detailFavoriteBtn");
+      const detailShareBtn = document.getElementById("detailShareBtn");
+      const detailGalleryHost = document.getElementById("detailGalleryHost");
+
+      detailShareBtn?.addEventListener("click", () => {
+        window.KDOfferShare.open({ id: location.id, title: location.title, onFeedback: showFeedback });
+      });
+
+      window.PropertyImageGallery.mount(detailGalleryHost, {
+        images: galleryImages,
+        title: location.title,
+        subtitle: location.location || "Localisation",
+        variant: "grid"
+      });
+
+      mount.querySelectorAll(".recommended-card").forEach((card) => {
+        card.addEventListener("click", () => trackListingEvent(card.getAttribute("href")?.split("id=")[1], "cardClick"));
+      });
+
+      detailFavoriteBtn.addEventListener("click", () => {
+        const result = toggleFavorite(location.id);
+        detailFavoriteBtn.classList.toggle("active", result.isFavorite);
+        detailFavoriteBtn.setAttribute("aria-pressed", result.isFavorite ? "true" : "false");
+        showFeedback(result.isFavorite ? "Ajouté aux favoris" : "Retiré des favoris");
+      });
+
+      initBookingDatePickers(mount);
+    };
+
+    const setupPageTransitions = () => {
+      requestAnimationFrame(() => document.body.classList.add("page-ready"));
+      document.querySelectorAll('a[href$=".html"], a[href^="./"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href");
+          if (!href || href.startsWith("#") || link.target === "_blank" || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 180);
+        });
+      });
+    };
+
+    setupPageTransitions();
+    Promise.all([loadRemoteCatalog(), currentLocation ? Promise.resolve(currentLocation) : loadRemoteLocation()]).then(([, remoteLocation]) => {
+      const resolvedLocation = currentLocation || remoteLocation;
+      if (resolvedLocation) renderDetail(resolvedLocation);
+      else renderNotFound();
+    });
+  </script>
+</body>
+</html>

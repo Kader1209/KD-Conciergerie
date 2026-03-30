@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Demande d'estimation KD Conciergerie - page dédiée pour présenter votre bien et demander une estimation." />
+  <title>Estimation | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/signatura" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6878;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --green: #0f766e;
+      --cream-soft: #fcfdff;
+      --blue-soft: #eff5ff;
+      --line: #e6ebf2;
+      --shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+      --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.05);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 48px;
+      --space-6: 64px;
+      --space-7: 96px;
+      --max: 1240px;
+      --site-header-h: 80px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.06), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.06), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea,
+    select,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body.page-ready {
+      opacity: 1;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+    }
+
+    body.sidebar-open {
+      overflow: hidden;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(248, 250, 252, 0.84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+      transition: background 0.24s ease-in-out, box-shadow 0.24s ease-in-out, border-color 0.24s ease-in-out;
+    }
+
+    header.scrolled {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom-color: rgba(221, 228, 239, 0.96);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 5px;
+      border: 1px solid rgba(231, 238, 248, 0.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-name {
+      font-family: "Signatura", "Inter", sans-serif;
+      font-size: 32px;
+      line-height: 0.95;
+      color: var(--blue);
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4em;
+      white-space: nowrap;
+    }
+
+    .brand-initials {
+      letter-spacing: -0.1em;
+    }
+
+    .brand-word {
+      letter-spacing: -0.045em;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(86vw, 360px);
+      height: 100dvh;
+      padding: 88px 14px 18px;
+      background: rgba(245, 248, 251, 0.9);
+      backdrop-filter: blur(18px);
+      border-left: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: -10px 0 24px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform 0.28s ease, visibility 0.28s ease;
+      z-index: 39;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 54px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(30, 64, 175, 0.08);
+      font-weight: 500;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      transform: translateX(-2px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .menu-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(210, 219, 232, 0.9);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-1px);
+      background: #fff;
+      border-color: rgba(30, 64, 175, 0.18);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+      z-index: 38;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), #173b8f);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(30, 64, 175, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(31, 79, 214, 0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--text);
+      border-color: #d9e1ec;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      background: #fff;
+      border-color: #c7d5ea;
+      color: var(--blue);
+    }
+
+    main {
+      padding: calc(var(--space-5) + var(--site-header-h)) 0 var(--space-7);
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    #formulaire-estimation {
+      scroll-margin-top: 110px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: var(--space-3);
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-aside,
+    .form-card,
+    .info-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(223, 231, 241, 0.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-copy {
+      padding: var(--space-4);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 252, 0.92));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cream-soft), var(--blue-soft));
+      border: 1px solid #dfe8f6;
+      color: #49607f;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 4.8vw, 4.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+      max-width: 10ch;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.03rem;
+      max-width: 58ch;
+    }
+
+    .hero-points {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+
+    .hero-point {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid #e5ecf5;
+    }
+
+    .hero-point strong {
+      display: block;
+      font-size: 0.98rem;
+    }
+
+    .hero-point span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .point-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eef4ff, #edf9f6);
+      color: var(--blue-deep);
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .hero-aside {
+      padding: var(--space-3);
+      display: grid;
+      gap: var(--space-2);
+      align-content: start;
+    }
+
+    .hero-aside h2,
+    .section-title {
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-aside p,
+    .section-lead {
+      color: var(--muted);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .mini-card {
+      padding: var(--space-2);
+      border-radius: var(--radius);
+      background: #fffdfa;
+      border: 1px solid #e4ebf4;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .mini-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+
+    .form-card,
+    .info-card {
+      padding: var(--space-4);
+    }
+
+    .form-head {
+      margin-bottom: 22px;
+    }
+
+    .form-head p {
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #243245;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid #d8e1ec;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(31, 79, 214, 0.38);
+      box-shadow: 0 0 0 4px rgba(31, 79, 214, 0.08);
+      background: #fff;
+    }
+
+    .select-wrap {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+
+    .select-wrap select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 48px;
+      cursor: pointer;
+    }
+
+    .select-wrap .select-chevron {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translate3d(0, -50%, 0) rotate(0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      pointer-events: none;
+      transition:
+        transform 0.32s cubic-bezier(0.34, 1.35, 0.64, 1),
+        color 0.22s ease;
+    }
+
+    .select-wrap .select-chevron svg {
+      display: block;
+    }
+
+    .select-wrap:hover .select-chevron {
+      color: #1e293b;
+    }
+
+    .select-wrap select:focus + .select-chevron,
+    .select-wrap select:focus-visible + .select-chevron {
+      transform: translate3d(0, -50%, 0) rotate(180deg);
+      color: var(--blue);
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .helper {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .success {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #edf9f6;
+      border: 1px solid #c8ebe3;
+      color: #0f5d57;
+      font-size: 0.94rem;
+    }
+
+    .success.active {
+      display: block;
+    }
+
+    .info-stack {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .info-item {
+      padding: var(--space-2);
+      border-radius: var(--radius);
+      background: #fffdfa;
+      border: 1px solid #e4ebf4;
+    }
+
+    .info-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .info-item p,
+    .info-item a {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .info-item a:hover {
+      color: var(--blue);
+    }
+
+    footer {
+      padding: var(--space-3) 0 var(--space-4);
+      border-top: 1px solid rgba(223, 231, 241, 0.86);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: #64748b;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1,
+      .lead {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: 34px 0 72px;
+      }
+
+      .form-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .hero-aside,
+      .form-card,
+      .info-card {
+        padding: var(--space-3);
+      }
+
+      .nav {
+        padding: 8px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="./index.html">
+        <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+        <div class="brand-name"><span class="brand-initials">𝒦𝒟</span><span class="brand-word">𝒞𝑜𝓃𝒸𝒾𝑒𝓇𝑔𝑒𝓇𝒾𝑒</span></div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="./index.html">Accueil</a>
+        <a href="./index.html#solutions">Solutions</a>
+        <a href="./estimation.html" class="is-active">Estimation</a>
+        <a href="./index.html#premium">Premium</a>
+        <a href="./locations.html">Locations disponibles</a>
+        <a href="./index.html#preuves">Preuves</a>
+        <a href="./index.html#carte">Carte & alentours</a>
+        <a href="./index.html#faq">FAQ</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Estimation dédiée</div>
+        <h1>Obtenez une estimation claire de votre bien</h1>
+        <p class="lead">
+          Cette page est dédiée aux demandes d'estimation et de devis. Vous pouvez présenter votre bien, indiquer ses caractéristiques et envoyer une demande plus précise à KD Conciergerie.
+        </p>
+
+        <div class="hero-points">
+          <div class="hero-point">
+            <div class="point-icon">01</div>
+            <div>
+              <strong>Demande simple</strong>
+              <span>Un formulaire clair pour aller droit à l'essentiel.</span>
+            </div>
+          </div>
+          <div class="hero-point">
+            <div class="point-icon">02</div>
+            <div>
+              <strong>Analyse personnalisée</strong>
+              <span>Chaque bien est étudié selon sa localisation et son potentiel.</span>
+            </div>
+          </div>
+          <div class="hero-point">
+            <div class="point-icon">03</div>
+            <div>
+              <strong>Retour rapide</strong>
+              <span>Nous reprenons contact pour affiner votre projet.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <h2>Ce que vous pouvez demander</h2>
+        <p>Estimation de vente, avis locatif, devis de gestion, ou accompagnement plus large pour valoriser votre bien.</p>
+
+        <div class="mini-grid">
+          <div class="mini-card">
+            <strong>Vente</strong>
+            <p>Positionnement de prix et lecture du marché local.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Location</strong>
+            <p>Projection de rendement et niveau de loyer.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Conciergerie</strong>
+            <p>Évaluation des besoins d'accueil et d'exploitation.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Sur mesure</strong>
+            <p>Projet mixte immobilier et services premium.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="content-grid" id="formulaire-estimation">
+      <div class="form-card">
+        <div class="form-head">
+          <h2 class="section-title">Formulaire d'estimation</h2>
+          <p>Renseignez votre demande. Le formulaire prépare ensuite un message pré-rempli pour faciliter l'envoi.</p>
+        </div>
+
+        <form id="estimateForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="fullName">Nom complet</label>
+              <input id="fullName" name="fullName" type="text" placeholder="Votre nom et prénom" required />
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="vous@example.com" required />
+            </div>
+
+            <div class="field">
+              <label for="phone">Téléphone</label>
+              <input id="phone" name="phone" type="tel" placeholder="07 00 00 00 00" />
+            </div>
+
+            <div class="field">
+              <label for="projectType">Type de demande</label>
+              <div class="select-wrap">
+                <select id="projectType" name="projectType" required>
+                  <option value="">Sélectionnez</option>
+                  <option>Estimation de vente</option>
+                  <option>Avis locatif</option>
+                  <option>Devis conciergerie</option>
+                  <option>Accompagnement sur mesure</option>
+                </select>
+                <span class="select-chevron" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="field field-full">
+              <label for="address">Adresse du bien</label>
+              <input id="address" name="address" type="text" placeholder="Adresse complète du bien" required />
+            </div>
+
+            <div class="field">
+              <label for="propertyType">Type de bien</label>
+              <div class="select-wrap">
+                <select id="propertyType" name="propertyType">
+                  <option value="">Sélectionnez</option>
+                  <option>Appartement</option>
+                  <option>Maison</option>
+                  <option>Studio</option>
+                  <option>Villa</option>
+                  <option>Autre</option>
+                </select>
+                <span class="select-chevron" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="surface">Surface</label>
+              <input id="surface" name="surface" type="text" placeholder="Ex. 82 m2" />
+            </div>
+
+            <div class="field">
+              <label for="rooms">Pièces / chambres</label>
+              <input id="rooms" name="rooms" type="text" placeholder="Ex. 4 pièces, 2 chambres" />
+            </div>
+
+            <div class="field">
+              <label for="budget">Budget / objectif</label>
+              <input id="budget" name="budget" type="text" placeholder="Ex. vente autour de 250 000 EUR" />
+            </div>
+
+            <div class="field field-full">
+              <label for="message">Informations complémentaires</label>
+              <textarea id="message" name="message" placeholder="Précisez l'état du bien, la disponibilité, les équipements, votre objectif, ou tout autre détail utile."></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Envoyer ma demande</button>
+            <a class="btn btn-secondary" href="./index.html#contact">Contact direct</a>
+          </div>
+
+          <p class="helper">Le formulaire ouvre votre application email avec un message déjà préparé à l'adresse KD Conciergerie.</p>
+          <div class="success" id="successMessage">Votre demande est prête. Si aucun email ne s'ouvre automatiquement, vérifiez votre application mail par défaut.</div>
+        </form>
+      </div>
+
+      <aside class="info-card">
+        <h2 class="section-title">Informations utiles</h2>
+        <p class="section-lead">Un point de contact dédié pour avancer rapidement sur votre demande d'estimation.</p>
+
+        <div class="info-stack">
+          <div class="info-item">
+            <strong>Email</strong>
+            <a href="mailto:kd.conciergerie13@gmail.com">kd.conciergerie13@gmail.com</a>
+          </div>
+          <div class="info-item">
+            <strong>Téléphone</strong>
+            <a href="tel:0781957161">07 81 95 71 61</a>
+          </div>
+          <div class="info-item">
+            <strong>Zone</strong>
+            <p>Port-de-Bouc, Martigues et secteurs proches.</p>
+          </div>
+          <div class="info-item">
+            <strong>Conseil</strong>
+            <p>Ajoutez si possible l'adresse, la surface, le nombre de pièces et votre objectif pour recevoir une réponse plus pertinente.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026 KD Conciergerie. Tous droits réservés.</span>
+      <span>Immobilier, estimation et conciergerie premium.</span>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById("estimateForm");
+    const successMessage = document.getElementById("successMessage");
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const header = document.querySelector("header");
+
+    const setupStickyHeader = () => {
+    const openSidebar = () => {
+      navLinks.classList.add("active");
+      sidebarOverlay.classList.add("active");
+      document.body.classList.add("sidebar-open");
+    };
+
+    const closeSidebar = () => {
+      navLinks.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+    };
+
+    menuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (navLinks.classList.contains("active")) closeSidebar();
+      else openSidebar();
+    });
+
+    sidebarOverlay.addEventListener("click", closeSidebar);
+
+    document.addEventListener("click", (event) => {
+      const insideSidebar = navLinks.contains(event.target) || menuBtn.contains(event.target);
+      if (!insideSidebar && navLinks.classList.contains("active")) closeSidebar();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSidebar();
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeSidebar));
+
+    const syncHeader = () => {
+        header.classList.toggle("scrolled", window.scrollY > 10);
+      };
+      syncHeader();
+      window.addEventListener("scroll", syncHeader, { passive: true });
+    };
+
+    const setupPageTransitions = () => {
+      requestAnimationFrame(() => document.body.classList.add("page-ready"));
+      document.querySelectorAll('a[href$=".html"], a[href^="./"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href");
+          if (!href || href.startsWith("#") || link.target === "_blank" || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 180);
+        });
+      });
+    };
+
+    setupStickyHeader();
+    setupPageTransitions();
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const lines = [
+        "Bonjour,",
+        "",
+        "Je souhaite demander une estimation / un devis.",
+        "",
+        `Nom complet : ${data.get("fullName") || ""}`,
+        `Email : ${data.get("email") || ""}`,
+        `Téléphone : ${data.get("phone") || ""}`,
+        `Type de demande : ${data.get("projectType") || ""}`,
+        `Adresse du bien : ${data.get("address") || ""}`,
+        `Type de bien : ${data.get("propertyType") || ""}`,
+        `Surface : ${data.get("surface") || ""}`,
+        `Pièces / chambres : ${data.get("rooms") || ""}`,
+        `Budget / objectif : ${data.get("budget") || ""}`,
+        "",
+        "Informations complémentaires :",
+        `${data.get("message") || ""}`
+      ];
+
+      const subject = encodeURIComponent("Demande d'estimation - KD Conciergerie");
+      const body = encodeURIComponent(lines.join("\n"));
+      window.location.href = `mailto:kd.conciergerie13@gmail.com?subject=${subject}&body=${body}`;
+      successMessage.classList.add("active");
+    });
+  </script>
+</body>
+</html>
