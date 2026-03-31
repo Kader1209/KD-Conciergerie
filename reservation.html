@@ -598,8 +598,8 @@
       <section class="card section">
         <div class="section-title">Modalité de paiement</div>
         <div class="choice-grid" id="paymentChoices">
-          <label class="payment-choice active">
-            <input type="radio" name="paymentMethod" value="card" checked />
+          <label class="payment-choice">
+            <input type="radio" name="paymentMethod" value="card" />
             <div>
               <strong>Carte bancaire</strong>
               <span>Paiement en ligne après confirmation du séjour.</span>
@@ -623,12 +623,8 @@
         <div class="section-title">Conditions</div>
         <div class="checks">
           <label class="check-row">
-            <input type="checkbox" id="acceptContractTerms" />
-            <span>J’ai lu et accepté les <a href="./index.html#contact">conditions générales de contrat</a>.</span>
-          </label>
-          <label class="check-row">
-            <input type="checkbox" id="acceptDataPolicy" />
-            <span>J’accepte la politique de protection des données.</span>
+            <input type="checkbox" id="acceptRequiredTerms" />
+            <span>J’ai lu et j’accepte les <a href="./index.html#contact">conditions générales de contrat</a> et la politique de protection des données.</span>
           </label>
           <label class="check-row">
             <input type="checkbox" id="acceptPromos" />
@@ -657,28 +653,43 @@
     const { enrichListing } = window.KDSite;
 
     const params = new URLSearchParams(window.location.search);
+    const STORAGE_KEY = "kd-reservation-draft";
     const readReservationDraft = () => {
       try {
-        const raw = window.sessionStorage.getItem("kd-reservation-draft");
-        return raw ? JSON.parse(raw) : {};
-      } catch {
-        return {};
-      }
+        const sessionRaw = window.sessionStorage.getItem(STORAGE_KEY);
+        if (sessionRaw) return JSON.parse(sessionRaw);
+      } catch {}
+      try {
+        const localRaw = window.localStorage.getItem(STORAGE_KEY);
+        if (localRaw) return JSON.parse(localRaw);
+      } catch {}
+      return {};
+    };
+    const writeReservationDraft = (data) => {
+      try {
+        const serialized = JSON.stringify(data);
+        window.sessionStorage.setItem(STORAGE_KEY, serialized);
+        window.localStorage.setItem(STORAGE_KEY, serialized);
+      } catch {}
     };
     const reservationDraft = readReservationDraft();
-    const locationId = params.get("id") || reservationDraft.id || "";
-    const arriveIso = params.get("arrive") || reservationDraft.arrive || "";
-    const departIso = params.get("depart") || reservationDraft.depart || "";
-    const adults = Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0);
-    const children = Number(params.get("children") || reservationDraft.children || 0);
-    const babies = Number(params.get("babies") || reservationDraft.babies || 0);
+    const reservationData = {
+      id: params.get("id") || reservationDraft.id || "",
+      arrive: params.get("arrive") || reservationDraft.arrive || "",
+      depart: params.get("depart") || reservationDraft.depart || "",
+      adults: Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
+      children: Number(params.get("children") || reservationDraft.children || 0),
+      babies: Number(params.get("babies") || reservationDraft.babies || 0)
+    };
+    writeReservationDraft(reservationData);
+    const locationId = reservationData.id;
 
     const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
     let location = fallbackLocations.find((item) => item.id === locationId) || null;
     let feedbackTimeout;
     let activePromo = null;
     let selectedOptionKeys = new Set();
-    let selectedPaymentMethod = "card";
+    let selectedPaymentMethod = "";
 
     const DEFAULT_RESERVATION = {
       cityTaxPerNightPerAdult: 2,
@@ -843,24 +854,25 @@
       });
     };
 
-    const loadReservationData = () => ({
-      hasDates: Boolean(arriveIso && departIso),
-      hasTravelers: adults > 0,
-      adults,
-      children,
-      babies
-    });
+    const loadReservationData = () => {
+      const data = {
+        ...reservationData,
+        hasDates: Boolean(reservationData.arrive && reservationData.depart),
+        hasTravelers: Number(reservationData.adults) > 0
+      };
+      writeReservationDraft(data);
+      return data;
+    };
 
     const isReservationComplete = () => {
       const data = loadReservationData();
-      return data.hasDates && data.hasTravelers && diffNights(arriveIso, departIso) > 0;
+      return data.hasDates && data.hasTravelers && diffNights(data.arrive, data.depart) > 0;
     };
 
     const validateReservationForm = () => {
       const hasPayment = selectedPaymentMethod === "card" || selectedPaymentMethod === "transfer";
-      const termsAccepted = document.getElementById("acceptContractTerms")?.checked;
-      const dataAccepted = document.getElementById("acceptDataPolicy")?.checked;
-      return Boolean(isReservationComplete() && hasPayment && termsAccepted && dataAccepted);
+      const termsAccepted = document.getElementById("acceptRequiredTerms")?.checked;
+      return Boolean(isReservationComplete() && hasPayment && termsAccepted);
     };
 
     const updateSubmitButtonState = () => {
@@ -870,15 +882,16 @@
     };
 
     const buildMailHref = ({ totalLabel, nights, selectedOptions, payment }) => {
+      const data = loadReservationData();
       const body = encodeURIComponent([
         `Bonjour,`,
         ``,
         `Je souhaite confirmer ma demande pour ${location.title}.`,
-        `Arrivée : ${formatLongDate(arriveIso)}`,
-        `Départ : ${formatLongDate(departIso)}`,
-        `Adultes : ${adults}`,
-        `Enfants : ${children}`,
-        `Bébés : ${babies}`,
+        `Arrivée : ${formatLongDate(data.arrive)}`,
+        `Départ : ${formatLongDate(data.depart)}`,
+        `Adultes : ${data.adults}`,
+        `Enfants : ${data.children}`,
+        `Bébés : ${data.babies}`,
         `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
         `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
         `Paiement choisi : ${payment}`,
@@ -888,13 +901,14 @@
     };
 
     const buildWhatsappHref = ({ totalLabel, nights, selectedOptions, payment }) => {
+      const data = loadReservationData();
       const body = encodeURIComponent([
         `Bonjour, je souhaite confirmer ma demande pour ${location.title}.`,
-        `Arrivée : ${formatLongDate(arriveIso)}`,
-        `Départ : ${formatLongDate(departIso)}`,
-        `Adultes : ${adults}`,
-        `Enfants : ${children}`,
-        `Bébés : ${babies}`,
+        `Arrivée : ${formatLongDate(data.arrive)}`,
+        `Départ : ${formatLongDate(data.depart)}`,
+        `Adultes : ${data.adults}`,
+        `Enfants : ${data.children}`,
+        `Bébés : ${data.babies}`,
         `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
         `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
         `Paiement choisi : ${payment}`,
@@ -909,14 +923,14 @@
         return;
       }
 
-      const reservationData = loadReservationData();
+      const data = loadReservationData();
       const reservation = mergeReservation(location.reservation);
-      const nights = diffNights(arriveIso, departIso);
+      const nights = diffNights(data.arrive, data.depart);
       const nightlyPrice = Number(location.priceValue) || 0;
       const rentTotal = nightlyPrice * nights;
       const selectedOptions = getSelectedOptions(reservation);
       const optionsTotal = selectedOptions.reduce((sum, item) => sum + Number(item.price || 0), 0);
-      const cityTax = Number(reservation.cityTaxPerNightPerAdult || 0) * adults * nights;
+      const cityTax = Number(reservation.cityTaxPerNightPerAdult || 0) * data.adults * nights;
       const cleaningFee = Number(reservation.cleaningFee || 0);
       const serviceFee = Number(reservation.serviceFee || 0);
       const subtotalBeforeDiscount = rentTotal + optionsTotal + cityTax + cleaningFee + serviceFee;
@@ -930,10 +944,10 @@
       const depositAmount = grandTotal * (depositPercent / 100);
       const onSiteAmount = grandTotal * (onSitePercent / 100);
       const balanceAmount = Math.max(grandTotal - depositAmount - onSiteAmount, 0);
-      const balanceDate = addDays(arriveIso, -(Number(reservation.paymentSchedule.balanceDaysBeforeArrival || 0)));
+      const balanceDate = addDays(data.arrive, -(Number(reservation.paymentSchedule.balanceDaysBeforeArrival || 0)));
 
-      const arriveCard = formatDateCard(arriveIso);
-      const departCard = formatDateCard(departIso);
+      const arriveCard = formatDateCard(data.arrive);
+      const departCard = formatDateCard(data.depart);
       document.getElementById("heroImage").innerHTML = `<img src="${location.heroImage || ""}" alt="${location.title}" />`;
       document.getElementById("reservationTitle").textContent = location.title;
       document.getElementById("reservationLead").textContent = `${location.type || "Bien"} à ${location.location || "Port-de-Bouc"} avec récapitulatif premium, échéancier et conditions détaillées.`;
@@ -943,8 +957,8 @@
       document.getElementById("arriveMonth").textContent = arriveCard.month;
       document.getElementById("departDay").textContent = departCard.day;
       document.getElementById("departMonth").textContent = departCard.month;
-      document.getElementById("travelerCounts").textContent = reservationData.hasTravelers
-        ? `${adults} adulte${adults > 1 ? "s" : ""}, ${children} enfant${children > 1 ? "s" : ""}${babies ? `, ${babies} bébé${babies > 1 ? "s" : ""}` : ""}`
+      document.getElementById("travelerCounts").textContent = data.hasTravelers
+        ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}, ${data.children} enfant${data.children > 1 ? "s" : ""}${data.babies ? `, ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}`
         : "Veuillez sélectionner vos dates et voyageurs avant de continuer.";
 
       document.getElementById("priceBreakdown").innerHTML = `
@@ -979,7 +993,7 @@
         <div class="price-row">
           <div>
             <strong>Taxe de séjour</strong>
-            <small>${formatMoney(reservation.cityTaxPerNightPerAdult)} x ${adults} adulte${adults > 1 ? "s" : ""} x ${nights} nuit${nights > 1 ? "s" : ""}</small>
+            <small>${formatMoney(reservation.cityTaxPerNightPerAdult)} x ${data.adults} adulte${data.adults > 1 ? "s" : ""} x ${nights} nuit${nights > 1 ? "s" : ""}</small>
           </div>
           <strong>${formatMoney(cityTax)}</strong>
         </div>
@@ -1076,6 +1090,7 @@
         input.onchange = () => {
           selectedPaymentMethod = input.value;
           renderPaymentChoiceState();
+          updateSubmitButtonState();
           renderReservation();
         };
       });
@@ -1115,8 +1130,7 @@
         showFeedback(`Code promo ${code} appliqué.`);
       });
 
-      document.getElementById("acceptContractTerms").addEventListener("change", renderReservation);
-      document.getElementById("acceptDataPolicy").addEventListener("change", renderReservation);
+      document.getElementById("acceptRequiredTerms").addEventListener("change", updateSubmitButtonState);
       document.getElementById("acceptPromos").addEventListener("change", () => {});
       document.getElementById("continuePaymentBtn").addEventListener("click", (event) => {
         if (event.currentTarget.classList.contains("is-disabled")) {
