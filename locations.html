@@ -1133,22 +1133,9 @@
         <h3>Mes favoris</h3>
         <span class="section-note">Retrouvez ici vos annonces enregistrées.</span>
       </div>
-      <div class="favorites-tabs" role="tablist" aria-label="Favoris">
-        <button type="button" class="favorites-tab" role="tab" id="favoritesTabListings" aria-selected="true" aria-controls="favoritesPanelListings">Annonces favorites</button>
-        <button type="button" class="favorites-tab" role="tab" id="favoritesTabReperes" aria-selected="false" aria-controls="favoritesPanelReperes">Repères personnels</button>
-      </div>
-      <div id="favoritesPanelListings" class="favorites-panel" role="tabpanel" aria-labelledby="favoritesTabListings">
+      <div id="favoritesPanelListings" class="favorites-panel">
         <div class="smart-grid" id="favoritesGrid"></div>
         <p class="section-note" id="favoritesEmpty">Aucune annonce favorite pour le moment.</p>
-      </div>
-      <div id="favoritesPanelReperes" class="favorites-panel" role="tabpanel" aria-labelledby="favoritesTabReperes" hidden>
-        <p class="section-note favorites-reperes-intro">Notez ici un lieu, une envie ou un rappel : ce n’est pas lié aux annonces du catalogue.</p>
-        <div class="custom-bookmark-form">
-          <input class="custom-bookmark-input" id="customBookmarkInput" type="text" maxlength="120" placeholder="Ex. : quartier préféré, dates souhaitées…" autocomplete="off" />
-          <button type="button" class="custom-bookmark-add" id="customBookmarkAddBtn">Ajouter</button>
-        </div>
-        <ul class="custom-bookmarks-list" id="customBookmarksList" aria-label="Vos repères"></ul>
-        <p class="section-note" id="customBookmarksEmpty">Aucun repère enregistré.</p>
       </div>
     </section>
   </main>
@@ -1210,14 +1197,7 @@
     const favoritesSection = document.getElementById("favoris");
     const favoritesGrid = document.getElementById("favoritesGrid");
     const favoritesEmpty = document.getElementById("favoritesEmpty");
-    const favoritesTabListings = document.getElementById("favoritesTabListings");
-    const favoritesTabReperes = document.getElementById("favoritesTabReperes");
     const favoritesPanelListings = document.getElementById("favoritesPanelListings");
-    const favoritesPanelReperes = document.getElementById("favoritesPanelReperes");
-    const customBookmarkInput = document.getElementById("customBookmarkInput");
-    const customBookmarkAddBtn = document.getElementById("customBookmarkAddBtn");
-    const customBookmarksList = document.getElementById("customBookmarksList");
-    const customBookmarksEmpty = document.getElementById("customBookmarksEmpty");
     const searchInput = document.getElementById("searchInput");
     const searchSuggestions = document.getElementById("searchSuggestions");
     const resultsCount = document.getElementById("resultsCount");
@@ -1316,72 +1296,14 @@
       feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
     };
 
-    const setFavoritesTab = (tab, { updateUrl = true } = {}) => {
-      const isListings = tab === "listings";
-      favoritesTabListings.setAttribute("aria-selected", isListings ? "true" : "false");
-      favoritesTabReperes.setAttribute("aria-selected", isListings ? "false" : "true");
-      favoritesPanelListings.hidden = !isListings;
-      favoritesPanelReperes.hidden = isListings;
-      if (updateUrl) {
-        const nextHash = isListings ? "#favoris" : "#favoris-reperes";
-        if (window.location.hash !== nextHash) {
-          history.replaceState(null, "", nextHash);
-        }
-      }
-    };
-
-    favoritesTabListings.addEventListener("click", () => setFavoritesTab("listings"));
-    favoritesTabReperes.addEventListener("click", () => setFavoritesTab("reperes"));
-
     const applyFavoritesHash = () => {
       const h = window.location.hash;
-      if (h === "#favoris-reperes") setFavoritesTab("reperes", { updateUrl: false });
-      else if (h === "#favoris" || h === "#favoris-locations") setFavoritesTab("listings", { updateUrl: false });
+      if (h === "#favoris" || h === "#favoris-locations") {
+        favoritesPanelListings.hidden = false;
+      }
     };
 
     window.addEventListener("hashchange", applyFavoritesHash);
-
-    const renderCustomBookmarks = () => {
-      const items = getCustomBookmarks();
-      customBookmarksList.innerHTML = "";
-      customBookmarksEmpty.style.display = items.length ? "none" : "block";
-      for (const item of items) {
-        const li = document.createElement("li");
-        const label = document.createElement("span");
-        label.textContent = item.title || "";
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "custom-bookmark-remove";
-        btn.textContent = "Retirer";
-        btn.addEventListener("click", () => {
-          removeCustomBookmark(item.id);
-          renderCustomBookmarks();
-          showFeedback("Repère retiré");
-        });
-        li.appendChild(label);
-        li.appendChild(btn);
-        customBookmarksList.appendChild(li);
-      }
-    };
-
-    const addCustomBookmarkFromInput = () => {
-      const result = addCustomBookmark(customBookmarkInput.value);
-      if (!result.ok) {
-        showFeedback("Saisissez un texte");
-        return;
-      }
-      customBookmarkInput.value = "";
-      renderCustomBookmarks();
-      showFeedback("Repère ajouté");
-    };
-
-    customBookmarkAddBtn.addEventListener("click", addCustomBookmarkFromInput);
-    customBookmarkInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        addCustomBookmarkFromInput();
-      }
-    });
 
     const setFallback = (img) => {
       img.src = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;
@@ -1618,6 +1540,10 @@
       favoritesGrid.innerHTML = "";
       const favorites = getFavorites();
       const favoriteListings = listings.filter((listing) => favorites.has(listing.id));
+      const validFavoriteIds = new Set(favoriteListings.map((listing) => listing.id));
+      if (validFavoriteIds.size !== favorites.size) {
+        saveFavorites(validFavoriteIds);
+      }
       favoritesSection.style.display = favoriteListings.length ? "block" : "none";
       favoritesEmpty.style.display = favoriteListings.length ? "none" : "block";
       for (const listing of favoriteListings) {
@@ -1709,7 +1635,6 @@
       renderFilterControls();
       await renderRecommendations();
       await renderFavorites();
-      renderCustomBookmarks();
       await renderListings();
     };
 
@@ -1740,16 +1665,13 @@
         if (href === "#favoris") {
           event.preventDefault();
           closeSidebar();
-          setFavoritesTab("listings", { updateUrl: true });
-          window.setTimeout(() => {
-            document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 280);
-          return;
-        }
-        if (href === "#favoris-reperes") {
-          event.preventDefault();
-          closeSidebar();
-          setFavoritesTab("reperes", { updateUrl: true });
+          const hasVisibleFavorites = listings.some((listing) => getFavorites().has(listing.id));
+          if (!hasVisibleFavorites) {
+            history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+            showFeedback("Aucune annonce favorite pour le moment");
+            return;
+          }
+          history.replaceState(null, "", "#favoris");
           window.setTimeout(() => {
             document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
           }, 280);
@@ -1816,7 +1738,7 @@
       .then(renderAll)
       .then(() => {
         applyFavoritesHash();
-        if (window.location.hash === "#favoris" || window.location.hash === "#favoris-reperes" || window.location.hash === "#favoris-locations") {
+        if (window.location.hash === "#favoris" || window.location.hash === "#favoris-locations") {
           document.getElementById("favoris")?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
