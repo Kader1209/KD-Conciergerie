@@ -166,17 +166,17 @@
       left: 0;
       right: 0;
       z-index: 40;
-      background: rgba(248, 250, 252, 0.84);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(230, 235, 242, 0.88);
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-      transition: background 0.24s ease-in-out, box-shadow 0.24s ease-in-out, border-color 0.24s ease-in-out;
+      background: transparent;
+      backdrop-filter: none;
+      border-bottom: none;
+      box-shadow: none;
+      transition: none;
     }
 
     header.scrolled {
-      background: rgba(255, 255, 255, 0.94);
-      border-bottom-color: rgba(221, 228, 239, 0.96);
-      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+      background: transparent;
+      border-bottom: none;
+      box-shadow: none;
     }
 
     .nav {
@@ -202,10 +202,10 @@
       height: 60px;
       object-fit: contain;
       border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.8);
+      background: transparent;
       padding: 5px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(231, 238, 248, 0.88);
+      box-shadow: none;
+      border: none;
       transform-origin: center center;
       transform-style: preserve-3d;
       backface-visibility: visible;
@@ -299,18 +299,18 @@
       width: 46px;
       height: 46px;
       border-radius: var(--radius);
-      border: 1px solid #ddd5c8;
-      background: rgba(255, 250, 244, 0.86);
+      border: none;
+      background: transparent;
       cursor: pointer;
       font-size: 1.1rem;
-      box-shadow: var(--shadow-soft);
+      box-shadow: none;
       transition: transform 0.22s ease-in-out, background 0.22s ease-in-out, border-color 0.22s ease-in-out, box-shadow 0.22s ease-in-out;
     }
 
     .menu-btn:hover {
       transform: translateY(-1px);
-      background: #fff;
-      border-color: #c7d5ea;
+      background: transparent;
+      border-color: transparent;
     }
 
     .sidebar-overlay {
