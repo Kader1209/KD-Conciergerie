@@ -1883,6 +1883,7 @@
           hidden.value = iso;
           display.textContent = bookingFormatFR(iso);
           display.classList.remove("is-placeholder");
+          hidden.dispatchEvent(new Event("change", { bubbles: true }));
           closeAll();
           if (mode === "arrive") {
             const depShell = root.querySelector('[data-booking-date="depart"]');
@@ -1892,6 +1893,7 @@
             const dep = depInput ? bookingFromISO(depInput.value) : null;
             if (arr && dep && dep <= arr) {
               depInput.value = "";
+              depInput.dispatchEvent(new Event("change", { bubbles: true }));
               if (depDisp) {
                 depDisp.textContent = "jj/mm/aaaa";
                 depDisp.classList.add("is-placeholder");
