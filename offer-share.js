@@ -107,13 +107,13 @@
         border-color: rgba(30, 64, 175, 0.2);
       }
       .share-sheet__btn--primary {
-        background: #142c66;
+        background: #0f766e;
         color: #fff;
-        border-color: #142c66;
+        border-color: #0f766e;
       }
       .share-sheet__btn--primary:hover {
-        background: #1a3a8b;
-        border-color: #1a3a8b;
+        background: #0b5f59;
+        border-color: #0b5f59;
       }
       a.share-sheet__btn { text-decoration: none; }
     `;
@@ -150,9 +150,7 @@
           <button type="button" class="share-sheet__btn" id="kdOfferShareCopy">Copier le lien</button>
           <a class="share-sheet__btn" id="kdOfferShareWa" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <a class="share-sheet__btn" id="kdOfferShareFb" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a class="share-sheet__btn" id="kdOfferShareTw" target="_blank" rel="noopener noreferrer">X</a>
-          <a class="share-sheet__btn" id="kdOfferShareLi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="share-sheet__btn" id="kdOfferShareMail">E-mail</a>
+          <a class="share-sheet__btn" id="kdOfferShareIg" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </div>
     `;
@@ -210,9 +208,7 @@
     el.querySelector("#kdOfferShareNative").hidden = typeof navigator.share !== "function";
     el.querySelector("#kdOfferShareWa").href = `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
     el.querySelector("#kdOfferShareFb").href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    el.querySelector("#kdOfferShareTw").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-    el.querySelector("#kdOfferShareLi").href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-    el.querySelector("#kdOfferShareMail").href = `mailto:?subject=${encodeURIComponent(t)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`;
+    el.querySelector("#kdOfferShareIg").href = `https://www.instagram.com/`;
 
     el.classList.add("is-open");
     el.setAttribute("aria-hidden", "false");

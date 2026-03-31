@@ -1629,7 +1629,10 @@
       next.set("id", id);
       if (arriveIso) next.set("arrive", arriveIso);
       if (departIso) next.set("depart", departIso);
-      if (guests) next.set("guests", guests);
+      if (guests) {
+        next.set("guests", guests);
+        next.set("adults", guests);
+      }
       return `./reservation.html?${next.toString()}`;
     };
 
@@ -1682,6 +1685,18 @@
         noteEl.textContent = hasNightlyPrice
           ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${guests} voyageur${guests > 1 ? "s" : ""}.`
           : `Durée sélectionnée : ${nightsLabel} pour ${guests} voyageur${guests > 1 ? "s" : ""}. Le tarif exact sera confirmé sur demande.`;
+
+        try {
+          window.sessionStorage.setItem("kd-reservation-draft", JSON.stringify({
+            id: location.id,
+            arrive: arriveIso,
+            depart: departIso,
+            guests,
+            adults: guests,
+            children: 0,
+            babies: 0
+          }));
+        } catch {}
 
         requestBtn.textContent = "Continuer la réservation";
         requestBtn.href = buildReservationPageHref({
