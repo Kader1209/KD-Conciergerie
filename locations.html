@@ -1049,23 +1049,11 @@
       </a>
 
       <nav class="nav-links" id="navLinks" aria-label="Menu" aria-hidden="true">
-        <div class="nav-links__group">
-          <span class="nav-links__heading">Parcourir le site</span>
-          <a href="./index.html">Accueil</a>
-          <a href="./estimation.html">Estimation</a>
-          <a href="./index.html#faq">FAQ</a>
-          <a href="./index.html#contact">Contact</a>
-        </div>
-        <div class="nav-links__divider" role="presentation"></div>
-        <div class="nav-links__group">
-          <span class="nav-links__heading">Locations disponibles</span>
-          <a href="./locations.html" class="is-active">Voir le catalogue</a>
-        </div>
-        <div class="nav-links__divider" role="presentation"></div>
-        <div class="nav-links__group">
-          <span class="nav-links__heading">Favoris</span>
-          <a href="#favoris">Annonces enregistrées</a>
-        </div>
+        <a href="./index.html">Accueil</a>
+        <a href="./estimation.html">Estimation</a>
+        <a href="./locations.html" class="is-active">Locations disponibles</a>
+        <a href="./index.html#faq">FAQ</a>
+        <a href="./index.html#contact">Contact</a>
       </nav>
 
       <button class="menu-btn" id="menuBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">☰</button>
@@ -1076,7 +1064,6 @@
 
   <main class="container">
     <section class="page-hero reveal">
-      <div class="page-badge">Sélection KD</div>
       <h1>Locations disponibles</h1>
       <p class="hero-text">Découvrez nos biens soigneusement sélectionnés, présentés dans une grille claire, compacte et élégante pour une lecture immédiate.</p>
       <div class="hero-insights" id="heroInsights"></div>
@@ -1220,6 +1207,7 @@
     const grid = document.getElementById("locationsGrid");
     const heroInsights = document.getElementById("heroInsights");
     const recommendedGrid = document.getElementById("recommendedGrid");
+    const favoritesSection = document.getElementById("favoris");
     const favoritesGrid = document.getElementById("favoritesGrid");
     const favoritesEmpty = document.getElementById("favoritesEmpty");
     const favoritesTabListings = document.getElementById("favoritesTabListings");
@@ -1630,6 +1618,7 @@
       favoritesGrid.innerHTML = "";
       const favorites = getFavorites();
       const favoriteListings = listings.filter((listing) => favorites.has(listing.id));
+      favoritesSection.style.display = favoriteListings.length ? "block" : "none";
       favoritesEmpty.style.display = favoriteListings.length ? "none" : "block";
       for (const listing of favoriteListings) {
         await buildSmartCard(listing, favoritesGrid, { share: true });
