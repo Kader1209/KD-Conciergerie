@@ -1624,6 +1624,15 @@
       return `https://wa.me/33781957161?text=${message}`;
     };
 
+    const buildReservationPageHref = ({ id, arriveIso, departIso, guests }) => {
+      const next = new URLSearchParams();
+      next.set("id", id);
+      if (arriveIso) next.set("arrive", arriveIso);
+      if (departIso) next.set("depart", departIso);
+      if (guests) next.set("guests", guests);
+      return `./reservation.html?${next.toString()}`;
+    };
+
     const initBookingSummary = (root, location) => {
       const arriveInput = root.querySelector("#bookArrive");
       const departInput = root.querySelector("#bookDepart");
@@ -1674,15 +1683,12 @@
           ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${guests} voyageur${guests > 1 ? "s" : ""}.`
           : `Durée sélectionnée : ${nightsLabel} pour ${guests} voyageur${guests > 1 ? "s" : ""}. Le tarif exact sera confirmé sur demande.`;
 
-        requestBtn.textContent = "Demander cette réservation";
-        requestBtn.href = buildBookingRequestHref({
-          title: location.title,
-          location: location.location,
+        requestBtn.textContent = "Continuer la réservation";
+        requestBtn.href = buildReservationPageHref({
+          id: location.id,
           arriveIso,
           departIso,
-          guests,
-          totalLabel,
-          nights
+          guests
         });
         requestBtn.classList.remove("is-disabled");
         whatsappBtn.href = buildBookingWhatsappHref({
