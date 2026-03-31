@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Réservation premium KD Conciergerie - récapitulatif complet, prix détaillés, conditions et choix du paiement." />
+  <title>Réservation | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #e6ebf2;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --sand: #b79073;
+      --sand-deep: #a88063;
+      --green-soft: #e8f5f1;
+      --green-deep: #1f6f63;
+      --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.06);
+      --shadow-hover: 0 18px 38px rgba(15, 23, 42, 0.1);
+      --radius: 18px;
+      --radius-lg: 28px;
+      --max: 1080px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.06), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.05), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 18px 0 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: rgba(255, 255, 255, 0.9);
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+    }
+
+    main {
+      padding: 6px 0 36px;
+    }
+
+    .reservation-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .hero-image {
+      aspect-ratio: 16 / 5.8;
+      background: linear-gradient(135deg, #eef4ff, #edf9f6);
+    }
+
+    .hero-image img {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-body {
+      padding: 18px 18px 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 3vw, 2.7rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      color: #0f172a;
+    }
+
+    .lead {
+      color: #475569;
+      max-width: 62ch;
+    }
+
+    .date-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 420px;
+    }
+
+    .date-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+      text-align: center;
+    }
+
+    .date-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .date-day {
+      margin-top: 10px;
+      font-size: 2.15rem;
+      font-weight: 800;
+      line-height: 1;
+      color: #0f172a;
+    }
+
+    .date-month {
+      margin-top: 10px;
+      font-size: 0.98rem;
+      color: #334155;
+    }
+
+    .section {
+      padding: 22px 22px 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .edit-link {
+      color: var(--sand);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .traveler-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 2px 0 0;
+    }
+
+    .traveler-counts {
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .price-breakdown,
+    .payment-schedule,
+    .notes-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .price-row,
+    .schedule-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .price-row strong,
+    .schedule-row strong {
+      color: #0f172a;
+      font-size: 1rem;
+    }
+
+    .price-row small,
+    .schedule-row small {
+      display: block;
+      margin-top: 4px;
+      color: #94a3b8;
+      font-size: 0.82rem;
+    }
+
+    .highlight-row {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--green-soft);
+      border: 1px solid rgba(190, 225, 214, 0.96);
+    }
+
+    .price-total {
+      padding-top: 6px;
+      border-top: 1px solid rgba(230, 235, 242, 0.96);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .promo-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .field input {
+      min-height: 46px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .btn-inline {
+      min-height: 46px;
+      padding: 0 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(183, 144, 115, 0.18);
+      background: linear-gradient(180deg, var(--sand), var(--sand-deep));
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .notes-list ul,
+    .deposit-list ul {
+      padding-left: 1.2rem;
+      color: #334155;
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .payment-choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .payment-choice.active {
+      border-color: rgba(183, 144, 115, 0.46);
+      background: rgba(255, 252, 249, 0.95);
+      box-shadow: 0 10px 22px rgba(183, 144, 115, 0.08);
+    }
+
+    .payment-choice input {
+      margin-top: 4px;
+      accent-color: var(--sand);
+    }
+
+    .payment-choice strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #0f172a;
+    }
+
+    .payment-choice span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .reassurance-box {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.96);
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .reassurance-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+
+    .checks {
+      display: grid;
+      gap: 14px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: #334155;
+    }
+
+    .check-row input {
+      margin-top: 3px;
+      accent-color: var(--sand);
+    }
+
+    .check-row a {
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .cta-area {
+      display: grid;
+      gap: 12px;
+    }
+
+    .cta-button,
+    .secondary-button {
+      min-height: 54px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 18px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-button {
+      background: linear-gradient(180deg, var(--sand), var(--sand-deep));
+      color: #fff;
+      box-shadow: 0 16px 32px rgba(183, 144, 115, 0.2);
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      background: #fff;
+      color: #0f172a;
+    }
+
+    .cta-button:hover,
+    .secondary-button:hover,
+    .btn-inline:hover {
+      transform: translateY(-1px);
+    }
+
+    .is-disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    .small-note {
+      color: #94a3b8;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(12px);
+      min-width: 220px;
+      max-width: min(92vw, 460px);
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      z-index: 60;
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 760px) {
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .promo-row {
+        grid-template-columns: 1fr;
+      }
+
+      .price-row,
+      .schedule-row,
+      .price-total,
+      .traveler-summary {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <div class="topbar">
+      <a href="./location-detail.html" class="back-link" id="backToListing">← Retour à l’annonce</a>
+      <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="reservation-shell">
+      <section class="card">
+        <div class="hero-image" id="heroImage"></div>
+        <div class="hero-body">
+          <span class="eyebrow">Réservation premium</span>
+          <h1 id="reservationTitle">Votre séjour KD Conciergerie</h1>
+          <p class="lead" id="reservationLead">Un récapitulatif clair, détaillé et rassurant avant la confirmation finale.</p>
+          <div class="date-cards">
+            <article class="date-card">
+              <div class="date-label">Arrivée</div>
+              <div class="date-day" id="arriveDay">-</div>
+              <div class="date-month" id="arriveMonth">À préciser</div>
+            </article>
+            <article class="date-card">
+              <div class="date-label">Départ</div>
+              <div class="date-day" id="departDay">-</div>
+              <div class="date-month" id="departMonth">À préciser</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="traveler-summary">
+          <div>
+            <div class="section-title">Détails des voyageurs</div>
+            <div class="traveler-counts" id="travelerCounts">1 adulte, 0 enfant</div>
+          </div>
+          <a class="edit-link" id="editStayLink" href="./location-detail.html">Modifier</a>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Décomposition complète des prix</div>
+            <div class="section-note">Calcul automatique selon le bien, les nuits, les taxes et les services choisis.</div>
+          </div>
+        </div>
+        <div class="price-breakdown" id="priceBreakdown"></div>
+        <div class="price-total">
+          <span>Total final</span>
+          <span id="grandTotal">-</span>
+        </div>
+        <div class="promo-row">
+          <div class="field">
+            <label for="promoCodeInput">Code promo</label>
+            <input id="promoCodeInput" type="text" placeholder="Ex. : ETE10" autocomplete="off" />
+          </div>
+          <button class="btn-inline" id="applyPromoBtn" type="button">Appliquer</button>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Répartition du paiement</div>
+            <div class="section-note">Un échéancier clair avant toute confirmation.</div>
+          </div>
+        </div>
+        <div class="payment-schedule" id="paymentSchedule"></div>
+        <div class="price-total">
+          <span>Total</span>
+          <span id="scheduleTotal">-</span>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Services inclus</div>
+        <div class="notes-list">
+          <ul id="includedServices"></ul>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Services optionnels</div>
+        <div id="optionalServices"></div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Notes complémentaires</div>
+        <div class="notes-list">
+          <ul id="notesList"></ul>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Caution (remboursable)</div>
+        <div class="deposit-list">
+          <ul id="depositList"></ul>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Modalité de paiement</div>
+        <div class="choice-grid" id="paymentChoices">
+          <label class="payment-choice active">
+            <input type="radio" name="paymentMethod" value="card" checked />
+            <div>
+              <strong>Carte bancaire</strong>
+              <span>Paiement en ligne après confirmation du séjour.</span>
+            </div>
+          </label>
+          <label class="payment-choice">
+            <input type="radio" name="paymentMethod" value="transfer" />
+            <div>
+              <strong>Virement bancaire</strong>
+              <span>Coordonnées transmises après validation de la demande.</span>
+            </div>
+          </label>
+        </div>
+        <div class="reassurance-box">
+          <strong>Votre réservation est en attente de confirmation.</strong>
+          <div id="reassuranceText">KD Conciergerie traite votre demande avec soin. Aucun montant n’est débité immédiatement tant que la disponibilité n’est pas confirmée.</div>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-title">Conditions</div>
+        <div class="checks">
+          <label class="check-row">
+            <input type="checkbox" id="acceptContractTerms" />
+            <span>J’ai lu et accepté les <a href="./index.html#contact">conditions générales de contrat</a>.</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="acceptDataPolicy" />
+            <span>J’accepte la politique de protection des données.</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="acceptPromos" />
+            <span>J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="cta-area">
+          <a class="cta-button is-disabled" id="continuePaymentBtn" href="https://wa.me/33781957161" target="_blank" rel="noopener noreferrer">CONTINUER LE PAIEMENT</a>
+          <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
+          <p class="small-note">Le bouton final devient actif après acceptation des conditions et calcul valide du séjour.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script src="./site-intelligence.js?v=2"></script>
+  <script src="./locations-data.js?v=2"></script>
+  <script>
+    const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
+    const { enrichListing } = window.KDSite;
+
+    const params = new URLSearchParams(window.location.search);
+    const locationId = params.get("id");
+    const arriveIso = params.get("arrive") || "";
+    const departIso = params.get("depart") || "";
+    const adults = Number(params.get("adults") || params.get("guests") || 1);
+    const children = Number(params.get("children") || 0);
+    const babies = Number(params.get("babies") || 0);
+
+    const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
+    let location = fallbackLocations.find((item) => item.id === locationId) || null;
+    let feedbackTimeout;
+    let activePromo = null;
+    let selectedOptionKeys = new Set();
+
+    const DEFAULT_RESERVATION = {
+      cityTaxPerNightPerAdult: 2,
+      cleaningFee: 45,
+      serviceFee: 30,
+      securityDeposit: 300,
+      securityDepositMethod: "Carte bancaire",
+      securityDepositDue: "Avant l’arrivée",
+      refundTerms: "Restituée après vérification du logement.",
+      checkInWindow: "Arrivée entre 17:00 et 20:00",
+      checkOutWindow: "Départ avant 10:00",
+      keyHandover: "Remise des clés organisée avant votre arrivée.",
+      contactTiming: "Prise de contact avant le séjour pour confirmer l’accueil.",
+      specialNotes: [
+        "Merci de confirmer votre heure d’arrivée avant le séjour."
+      ],
+      includedServices: [
+        "Linge de maison inclus",
+        "WiFi inclus"
+      ],
+      optionalServices: [
+        { key: "baby-bed", label: "Lit bébé", description: "Installation sur demande.", price: 18 }
+      ],
+      paymentSchedule: {
+        depositPercent: 30,
+        balanceDaysBeforeArrival: 10,
+        onSitePercent: 0
+      },
+      promoCodes: {}
+    };
+
+    const showFeedback = (message) => {
+      const uiFeedback = document.getElementById("uiFeedback");
+      uiFeedback.textContent = message;
+      uiFeedback.classList.add("visible");
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1800);
+    };
+
+    const formatMoney = (value) =>
+      new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value || 0));
+
+    const formatDateCard = (iso) => {
+      if (!iso) return { day: "-", month: "À préciser" };
+      const parts = iso.split("-").map(Number);
+      if (parts.length !== 3) return { day: "-", month: "À préciser" };
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return {
+        day: String(date.getDate()).padStart(2, "0"),
+        month: date.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }).replace(/^\w/, (c) => c.toUpperCase())
+      };
+    };
+
+    const diffNights = (startIso, endIso) => {
+      if (!startIso || !endIso) return 0;
+      const start = new Date(startIso);
+      const end = new Date(endIso);
+      const diff = Math.round((end - start) / 86400000);
+      return diff > 0 ? diff : 0;
+    };
+
+    const addDays = (iso, days) => {
+      if (!iso) return "";
+      const date = new Date(iso);
+      date.setDate(date.getDate() + days);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    };
+
+    const formatLongDate = (iso) => {
+      if (!iso) return "À préciser";
+      const date = new Date(iso);
+      return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    };
+
+    const mergeReservation = (base) => ({
+      ...DEFAULT_RESERVATION,
+      ...(base || {}),
+      paymentSchedule: {
+        ...DEFAULT_RESERVATION.paymentSchedule,
+        ...((base || {}).paymentSchedule || {})
+      },
+      specialNotes: Array.isArray((base || {}).specialNotes) ? base.specialNotes : DEFAULT_RESERVATION.specialNotes,
+      includedServices: Array.isArray((base || {}).includedServices) ? base.includedServices : DEFAULT_RESERVATION.includedServices,
+      optionalServices: Array.isArray((base || {}).optionalServices) ? base.optionalServices : DEFAULT_RESERVATION.optionalServices,
+      promoCodes: typeof ((base || {}).promoCodes) === "object" && base.promoCodes ? base.promoCodes : DEFAULT_RESERVATION.promoCodes
+    });
+
+    const buildRemoteReservation = () => ({
+      ...DEFAULT_RESERVATION,
+      includedServices: [
+        "Linge de maison inclus",
+        "Internet WiFi inclus",
+        "Climatisation incluse"
+      ],
+      optionalServices: [
+        { key: "baby-bed", label: "Lit bébé", description: "Préparation avant arrivée.", price: 18 },
+        { key: "late-arrival", label: "Arrivée hors horaires", description: "Organisation tardive de l’accueil.", price: 25 },
+        { key: "breakfast", label: "Petit-déjeuner d’accueil", description: "Prévu pour le premier matin.", price: 22 }
+      ]
+    });
+
+    const normalizeRemoteLocation = (row) =>
+      enrichListing({
+        id: row.id,
+        title: row.title || "Annonce",
+        type: row.type || "Appartement",
+        location: row.location || "Port-de-Bouc",
+        heroImage: row.image_url || (row.images || [])[0] || "",
+        gallery: [row.image_url, ...(row.images || [])].filter(Boolean),
+        description: row.description || "Description à venir.",
+        fullDescription: row.description || "Description à venir.",
+        priceValue: Number(row.price) || null,
+        price: row.price ? `${formatMoney(row.price)} / nuit` : "Sur demande",
+        equipments: [
+          "WiFi",
+          "Climatisation",
+          "Linge de maison fourni"
+        ],
+        reservation: buildRemoteReservation()
+      });
+
+    const loadRemoteLocation = async () => {
+      if (!locationId) return null;
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&id=eq.${encodeURIComponent(locationId)}`, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error("Impossible de charger la réservation");
+        const rows = await response.json();
+        if (Array.isArray(rows) && rows.length) return normalizeRemoteLocation(rows[0]);
+      } catch (error) {
+        console.error(error);
+      }
+      return null;
+    };
+
+    const getSelectedOptions = (reservation) =>
+      reservation.optionalServices.filter((item) => selectedOptionKeys.has(item.key));
+
+    const getSelectedPayment = () =>
+      document.querySelector('input[name="paymentMethod"]:checked')?.value === "transfer" ? "Virement bancaire" : "Carte bancaire";
+
+    const computeDiscount = (subtotal, reservation) => {
+      if (!activePromo) return { amount: 0, label: "" };
+      const promo = reservation.promoCodes[activePromo];
+      if (!promo) return { amount: 0, label: "" };
+      if (promo.type === "percent") return { amount: (subtotal * promo.value) / 100, label: promo.label || activePromo };
+      if (promo.type === "fixed") return { amount: promo.value, label: promo.label || activePromo };
+      return { amount: 0, label: "" };
+    };
+
+    const renderPaymentChoiceState = () => {
+      document.querySelectorAll(".payment-choice").forEach((choice) => {
+        const input = choice.querySelector('input[type="radio"]');
+        choice.classList.toggle("active", !!input?.checked);
+      });
+    };
+
+    const buildMailHref = ({ totalLabel, nights, selectedOptions, payment }) => {
+      const body = encodeURIComponent([
+        `Bonjour,`,
+        ``,
+        `Je souhaite confirmer ma demande pour ${location.title}.`,
+        `Arrivée : ${formatLongDate(arriveIso)}`,
+        `Départ : ${formatLongDate(departIso)}`,
+        `Adultes : ${adults}`,
+        `Enfants : ${children}`,
+        `Bébés : ${babies}`,
+        `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
+        `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
+        `Paiement choisi : ${payment}`,
+        `Total estimé : ${totalLabel}`
+      ].join("\n"));
+      return `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(`Demande de réservation - ${location.title}`)}&body=${body}`;
+    };
+
+    const buildWhatsappHref = ({ totalLabel, nights, selectedOptions, payment }) => {
+      const body = encodeURIComponent([
+        `Bonjour, je souhaite confirmer ma demande pour ${location.title}.`,
+        `Arrivée : ${formatLongDate(arriveIso)}`,
+        `Départ : ${formatLongDate(departIso)}`,
+        `Adultes : ${adults}`,
+        `Enfants : ${children}`,
+        `Bébés : ${babies}`,
+        `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
+        `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
+        `Paiement choisi : ${payment}`,
+        `Total estimé : ${totalLabel}`
+      ].join("\n"));
+      return `https://wa.me/33781957161?text=${body}`;
+    };
+
+    const renderReservation = () => {
+      if (!location) {
+        document.querySelector("main").innerHTML = `<section class="card section"><div class="section-title">Réservation introuvable</div><p class="section-note">Aucune annonce valide n’a été trouvée pour cette réservation.</p></section>`;
+        return;
+      }
+
+      const reservation = mergeReservation(location.reservation);
+      const nights = diffNights(arriveIso, departIso);
+      const nightlyPrice = Number(location.priceValue) || 0;
+      const rentTotal = nightlyPrice * nights;
+      const selectedOptions = getSelectedOptions(reservation);
+      const optionsTotal = selectedOptions.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      const cityTax = Number(reservation.cityTaxPerNightPerAdult || 0) * adults * nights;
+      const cleaningFee = Number(reservation.cleaningFee || 0);
+      const serviceFee = Number(reservation.serviceFee || 0);
+      const subtotalBeforeDiscount = rentTotal + optionsTotal + cityTax + cleaningFee + serviceFee;
+      const discount = computeDiscount(subtotalBeforeDiscount, reservation);
+      const discountAmount = Math.min(Number(discount.amount || 0), subtotalBeforeDiscount);
+      const grandTotal = Math.max(subtotalBeforeDiscount - discountAmount, 0);
+      const payment = getSelectedPayment();
+
+      const depositPercent = Number(reservation.paymentSchedule.depositPercent || 0);
+      const onSitePercent = Number(reservation.paymentSchedule.onSitePercent || 0);
+      const depositAmount = grandTotal * (depositPercent / 100);
+      const onSiteAmount = grandTotal * (onSitePercent / 100);
+      const balanceAmount = Math.max(grandTotal - depositAmount - onSiteAmount, 0);
+      const balanceDate = addDays(arriveIso, -(Number(reservation.paymentSchedule.balanceDaysBeforeArrival || 0)));
+
+      const arriveCard = formatDateCard(arriveIso);
+      const departCard = formatDateCard(departIso);
+      document.getElementById("heroImage").innerHTML = `<img src="${location.heroImage || ""}" alt="${location.title}" />`;
+      document.getElementById("reservationTitle").textContent = location.title;
+      document.getElementById("reservationLead").textContent = `${location.type || "Bien"} à ${location.location || "Port-de-Bouc"} avec récapitulatif premium, échéancier et conditions détaillées.`;
+      document.getElementById("backToListing").href = `./location-detail.html?id=${location.id}`;
+      document.getElementById("editStayLink").href = `./location-detail.html?id=${location.id}`;
+      document.getElementById("arriveDay").textContent = arriveCard.day;
+      document.getElementById("arriveMonth").textContent = arriveCard.month;
+      document.getElementById("departDay").textContent = departCard.day;
+      document.getElementById("departMonth").textContent = departCard.month;
+      document.getElementById("travelerCounts").textContent = `${adults} adulte${adults > 1 ? "s" : ""}, ${children} enfant${children > 1 ? "s" : ""}${babies ? `, ${babies} bébé${babies > 1 ? "s" : ""}` : ""}`;
+
+      document.getElementById("priceBreakdown").innerHTML = `
+        <div class="price-row">
+          <div>
+            <strong>Montant total du loyer</strong>
+            <small>${nights ? `${formatMoney(nightlyPrice)} x ${nights} nuit${nights > 1 ? "s" : ""}` : "Dates non sélectionnées"}</small>
+          </div>
+          <strong>${formatMoney(rentTotal)}</strong>
+        </div>
+        <div class="price-row">
+          <div>
+            <strong>Frais de ménage</strong>
+            <small>Préparation et remise en état du logement</small>
+          </div>
+          <strong>${formatMoney(cleaningFee)}</strong>
+        </div>
+        <div class="price-row">
+          <div>
+            <strong>Gestion du séjour</strong>
+            <small>Suivi, coordination et accompagnement avant l’arrivée</small>
+          </div>
+          <strong>${formatMoney(serviceFee)}</strong>
+        </div>
+        <div class="price-row">
+          <div>
+            <strong>Services optionnels</strong>
+            <small>${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucun service sélectionné"}</small>
+          </div>
+          <strong>${formatMoney(optionsTotal)}</strong>
+        </div>
+        <div class="price-row">
+          <div>
+            <strong>Taxe de séjour</strong>
+            <small>${formatMoney(reservation.cityTaxPerNightPerAdult)} x ${adults} adulte${adults > 1 ? "s" : ""} x ${nights} nuit${nights > 1 ? "s" : ""}</small>
+          </div>
+          <strong>${formatMoney(cityTax)}</strong>
+        </div>
+        <div class="price-row">
+          <div>
+            <strong>Réduction éventuelle</strong>
+            <small>${activePromo ? `${activePromo}${discount.label ? ` • ${discount.label}` : ""}` : "Aucun code promo appliqué"}</small>
+          </div>
+          <strong>${discountAmount ? `- ${formatMoney(discountAmount)}` : formatMoney(0)}</strong>
+        </div>
+      `;
+
+      document.getElementById("grandTotal").textContent = formatMoney(grandTotal);
+
+      document.getElementById("paymentSchedule").innerHTML = `
+        <div class="schedule-row highlight-row">
+          <div>
+            <strong>À la réservation</strong>
+            <small>${depositPercent}% du total</small>
+          </div>
+          <strong>${formatMoney(depositAmount)}</strong>
+        </div>
+        <div class="schedule-row">
+          <div>
+            <strong>À payer le ${formatLongDate(balanceDate)}</strong>
+            <small>Solde avant l’arrivée</small>
+          </div>
+          <strong>${formatMoney(balanceAmount)}</strong>
+        </div>
+        <div class="schedule-row">
+          <div>
+            <strong>Sur place</strong>
+            <small>${onSitePercent ? "Montant à régler sur place" : "Aucun paiement sur place prévu"}</small>
+          </div>
+          <strong>${formatMoney(onSiteAmount)}</strong>
+        </div>
+      `;
+
+      document.getElementById("scheduleTotal").textContent = formatMoney(grandTotal);
+
+      document.getElementById("includedServices").innerHTML = reservation.includedServices.map((item) => `<li>${item}</li>`).join("");
+
+      document.getElementById("optionalServices").innerHTML = reservation.optionalServices.map((item) => `
+        <label class="price-row" style="padding: 14px 0; border-bottom: 1px solid rgba(230, 235, 242, 0.8);">
+          <div>
+            <strong>${item.label}</strong>
+            <small>${item.description}</small>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <strong>${formatMoney(item.price)}</strong>
+            <input type="checkbox" data-option="${item.key}" ${selectedOptionKeys.has(item.key) ? "checked" : ""} />
+          </div>
+        </label>
+      `).join("");
+
+      document.getElementById("notesList").innerHTML = [
+        `Heures d’arrivée : ${reservation.checkInWindow}`,
+        `Heure de départ : ${reservation.checkOutWindow}`,
+        `Remise des clés : ${reservation.keyHandover}`,
+        `Contact avant arrivée : ${reservation.contactTiming}`,
+        ...reservation.specialNotes
+      ].map((item) => `<li>${item}</li>`).join("");
+
+      document.getElementById("depositList").innerHTML = [
+        `Montant : ${formatMoney(reservation.securityDeposit)}`,
+        `Forme de paiement : ${reservation.securityDepositMethod}`,
+        `Moment du paiement : ${reservation.securityDepositDue}`,
+        `${reservation.refundTerms}`
+      ].map((item) => `<li>${item}</li>`).join("");
+
+      document.getElementById("reassuranceText").textContent =
+        payment === "Virement bancaire"
+          ? "Votre demande est traitée sous 48 heures. Les coordonnées bancaires vous sont envoyées après confirmation, sans débit immédiat."
+          : "Votre réservation est étudiée avec soin. Aucun montant n’est débité immédiatement tant que la disponibilité finale n’est pas confirmée.";
+
+      const emailReservationBtn = document.getElementById("emailReservationBtn");
+      const continuePaymentBtn = document.getElementById("continuePaymentBtn");
+      emailReservationBtn.href = buildMailHref({
+        totalLabel: formatMoney(grandTotal),
+        nights,
+        selectedOptions,
+        payment
+      });
+      continuePaymentBtn.href = buildWhatsappHref({
+        totalLabel: formatMoney(grandTotal),
+        nights,
+        selectedOptions,
+        payment
+      });
+
+      const ready = nights > 0 && document.getElementById("acceptContractTerms").checked && document.getElementById("acceptDataPolicy").checked;
+      continuePaymentBtn.classList.toggle("is-disabled", !ready);
+
+      document.querySelectorAll(".payment-choice input").forEach((input) => {
+        input.onchange = () => {
+          renderPaymentChoiceState();
+          renderReservation();
+        };
+      });
+
+      document.querySelectorAll("[data-option]").forEach((input) => {
+        input.onchange = () => {
+          const key = input.getAttribute("data-option");
+          if (!key) return;
+          if (input.checked) selectedOptionKeys.add(key);
+          else selectedOptionKeys.delete(key);
+          renderReservation();
+        };
+      });
+    };
+
+    const bindStaticEvents = () => {
+      document.getElementById("applyPromoBtn").addEventListener("click", () => {
+        const reservation = mergeReservation(location?.reservation);
+        const input = document.getElementById("promoCodeInput");
+        const code = String(input.value || "").trim().toUpperCase();
+        if (!code) {
+          activePromo = null;
+          renderReservation();
+          showFeedback("Aucun code promo saisi.");
+          return;
+        }
+        if (!reservation.promoCodes[code]) {
+          activePromo = null;
+          renderReservation();
+          showFeedback("Code promo non reconnu.");
+          return;
+        }
+        activePromo = code;
+        renderReservation();
+        showFeedback(`Code promo ${code} appliqué.`);
+      });
+
+      document.getElementById("acceptContractTerms").addEventListener("change", renderReservation);
+      document.getElementById("acceptDataPolicy").addEventListener("change", renderReservation);
+      document.getElementById("acceptPromos").addEventListener("change", () => {});
+      document.getElementById("continuePaymentBtn").addEventListener("click", (event) => {
+        if (event.currentTarget.classList.contains("is-disabled")) {
+          event.preventDefault();
+          showFeedback("Veuillez accepter les conditions et vérifier les dates du séjour.");
+        }
+      });
+    };
+
+    Promise.resolve(location ? location : loadRemoteLocation()).then((resolved) => {
+      if (resolved) location = resolved;
+      bindStaticEvents();
+      renderPaymentChoiceState();
+      renderReservation();
+    });
+  </script>
+</body>
+</html>
