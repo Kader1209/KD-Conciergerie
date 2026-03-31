@@ -502,6 +502,28 @@
       border-bottom: 1px solid rgba(230, 235, 242, 0.96);
     }
 
+    .booking-total-banner {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(30, 64, 175, 0.08), rgba(15, 118, 110, 0.06));
+      border: 1px solid rgba(30, 64, 175, 0.12);
+      display: grid;
+      gap: 6px;
+    }
+
+    .booking-total-banner strong {
+      font-size: 1.35rem;
+      color: #0f172a;
+      letter-spacing: -0.03em;
+    }
+
+    .booking-total-banner span {
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
     .booking-price-row strong {
       font-size: 1.35rem;
       font-weight: 700;
@@ -787,6 +809,107 @@
       font-size: 0.78rem;
       color: #94a3b8;
       line-height: 1.45;
+    }
+
+    .booking-summary {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.92);
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      display: grid;
+      gap: 10px;
+    }
+
+    .booking-summary[hidden] {
+      display: none;
+    }
+
+    .booking-summary-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.86rem;
+      color: #475569;
+    }
+
+    .booking-summary-line strong {
+      color: #0f172a;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .booking-summary-note {
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .booking-request-btn {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.18);
+      background: linear-gradient(180deg, #1e40af, #15338d);
+      color: #fff;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 16px;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      box-shadow: 0 14px 28px rgba(30, 64, 175, 0.18);
+    }
+
+    .booking-request-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .booking-request-btn.is-disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    .booking-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .booking-whatsapp-btn {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 118, 110, 0.18);
+      background: linear-gradient(180deg, #12b886, #0f9f74);
+      color: #fff;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 16px;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      box-shadow: 0 14px 28px rgba(15, 184, 134, 0.18);
+    }
+
+    .booking-whatsapp-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .booking-whatsapp-btn.is-disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      box-shadow: none;
     }
 
     .listing-stats-inline {
@@ -1456,6 +1579,130 @@
       return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
     };
 
+    const bookingDiffNights = (arriveIso, departIso) => {
+      const arrive = bookingFromISO(arriveIso);
+      const depart = bookingFromISO(departIso);
+      if (!arrive || !depart) return 0;
+      const diff = Math.round((bookingStartOfDay(depart) - bookingStartOfDay(arrive)) / 86400000);
+      return diff > 0 ? diff : 0;
+    };
+
+    const buildBookingRequestHref = ({ title, location, arriveIso, departIso, guests, totalLabel, nights }) => {
+      const subject = encodeURIComponent(`Demande de réservation - ${title}`);
+      const body = encodeURIComponent(
+        [
+          `Bonjour,`,
+          ``,
+          `Je souhaite obtenir une confirmation de disponibilité pour ce logement : ${title}.`,
+          `Localisation : ${location || "Non précisée"}`,
+          `Arrivée : ${bookingFormatFR(arriveIso) || "À préciser"}`,
+          `Départ : ${bookingFormatFR(departIso) || "À préciser"}`,
+          `Voyageurs : ${guests || "À préciser"}`,
+          nights ? `Durée : ${nights} nuit${nights > 1 ? "s" : ""}` : `Durée : À préciser`,
+          totalLabel ? `Budget estimatif affiché : ${totalLabel}` : `Budget estimatif : Sur demande`,
+          ``,
+          `Merci de me recontacter avec la disponibilité et les conditions.`,
+          ``,
+          `Cordialement`
+        ].join("\n")
+      );
+      return `mailto:kd.conciergerie13@gmail.com?subject=${subject}&body=${body}`;
+    };
+
+    const buildBookingWhatsappHref = ({ title, location, arriveIso, departIso, guests, totalLabel, nights }) => {
+      const message = encodeURIComponent(
+        [
+          `Bonjour, je souhaite réserver ce logement : ${title}.`,
+          `Localisation : ${location || "Non précisée"}`,
+          `Arrivée : ${bookingFormatFR(arriveIso) || "À préciser"}`,
+          `Départ : ${bookingFormatFR(departIso) || "À préciser"}`,
+          `Voyageurs : ${guests || "À préciser"}`,
+          nights ? `Durée : ${nights} nuit${nights > 1 ? "s" : ""}` : `Durée : À préciser`,
+          totalLabel ? `Prix estimé affiché : ${totalLabel}` : `Prix estimé : Sur demande`
+        ].join("\n")
+      );
+      return `https://wa.me/33781957161?text=${message}`;
+    };
+
+    const initBookingSummary = (root, location) => {
+      const arriveInput = root.querySelector("#bookArrive");
+      const departInput = root.querySelector("#bookDepart");
+      const guestsSelect = root.querySelector("#bookGuests");
+      const bannerTotalEl = root.querySelector("#bookingBannerTotal");
+      const bannerMetaEl = root.querySelector("#bookingBannerMeta");
+      const nightsEl = root.querySelector("#bookingNights");
+      const totalEl = root.querySelector("#bookingTotal");
+      const noteEl = root.querySelector("#bookingSummaryNote");
+      const summaryEl = root.querySelector("#bookingSummary");
+      const requestBtn = root.querySelector("#bookingRequestBtn");
+      const whatsappBtn = root.querySelector("#bookingWhatsappBtn");
+
+      if (!arriveInput || !departInput || !guestsSelect || !bannerTotalEl || !bannerMetaEl || !nightsEl || !totalEl || !noteEl || !summaryEl || !requestBtn || !whatsappBtn) return;
+
+      const nightlyPrice = Number(location.priceValue);
+      const hasNightlyPrice = Number.isFinite(nightlyPrice) && nightlyPrice > 0;
+
+      const updateBookingSummary = () => {
+        const arriveIso = arriveInput.value;
+        const departIso = departInput.value;
+        const guests = guestsSelect.value;
+        const nights = bookingDiffNights(arriveIso, departIso);
+
+        summaryEl.hidden = false;
+
+        if (!nights) {
+          bannerTotalEl.textContent = hasNightlyPrice ? `${formatPrice(nightlyPrice)} / nuit` : "Tarif sur demande";
+          bannerMetaEl.textContent = "Choisissez vos dates pour afficher le total estimé du séjour.";
+          nightsEl.textContent = "-";
+          totalEl.textContent = hasNightlyPrice ? "Sélectionnez vos dates" : "Tarif sur demande";
+          noteEl.textContent = "Choisissez une arrivée et un départ pour voir le récapitulatif.";
+          requestBtn.textContent = "Sélectionnez vos dates";
+          requestBtn.href = "./estimation.html";
+          requestBtn.classList.add("is-disabled");
+          whatsappBtn.href = "https://wa.me/33781957161";
+          whatsappBtn.classList.add("is-disabled");
+          return;
+        }
+
+        const nightsLabel = `${nights} nuit${nights > 1 ? "s" : ""}`;
+        const totalLabel = hasNightlyPrice ? formatPrice(nightlyPrice * nights) : "Tarif sur demande";
+        bannerTotalEl.textContent = totalLabel;
+        bannerMetaEl.textContent = `${nightsLabel} • ${guests} voyageur${guests > 1 ? "s" : ""}`;
+        nightsEl.textContent = nightsLabel;
+        totalEl.textContent = totalLabel;
+        noteEl.textContent = hasNightlyPrice
+          ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${guests} voyageur${guests > 1 ? "s" : ""}.`
+          : `Durée sélectionnée : ${nightsLabel} pour ${guests} voyageur${guests > 1 ? "s" : ""}. Le tarif exact sera confirmé sur demande.`;
+
+        requestBtn.textContent = "Demander cette réservation";
+        requestBtn.href = buildBookingRequestHref({
+          title: location.title,
+          location: location.location,
+          arriveIso,
+          departIso,
+          guests,
+          totalLabel,
+          nights
+        });
+        requestBtn.classList.remove("is-disabled");
+        whatsappBtn.href = buildBookingWhatsappHref({
+          title: location.title,
+          location: location.location,
+          arriveIso,
+          departIso,
+          guests,
+          totalLabel,
+          nights
+        });
+        whatsappBtn.classList.remove("is-disabled");
+      };
+
+      arriveInput.addEventListener("change", updateBookingSummary);
+      departInput.addEventListener("change", updateBookingSummary);
+      guestsSelect.addEventListener("change", updateBookingSummary);
+      updateBookingSummary();
+    };
+
     const initBookingDatePickers = (root) => {
       const shells = root.querySelectorAll("[data-booking-date]");
       if (!shells.length) return;
@@ -1771,6 +2018,10 @@
             </div>
 
             <aside class="detail-booking-card" aria-label="Tarif et disponibilité">
+              <div class="booking-total-banner">
+                <strong id="bookingBannerTotal">${location.priceValue ? `${escapeHtml(formatPrice(location.priceValue))} / nuit` : "Tarif sur demande"}</strong>
+                <span id="bookingBannerMeta">Choisissez vos dates pour afficher le total estimé du séjour.</span>
+              </div>
               <div class="booking-price-row">
                 ${priceRowHtml}
                 <span class="booking-aside">Tarif indicatif</span>
@@ -1843,6 +2094,21 @@
                   <option value="5">5 voyageurs ou plus</option>
                 </select>
               </div>
+              <div class="booking-summary" id="bookingSummary" hidden>
+                <div class="booking-summary-line">
+                  <span>Durée du séjour</span>
+                  <strong id="bookingNights">-</strong>
+                </div>
+                <div class="booking-summary-line">
+                  <span>Prix estimé</span>
+                  <strong id="bookingTotal">Sélectionnez vos dates</strong>
+                </div>
+                <p class="booking-summary-note" id="bookingSummaryNote">Choisissez une arrivée et un départ pour voir le récapitulatif.</p>
+              </div>
+              <div class="booking-actions">
+                <a class="booking-request-btn is-disabled" id="bookingRequestBtn" href="./estimation.html">Sélectionnez vos dates</a>
+                <a class="booking-whatsapp-btn is-disabled" id="bookingWhatsappBtn" href="https://wa.me/33781957161" target="_blank" rel="noopener noreferrer">Réserver sur WhatsApp</a>
+              </div>
               <p class="booking-footnote">Aucun montant ne sera débité pour le moment. Indiquez vos dates pour une demande de disponibilité.</p>
             </aside>
           </div>
@@ -1897,6 +2163,7 @@
       });
 
       initBookingDatePickers(mount);
+      initBookingSummary(mount, location);
     };
 
     const setupPageTransitions = () => {
