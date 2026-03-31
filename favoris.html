@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Favoris KD Conciergerie - retrouvez les locations enregistrées pour les consulter à tout moment." />
+  <title>Favoris | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-muted: #fbfdff;
+      --text: #1f2937;
+      --muted: #617084;
+      --line: #e6ebf2;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --green: #0f766e;
+      --shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 18px 34px rgba(15, 23, 42, 0.1);
+      --radius: 16px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 48px;
+      --space-6: 64px;
+      --max: 1200px;
+      --site-header-h: 80px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.05), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.05), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.page-ready {
+      opacity: 1;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+    }
+
+    body.sidebar-open,
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: transparent;
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: transparent;
+      padding: 5px;
+      border: none;
+      box-shadow: none;
+    }
+
+    .brand-name,
+    .brand-initials,
+    .brand-word {
+      display: none !important;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(86vw, 360px);
+      height: 100dvh;
+      height: 100vh;
+      padding: 96px 18px 30px;
+      background: rgba(245, 248, 251, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: -10px 0 24px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transform: translate3d(100%, 0, 0);
+      pointer-events: none;
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 39;
+      overflow-y: auto;
+    }
+
+    .nav-links.active {
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 64px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(30, 64, 175, 0.08);
+      font-weight: 500;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      transform: translateX(-2px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .menu-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(221, 228, 239, 0.96);
+      background: rgba(255, 255, 255, 0.96);
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #0f172a;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+      z-index: 38;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    main {
+      padding: calc(var(--site-header-h) + 12px) 0 32px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .page-hero,
+    .favorites-shell {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    .hero-text {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero-insights {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .insight-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(216, 225, 236, 0.96);
+      color: #405269;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .favorites-shell {
+      margin-top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      font-size: 1.15rem;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .location-card {
+      background: var(--surface);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .location-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(30, 64, 175, 0.14);
+    }
+
+    .card-stretched-link {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .card-media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: linear-gradient(135deg, #eef4ff, #edf9f6);
+    }
+
+    .card-gallery-host,
+    .card-gallery-host > * {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-content {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 1.02rem;
+      line-height: 1.3;
+    }
+
+    .card-description,
+    .card-location {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: #526276;
+    }
+
+    .card-price {
+      font-weight: 700;
+      color: var(--blue-deep);
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, 0.08);
+      color: var(--blue);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .card-favorite,
+    .card-share {
+      position: absolute;
+      top: 12px;
+      z-index: 2;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      background: rgba(255, 255, 255, 0.96);
+      display: inline-grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+    }
+
+    .card-favorite {
+      left: 12px;
+      color: #64748b;
+    }
+
+    .card-share {
+      right: 12px;
+      color: #0f172a;
+    }
+
+    .card-favorite svg,
+    .card-share svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .card-favorite svg path {
+      stroke: currentColor;
+      stroke-width: 1.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: transparent;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .card-favorite.active {
+      background: rgba(220, 38, 38, 0.1);
+      border-color: rgba(220, 38, 38, 0.18);
+      color: #dc2626;
+    }
+
+    .card-favorite.active svg path {
+      fill: currentColor;
+    }
+
+    .empty-state {
+      padding: 28px 20px;
+      border-radius: 20px;
+      border: 1px dashed rgba(203, 213, 225, 0.96);
+      background: rgba(248, 250, 252, 0.9);
+      text-align: center;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 14px 0 20px;
+      border-top: 1px solid rgba(230, 235, 242, 0.92);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      color: #728195;
+      font-size: 0.9rem;
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(12px);
+      min-width: 220px;
+      max-width: min(92vw, 420px);
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      z-index: 60;
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: calc(var(--site-header-h) + 8px) 0 24px;
+      }
+
+      .nav-links {
+        padding: 104px 18px 32px;
+        gap: 14px;
+      }
+
+      .nav-links a {
+        min-height: 66px;
+        padding: 18px 20px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="./index.html">
+        <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Menu" aria-hidden="true">
+        <a href="./index.html">Accueil</a>
+        <a href="./estimation.html">Estimation</a>
+        <a href="./locations.html">Locations disponibles</a>
+        <a href="./favoris.html" class="is-active">Favoris</a>
+        <a href="./index.html#faq">FAQ</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="container">
+    <section class="page-hero">
+      <h1>Favoris</h1>
+      <p class="hero-text">Retrouvez uniquement les locations enregistrées. Cette page est entièrement indépendante des locations disponibles.</p>
+      <div class="hero-insights" id="heroInsights"></div>
+    </section>
+
+    <section class="favorites-shell">
+      <div class="section-head">
+        <h2>Mes locations favorites</h2>
+        <span class="section-note" id="favoritesCountLabel">0 location</span>
+      </div>
+      <div class="cards-grid" id="favoritesGrid"></div>
+      <div class="empty-state" id="favoritesEmpty" hidden>Aucune location en favori pour le moment.</div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026. Tous droits réservés.</span>
+      <span>Une présentation premium, claire et rassurante de nos locations.</span>
+    </div>
+  </footer>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script src="./site-intelligence.js?v=2"></script>
+  <script src="./locations-data.js?v=2"></script>
+  <script src="./offer-share.js?v=12"></script>
+  <script src="./property-image-gallery.js?v=2"></script>
+  <script>
+    const fallbackSvg = encodeURIComponent(`
+      <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'>
+        <defs>
+          <linearGradient id='g' x1='0' x2='1'>
+            <stop offset='0%' stop-color='#eef4ff'/>
+            <stop offset='100%' stop-color='#edf9f6'/>
+          </linearGradient>
+        </defs>
+        <rect width='100%' height='100%' fill='url(#g)'/>
+        <text x='50%' y='48%' text-anchor='middle' font-size='46' fill='#1e3a8a' font-family='Inter, Arial, sans-serif'>Annonce</text>
+        <text x='50%' y='56%' text-anchor='middle' font-size='28' fill='#0f766e' font-family='Inter, Arial, sans-serif'>Image indisponible</text>
+      </svg>
+    `);
+
+    const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
+    const { enrichListing, getFavorites, saveFavorites, toggleFavorite, isFavorite, getAnalyticsSummary, trackListingEvent } = window.KDSite;
+
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const heroInsights = document.getElementById("heroInsights");
+    const favoritesGrid = document.getElementById("favoritesGrid");
+    const favoritesEmpty = document.getElementById("favoritesEmpty");
+    const favoritesCountLabel = document.getElementById("favoritesCountLabel");
+    const uiFeedback = document.getElementById("uiFeedback");
+
+    let listings = (window.KD_LOCATIONS || []).map((location) => enrichListing(location));
+    let feedbackTimeout;
+
+    const LOCAL_PETIT_COCON_GALLERY = [
+      "./Petit cocon/Pcocon1.png?v=4",
+      "./Petit cocon/Pcocon2.png?v=4",
+      "./Petit cocon/Pcocon3.png?v=4",
+      "./Petit cocon/Pcocon4.png?v=4",
+      "./Petit cocon/Pcocon5.png?v=4",
+      "./Petit cocon/Pcocon6.png?v=4",
+      "./Petit cocon/Pcocon7.png?v=4",
+      "./Petit cocon/Pcocon8.png?v=4",
+      "./Petit cocon/Pcocon9.png?v=4",
+      "./Petit cocon/Pcocon10.png?v=4"
+    ];
+    const LOCAL_PROXI_GALLERY = [
+      "./Proxi/Proxi 1.png",
+      "./Proxi/Proxi 2.png",
+      "./Proxi/Proxi 3.png",
+      "./Proxi/Proxi 4.png",
+      "./Proxi/Proxi 5.png"
+    ];
+
+    const formatCurrency = (value) =>
+      typeof value === "number" && Number.isFinite(value)
+        ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value)
+        : "";
+
+    const detailHrefFor = (listingId) => `./location-detail.html?id=${listingId}`;
+
+    const escapeHtml = (value) =>
+      String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+    const showFeedback = (message) => {
+      uiFeedback.textContent = message;
+      uiFeedback.classList.add("visible");
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
+    };
+
+    const openSidebar = () => {
+      sidebarOverlay.classList.add("active");
+      document.body.classList.add("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "false");
+      menuBtn.setAttribute("aria-expanded", "true");
+      navLinks.classList.add("active");
+    };
+
+    const closeSidebar = () => {
+      navLinks.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "true");
+      menuBtn.setAttribute("aria-expanded", "false");
+    };
+
+    menuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (navLinks.classList.contains("active")) closeSidebar();
+      else openSidebar();
+    });
+
+    sidebarOverlay.addEventListener("click", closeSidebar);
+    document.addEventListener("click", (event) => {
+      const insideSidebar = navLinks.contains(event.target) || menuBtn.contains(event.target);
+      if (!insideSidebar && navLinks.classList.contains("active")) closeSidebar();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSidebar();
+    });
+    navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeSidebar));
+
+    const checkImageAvailability = (src) =>
+      new Promise((resolve) => {
+        const probe = new Image();
+        probe.onload = () => resolve(true);
+        probe.onerror = () => resolve(false);
+        probe.src = src;
+      });
+
+    const getListingImages = async (listing) => {
+      const fallbackImage = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;
+      const candidates = [...new Set([...(listing.gallery || []), listing.heroImage, listing.image].filter(Boolean))];
+      if (!candidates.length) return [fallbackImage];
+      const resolved = await Promise.all(candidates.map(async (src) => ((await checkImageAvailability(src)) ? src : null)));
+      const availableImages = resolved.filter(Boolean);
+      return availableImages.length ? availableImages : [fallbackImage];
+    };
+
+    const applyLocalApartmentImages = (listing) => {
+      const fingerprint = `${listing.id || ""} ${listing.title || ""}`.toLowerCase();
+      if (fingerprint.includes("petit") && fingerprint.includes("cocon")) {
+        return { ...listing, heroImage: LOCAL_PETIT_COCON_GALLERY[0], gallery: [...LOCAL_PETIT_COCON_GALLERY] };
+      }
+      if (fingerprint.includes("proximite")) {
+        return { ...listing, heroImage: LOCAL_PROXI_GALLERY[0], gallery: [...LOCAL_PROXI_GALLERY] };
+      }
+      return listing;
+    };
+
+    const normalizeRemoteListing = (row) => {
+      const gallery = [row.image_url, ...(row.images || [])].filter(Boolean);
+      const specs = [
+        row.location,
+        row.max_guests ? `${row.max_guests} voyageurs` : null,
+        row.bedrooms ? `${row.bedrooms} ch.` : null
+      ].filter(Boolean);
+
+      return enrichListing(
+        applyLocalApartmentImages({
+          id: row.id,
+          title: row.title || "Annonce",
+          shortDescription: row.description || specs.join(" • ") || "Description à venir.",
+          description: row.description || specs.join(" • ") || "Description à venir.",
+          location: row.location || "Port-de-Bouc",
+          heroImage: row.image_url || gallery[0] || `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`,
+          gallery: gallery.length ? gallery : [row.image_url].filter(Boolean),
+          type: row.type,
+          priceValue: Number(row.price) || null,
+          price: row.price ? `${formatCurrency(Number(row.price))} / nuit` : "Sur demande"
+        })
+      );
+    };
+
+    const loadLocations = async () => {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&order=created_at.desc`, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            Accept: "application/json"
+          }
+        });
+        if (!response.ok) throw new Error("Impossible de charger les annonces");
+        const rows = await response.json();
+        if (Array.isArray(rows) && rows.length) {
+          listings = rows
+            .filter((row) => row.type === "rental" || !row.type || row.location)
+            .map(normalizeRemoteListing)
+            .filter((row) => row.heroImage);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const renderHeroInsights = () => {
+      const summary = getAnalyticsSummary();
+      const favoritesCount = getFavorites().size;
+      heroInsights.innerHTML = `
+        <span class="insight-pill">${favoritesCount} favori${favoritesCount > 1 ? "s" : ""}</span>
+        <span class="insight-pill">${summary.views} vue${summary.views > 1 ? "s" : ""} enregistrée${summary.views > 1 ? "s" : ""}</span>
+        <span class="insight-pill">${summary.cardClicks} interaction${summary.cardClicks > 1 ? "s" : ""} principale${summary.cardClicks > 1 ? "s" : ""}</span>
+      `;
+    };
+
+    const buildFavoriteCard = async (listing) => {
+      const galleryImages = await getListingImages(listing);
+      const card = document.createElement("article");
+      card.className = "location-card";
+      card.innerHTML = `
+        <a class="card-stretched-link" href="${detailHrefFor(listing.id)}" aria-label="Voir l'annonce : ${escapeHtml(listing.title)}">
+          <span class="visually-hidden">Ouvrir la fiche complète de l’annonce</span>
+        </a>
+        <div class="card-media">
+          <button class="card-favorite ${isFavorite(listing.id) ? "active" : ""}" type="button" aria-label="Ajouter aux favoris" aria-pressed="${isFavorite(listing.id) ? "true" : "false"}">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+            </svg>
+          </button>
+          <button class="card-share" type="button" aria-label="Partager cette annonce">
+            ${window.KDOfferShare.getShareButtonIcon()}
+          </button>
+          <div class="card-gallery-host"></div>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">${escapeHtml(listing.title)}</h2>
+          <p class="card-description">${escapeHtml(listing.shortDescription || listing.description || "Description à venir.")}</p>
+          <div class="card-location">${escapeHtml(listing.location || "")}</div>
+          <div class="card-meta">
+            <span>${escapeHtml(listing.type || "Appartement")}</span>
+            <span class="card-price">${escapeHtml(listing.price || "Sur demande")}</span>
+          </div>
+          <span class="card-action" aria-hidden="true">Voir plus</span>
+        </div>
+      `;
+
+      const galleryHost = card.querySelector(".card-gallery-host");
+      const favoriteButton = card.querySelector(".card-favorite");
+      const shareButton = card.querySelector(".card-share");
+      const stretchedLink = card.querySelector(".card-stretched-link");
+
+      window.PropertyImageGallery.mount(galleryHost, {
+        images: galleryImages,
+        title: listing.title,
+        subtitle: listing.location,
+        variant: "cover",
+        placeholder: `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`,
+        enableZoom: false
+      });
+
+      favoriteButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const result = toggleFavorite(listing.id);
+        favoriteButton.classList.toggle("active", result.isFavorite);
+        favoriteButton.setAttribute("aria-pressed", result.isFavorite ? "true" : "false");
+        showFeedback(result.isFavorite ? "Ajouté aux favoris" : "Retiré des favoris");
+        await renderFavorites();
+      });
+
+      shareButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        window.KDOfferShare.open({ id: listing.id, title: listing.title, onFeedback: showFeedback });
+      });
+
+      stretchedLink.addEventListener("click", () => trackListingEvent(listing.id, "cardClick"));
+      return card;
+    };
+
+    const renderFavorites = async () => {
+      favoritesGrid.innerHTML = "";
+      const favorites = getFavorites();
+      const favoriteListings = listings.filter((listing) => favorites.has(listing.id));
+      const validFavoriteIds = new Set(favoriteListings.map((listing) => listing.id));
+
+      if (validFavoriteIds.size !== favorites.size) {
+        saveFavorites(validFavoriteIds);
+      }
+
+      favoritesCountLabel.textContent = `${favoriteListings.length} location${favoriteListings.length > 1 ? "s" : ""}`;
+      favoritesEmpty.hidden = favoriteListings.length > 0;
+
+      if (!favoriteListings.length) {
+        renderHeroInsights();
+        return;
+      }
+
+      for (const listing of favoriteListings) {
+        const card = await buildFavoriteCard(listing);
+        favoritesGrid.appendChild(card);
+      }
+
+      renderHeroInsights();
+    };
+
+    const setupPageTransitions = () => {
+      requestAnimationFrame(() => document.body.classList.add("page-ready"));
+      document.querySelectorAll('a[href$=".html"], a[href^="./"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href");
+          if (!href || href.startsWith("#") || link.target === "_blank" || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 180);
+        });
+      });
+    };
+
+    window.addEventListener("storage", () => {
+      renderFavorites();
+    });
+
+    setupPageTransitions();
+    renderHeroInsights();
+    loadLocations().then(renderFavorites);
+  </script>
+</body>
+</html>
