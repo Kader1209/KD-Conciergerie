@@ -128,6 +128,12 @@
       gap: var(--space-2);
     }
 
+    @media (min-width: 721px) {
+      .container.nav {
+        width: min(97%, calc(var(--max) + 120px));
+      }
+    }
+
     .brand {
       display: flex;
       align-items: center;
@@ -231,18 +237,19 @@
       width: 46px;
       height: 46px;
       border-radius: 14px;
-      border: none;
-      background: transparent;
+      border: 1px solid rgba(221, 228, 239, 0.96);
+      background: rgba(255, 255, 255, 0.96);
       cursor: pointer;
       font-size: 1.1rem;
-      box-shadow: none;
+      color: #0f172a;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
       transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
     }
 
     .menu-btn:hover {
       transform: translateY(-1px);
-      background: transparent;
-      border-color: transparent;
+      background: #fff;
+      border-color: rgba(203, 213, 225, 0.96);
     }
 
     .sidebar-overlay {
@@ -523,6 +530,11 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 18px;
+    }
+
+    #favoritesTabReperes,
+    #favoritesPanelReperes {
+      display: none !important;
     }
 
     .favorites-tab {
@@ -992,7 +1004,7 @@
 
     @media (max-width: 720px) {
       main {
-        padding: var(--space-4) 0 var(--space-5);
+        padding: calc(var(--site-header-h) + 8px) 0 var(--space-5);
       }
 
       .cards-grid {
@@ -1053,7 +1065,6 @@
         <div class="nav-links__group">
           <span class="nav-links__heading">Favoris</span>
           <a href="#favoris">Annonces enregistrées</a>
-          <a href="#favoris-reperes">Repères personnels</a>
         </div>
       </nav>
 
@@ -1133,7 +1144,7 @@
     <section class="favorites-section reveal" id="favoris">
       <div class="section-head">
         <h3>Mes favoris</h3>
-        <span class="section-note">Annonces enregistrées et repères personnels, à part.</span>
+        <span class="section-note">Retrouvez ici vos annonces enregistrées.</span>
       </div>
       <div class="favorites-tabs" role="tablist" aria-label="Favoris">
         <button type="button" class="favorites-tab" role="tab" id="favoritesTabListings" aria-selected="true" aria-controls="favoritesPanelListings">Annonces favorites</button>
@@ -1157,7 +1168,7 @@
 
   <footer>
     <div class="container footer-row">
-      <span>© 2026 KD Conciergerie. Tous droits réservés.</span>
+      <span>© 2026. Tous droits réservés.</span>
       <span>Une présentation premium, claire et rassurante de nos locations.</span>
     </div>
   </footer>
@@ -1179,7 +1190,7 @@
           </linearGradient>
         </defs>
         <rect width='100%' height='100%' fill='url(#g)'/>
-        <text x='50%' y='48%' text-anchor='middle' font-size='46' fill='#1e3a8a' font-family='Inter, Arial, sans-serif'>KD Conciergerie</text>
+        <text x='50%' y='48%' text-anchor='middle' font-size='46' fill='#1e3a8a' font-family='Inter, Arial, sans-serif'>Annonce</text>
         <text x='50%' y='56%' text-anchor='middle' font-size='28' fill='#0f766e' font-family='Inter, Arial, sans-serif'>Image indisponible</text>
       </svg>
     `);
