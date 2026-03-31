@@ -10,7 +10,14 @@
     }
   };
 
-  const getShareButtonIcon = () => ``;
+  const getShareButtonIcon = () => `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="currentColor"
+        d="M7.62 18.25a1.1 1.1 0 0 1-1.56-1.53c1.3-1.34 2.72-2.36 4.24-3.05 1.55-.7 3.2-1.07 4.95-1.12v-2.13a1.1 1.1 0 0 1 1.87-.78l4.48 4.4a1.1 1.1 0 0 1 0 1.57l-4.48 4.4a1.1 1.1 0 0 1-1.87-.79v-2.05c-2.98.03-5.52.89-7.63 2.58Z"
+      />
+    </svg>
+  `;
 
   const injectStyles = () => {
     if (document.getElementById(STYLE_ID)) return;
