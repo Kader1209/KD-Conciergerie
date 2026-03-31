@@ -59,8 +59,8 @@
         }
 
         .pizoom__dialog {
-          width: min(92vw, 1040px);
-          max-height: min(calc(100dvh - 28px), calc(100vh - 28px), 900px);
+          width: min(97vw, 1360px);
+          max-height: min(calc(100dvh - 16px), calc(100vh - 16px), 980px);
           margin: auto;
           display: grid;
           grid-template-rows: auto minmax(0, 1fr);
@@ -134,12 +134,12 @@
         .pizoom__stage {
           position: relative;
           min-height: 0;
-          max-height: min(56vh, 640px);
-          height: min(50vh, 600px);
+          max-height: min(82vh, 900px);
+          height: min(76vh, 860px);
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px 76px;
+          padding: 16px 88px 20px;
           background: transparent;
         }
 
@@ -208,14 +208,14 @@
           }
 
           .pizoom__dialog {
-            width: min(94vw, 860px);
-            max-height: min(calc(100dvh - 24px), calc(100vh - 24px), 860px);
+            width: min(97vw, 980px);
+            max-height: min(calc(100dvh - 18px), calc(100vh - 18px), 920px);
           }
 
           .pizoom__stage {
-            max-height: min(50vh, 520px);
-            height: min(44vh, 480px);
-            padding: 16px 56px;
+            max-height: min(76vh, 760px);
+            height: min(70vh, 720px);
+            padding: 14px 64px 18px;
           }
         }
 
@@ -227,13 +227,13 @@
           .pizoom__dialog {
             width: min(96vw, 560px);
             border-radius: 22px;
-            max-height: min(calc(100dvh - 20px), calc(100vh - 20px), 720px);
+            max-height: min(calc(100dvh - 12px), calc(100vh - 12px), 820px);
           }
 
           .pizoom__stage {
-            max-height: min(42vh, 420px);
-            height: min(38vh, 380px);
-            padding: 14px 44px;
+            max-height: min(72vh, 720px);
+            height: min(66vh, 680px);
+            padding: 12px 42px 18px;
           }
 
           .pizoom__nav {

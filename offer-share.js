@@ -10,6 +10,19 @@
     }
   };
 
+  const getShareButtonIcon = () => `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="currentColor"
+        d="M14 3a1 1 0 0 1 1 1v6h2.59L12 15.59 6.41 10H9V4a1 1 0 1 1 2 0v4h2V4a1 1 0 0 1 1-1Z"
+      />
+      <path
+        fill="currentColor"
+        d="M5 14a1 1 0 0 1 1 1v3h12v-3a1 1 0 1 1 2 0v3.5A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5V15a1 1 0 0 1 1-1Z"
+      />
+    </svg>
+  `;
+
   const injectStyles = () => {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -38,6 +51,7 @@
         border: 1px solid rgba(226, 232, 240, 0.96);
         padding: 22px 18px 18px;
         box-shadow: 0 24px 48px rgba(15, 23, 42, 0.2);
+        font-family: Inter, Arial, sans-serif;
       }
       .share-sheet__dismiss {
         position: absolute;
@@ -55,17 +69,18 @@
       }
       .share-sheet__dismiss:hover { background: #f8fafc; }
       .share-sheet__title {
-        font-size: 1.05rem;
+        font-size: 1.18rem;
         font-weight: 700;
         color: #0f172a;
-        margin: 0 40px 6px 0;
+        margin: 0 48px 8px 0;
         letter-spacing: -0.02em;
+        line-height: 1.25;
       }
       .share-sheet__hint {
-        margin: 0 0 16px;
-        font-size: 0.86rem;
+        margin: 0 0 18px;
+        font-size: 0.95rem;
         color: #617084;
-        line-height: 1.45;
+        line-height: 1.55;
       }
       .share-sheet__actions { display: grid; gap: 10px; }
       .share-sheet__btn {
@@ -80,7 +95,7 @@
         border: 1px solid rgba(226, 232, 240, 0.96);
         background: #fff;
         font: inherit;
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 600;
         color: #1e293b;
         cursor: pointer;
@@ -128,14 +143,14 @@
     el.innerHTML = `
       <div class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="kdOfferShareTitle">
         <button type="button" class="share-sheet__dismiss" aria-label="Fermer">✕</button>
-        <p class="share-sheet__title" id="kdOfferShareTitle">Partager cette annonce</p>
+        <p class="share-sheet__title" id="kdOfferShareTitle">Partager</p>
         <p class="share-sheet__hint" id="kdOfferShareHint"></p>
         <div class="share-sheet__actions">
-          <button type="button" class="share-sheet__btn share-sheet__btn--primary" id="kdOfferShareNative" hidden>Partager via…</button>
+          <button type="button" class="share-sheet__btn share-sheet__btn--primary" id="kdOfferShareNative" hidden>Partager maintenant</button>
           <button type="button" class="share-sheet__btn" id="kdOfferShareCopy">Copier le lien</button>
           <a class="share-sheet__btn" id="kdOfferShareWa" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <a class="share-sheet__btn" id="kdOfferShareFb" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a class="share-sheet__btn" id="kdOfferShareTw" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a class="share-sheet__btn" id="kdOfferShareTw" target="_blank" rel="noopener noreferrer">X</a>
           <a class="share-sheet__btn" id="kdOfferShareLi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           <a class="share-sheet__btn" id="kdOfferShareMail">E-mail</a>
         </div>
@@ -191,7 +206,7 @@
     const t = state.title || "Annonce KD Conciergerie";
     const text = `Découvrez cette location : ${t}`;
 
-    el.querySelector("#kdOfferShareHint").textContent = t;
+    el.querySelector("#kdOfferShareHint").textContent = `Annonce : ${t}`;
     el.querySelector("#kdOfferShareNative").hidden = typeof navigator.share !== "function";
     el.querySelector("#kdOfferShareWa").href = `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`;
     el.querySelector("#kdOfferShareFb").href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
@@ -203,5 +218,5 @@
     el.setAttribute("aria-hidden", "false");
   };
 
-  window.KDOfferShare = { open, close };
+  window.KDOfferShare = { open, close, getShareButtonIcon };
 })();

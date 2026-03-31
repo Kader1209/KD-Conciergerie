@@ -726,7 +726,7 @@
       border-radius: 14px;
       border: 1px solid rgba(30, 64, 175, 0.14);
       background: rgba(255, 255, 255, 0.95);
-      color: var(--blue-deep);
+      color: #111827;
       cursor: pointer;
       transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
@@ -1054,11 +1054,7 @@
         <div class="nav-links__group">
           <span class="nav-links__heading">Parcourir le site</span>
           <a href="./index.html">Accueil</a>
-          <a href="./index.html#solutions">Solutions</a>
-          <a href="./index.html#premium">Premium</a>
-          <a href="./index.html#preuves">Preuves</a>
           <a href="./estimation.html">Estimation</a>
-          <a href="./index.html#carte">Carte & alentours</a>
           <a href="./index.html#faq">FAQ</a>
           <a href="./index.html#contact">Contact</a>
         </div>
@@ -1608,14 +1604,7 @@
         shareBtn.className = "smart-card-share";
         shareBtn.setAttribute("aria-label", "Partager cette annonce");
         shareBtn.setAttribute("aria-haspopup", "dialog");
-        shareBtn.innerHTML = `
-          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
-            <circle cx="18" cy="5" r="2.2" fill="currentColor"/>
-            <circle cx="6" cy="12" r="2.2" fill="currentColor"/>
-            <circle cx="18" cy="19" r="2.2" fill="currentColor"/>
-            <path d="M8.3 10.4 15.7 6.5M8.3 13.6 15.7 17.5" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" fill="none"/>
-          </svg>
-        `;
+      shareBtn.innerHTML = window.KDOfferShare.getShareButtonIcon();
         shareBtn.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();

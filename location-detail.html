@@ -370,7 +370,7 @@
       border-radius: 14px;
       border: 1px solid rgba(30, 64, 175, 0.14);
       background: rgba(255, 255, 255, 0.95);
-      color: var(--blue-deep);
+      color: #111827;
       cursor: pointer;
       transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
       padding: 0;
@@ -1161,12 +1161,8 @@
       </a>
       <nav class="nav-links" id="navLinks">
         <a href="./index.html">Accueil</a>
-        <a href="./index.html#solutions">Solutions</a>
         <a href="./estimation.html">Estimation</a>
-        <a href="./index.html#premium">Premium</a>
         <a href="./locations.html" class="is-active">Locations disponibles</a>
-        <a href="./index.html#preuves">Preuves</a>
-        <a href="./index.html#carte">Carte & alentours</a>
         <a href="./index.html#faq">FAQ</a>
         <a href="./index.html#contact">Contact</a>
       </nav>
@@ -1742,9 +1738,7 @@
                 <h1>${titleSafe}</h1>
                 <div class="listing-header-actions">
                   <button type="button" class="detail-share-btn" id="detailShareBtn" aria-label="Partager cette annonce">
-                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
+                    ${window.KDOfferShare.getShareButtonIcon()}
                   </button>
                   <button class="detail-favorite ${isFavorite(location.id) ? "active" : ""}" id="detailFavoriteBtn" type="button" aria-label="Ajouter aux favoris" aria-pressed="${isFavorite(location.id) ? "true" : "false"}">
                     <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
