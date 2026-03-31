@@ -657,18 +657,28 @@
     const { enrichListing } = window.KDSite;
 
     const params = new URLSearchParams(window.location.search);
-    const locationId = params.get("id");
-    const arriveIso = params.get("arrive") || "";
-    const departIso = params.get("depart") || "";
-    const adults = Number(params.get("adults") || params.get("guests") || 1);
-    const children = Number(params.get("children") || 0);
-    const babies = Number(params.get("babies") || 0);
+    const readReservationDraft = () => {
+      try {
+        const raw = window.sessionStorage.getItem("kd-reservation-draft");
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    };
+    const reservationDraft = readReservationDraft();
+    const locationId = params.get("id") || reservationDraft.id || "";
+    const arriveIso = params.get("arrive") || reservationDraft.arrive || "";
+    const departIso = params.get("depart") || reservationDraft.depart || "";
+    const adults = Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0);
+    const children = Number(params.get("children") || reservationDraft.children || 0);
+    const babies = Number(params.get("babies") || reservationDraft.babies || 0);
 
     const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
     let location = fallbackLocations.find((item) => item.id === locationId) || null;
     let feedbackTimeout;
     let activePromo = null;
     let selectedOptionKeys = new Set();
+    let selectedPaymentMethod = "card";
 
     const DEFAULT_RESERVATION = {
       cityTaxPerNightPerAdult: 2,
@@ -813,7 +823,7 @@
       reservation.optionalServices.filter((item) => selectedOptionKeys.has(item.key));
 
     const getSelectedPayment = () =>
-      document.querySelector('input[name="paymentMethod"]:checked')?.value === "transfer" ? "Virement bancaire" : "Carte bancaire";
+      selectedPaymentMethod === "transfer" ? "Virement bancaire" : "Carte bancaire";
 
     const computeDiscount = (subtotal, reservation) => {
       if (!activePromo) return { amount: 0, label: "" };
@@ -827,8 +837,36 @@
     const renderPaymentChoiceState = () => {
       document.querySelectorAll(".payment-choice").forEach((choice) => {
         const input = choice.querySelector('input[type="radio"]');
-        choice.classList.toggle("active", !!input?.checked);
+        const isActive = input?.value === selectedPaymentMethod;
+        if (input) input.checked = isActive;
+        choice.classList.toggle("active", isActive);
       });
+    };
+
+    const loadReservationData = () => ({
+      hasDates: Boolean(arriveIso && departIso),
+      hasTravelers: adults > 0,
+      adults,
+      children,
+      babies
+    });
+
+    const isReservationComplete = () => {
+      const data = loadReservationData();
+      return data.hasDates && data.hasTravelers && diffNights(arriveIso, departIso) > 0;
+    };
+
+    const validateReservationForm = () => {
+      const hasPayment = selectedPaymentMethod === "card" || selectedPaymentMethod === "transfer";
+      const termsAccepted = document.getElementById("acceptContractTerms")?.checked;
+      const dataAccepted = document.getElementById("acceptDataPolicy")?.checked;
+      return Boolean(isReservationComplete() && hasPayment && termsAccepted && dataAccepted);
+    };
+
+    const updateSubmitButtonState = () => {
+      const continuePaymentBtn = document.getElementById("continuePaymentBtn");
+      if (!continuePaymentBtn) return;
+      continuePaymentBtn.classList.toggle("is-disabled", !validateReservationForm());
     };
 
     const buildMailHref = ({ totalLabel, nights, selectedOptions, payment }) => {
@@ -871,6 +909,7 @@
         return;
       }
 
+      const reservationData = loadReservationData();
       const reservation = mergeReservation(location.reservation);
       const nights = diffNights(arriveIso, departIso);
       const nightlyPrice = Number(location.priceValue) || 0;
@@ -904,7 +943,9 @@
       document.getElementById("arriveMonth").textContent = arriveCard.month;
       document.getElementById("departDay").textContent = departCard.day;
       document.getElementById("departMonth").textContent = departCard.month;
-      document.getElementById("travelerCounts").textContent = `${adults} adulte${adults > 1 ? "s" : ""}, ${children} enfant${children > 1 ? "s" : ""}${babies ? `, ${babies} bébé${babies > 1 ? "s" : ""}` : ""}`;
+      document.getElementById("travelerCounts").textContent = reservationData.hasTravelers
+        ? `${adults} adulte${adults > 1 ? "s" : ""}, ${children} enfant${children > 1 ? "s" : ""}${babies ? `, ${babies} bébé${babies > 1 ? "s" : ""}` : ""}`
+        : "Veuillez sélectionner vos dates et voyageurs avant de continuer.";
 
       document.getElementById("priceBreakdown").innerHTML = `
         <div class="price-row">
@@ -1029,11 +1070,11 @@
         payment
       });
 
-      const ready = nights > 0 && document.getElementById("acceptContractTerms").checked && document.getElementById("acceptDataPolicy").checked;
-      continuePaymentBtn.classList.toggle("is-disabled", !ready);
+      updateSubmitButtonState();
 
       document.querySelectorAll(".payment-choice input").forEach((input) => {
         input.onchange = () => {
+          selectedPaymentMethod = input.value;
           renderPaymentChoiceState();
           renderReservation();
         };
@@ -1048,6 +1089,8 @@
           renderReservation();
         };
       });
+
+      renderPaymentChoiceState();
     };
 
     const bindStaticEvents = () => {
