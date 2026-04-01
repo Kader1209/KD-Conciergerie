@@ -577,6 +577,84 @@
       overflow: visible;
     }
 
+    .booking-travelers {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid rgba(209, 219, 232, 0.96);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .booking-traveler-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .booking-traveler-copy strong {
+      display: block;
+      font-size: 0.94rem;
+      color: #0f172a;
+    }
+
+    .booking-traveler-copy span {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .booking-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .booking-stepper button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(203, 213, 225, 0.96);
+      border-radius: 999px;
+      background: #fff;
+      color: #0f172a;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .booking-stepper strong {
+      min-width: 18px;
+      text-align: center;
+      color: #0f172a;
+      font-size: 0.95rem;
+    }
+
+    .booking-child-ages {
+      display: grid;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(230, 235, 242, 0.9);
+    }
+
+    .booking-child-ages[hidden] {
+      display: none;
+    }
+
+    .booking-child-age-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .booking-child-age-item label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+
     .booking-date-shell {
       position: relative;
       z-index: 1;
@@ -1708,32 +1786,48 @@
       return `https://wa.me/33781957161?text=${message}`;
     };
 
-    const buildReservationPageHref = ({ id, arriveIso, departIso, guests, children = 0, babies = 0 }) => {
-      const next = new URLSearchParams();
-      next.set("id", id);
-      if (arriveIso) next.set("arrive", arriveIso);
-      if (departIso) next.set("depart", departIso);
-      if (guests) {
-        next.set("guests", guests);
-        next.set("adults", guests);
-      }
-      if (children) next.set("children", children);
-      if (babies) next.set("babies", babies);
-      return `./reservation.html?${next.toString()}`;
+    const BOOKING_STORAGE_KEY = "kd_booking";
+    const createBookingDataFromListing = ({ propertyId, checkIn, checkOut, adults, children }) => {
+      const bookingData = {
+        propertyId: normalizeListingId(propertyId),
+        checkIn: String(checkIn || ""),
+        checkOut: String(checkOut || ""),
+        adults: Number(adults || 0),
+        children: Number(children || 0),
+        selectedAt: Date.now()
+      };
+      console.log("[kd_booking] createBookingDataFromListing", bookingData);
+      return bookingData;
     };
+    const saveBookingData = (bookingData) => {
+      try {
+        window.sessionStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(bookingData));
+        console.log("[kd_booking] saved", bookingData);
+      } catch (error) {
+        console.log("[kd_booking] save failed", error);
+      }
+    };
+    const buildReservationPageHref = ({ id }) => `./reservation.html?id=${encodeURIComponent(id)}`;
 
     const hydrateBookingDraft = (root, location) => {
       const arriveInput = root.querySelector("#bookArrive");
       const departInput = root.querySelector("#bookDepart");
-      const guestsSelect = root.querySelector("#bookGuests");
+      const guestsInput = root.querySelector("#bookGuests");
+      const adultsValueEl = root.querySelector("#bookAdultsValue");
+      const childrenValueEl = root.querySelector("#bookChildrenValue");
       const arriveDisplay = root.querySelector("#bookArriveDisplay");
       const departDisplay = root.querySelector("#bookDepartDisplay");
-      if (!arriveInput || !departInput || !guestsSelect || !arriveDisplay || !departDisplay) return;
+      if (!arriveInput || !departInput || !guestsInput || !adultsValueEl || !childrenValueEl || !arriveDisplay || !departDisplay) return;
 
       const draft = normalizeListingId(reservationDraft.id) === location.id ? reservationDraft : {};
       const nextArrive = params.get("arrive") || draft.arrive || "";
       const nextDepart = params.get("depart") || draft.depart || "";
-      const nextGuests = params.get("guests") || params.get("adults") || draft.guests || draft.adults || "1";
+      const nextAdults = Math.max(1, Number(params.get("adults") || draft.adults || params.get("guests") || draft.guests || 1));
+      const nextChildren = Math.max(0, Number(params.get("children") || draft.children || 0));
+      const nextChildAgesRaw = params.get("childAges");
+      const nextChildAges = nextChildAgesRaw
+        ? nextChildAgesRaw.split(",").map((item) => String(item || "").trim()).filter(Boolean)
+        : Array.isArray(draft.childAges) ? draft.childAges : [];
 
       arriveInput.value = nextArrive;
       departInput.value = nextDepart;
@@ -1741,18 +1835,24 @@
       departDisplay.textContent = nextDepart ? bookingFormatFR(nextDepart) : "jj/mm/aaaa";
       arriveDisplay.classList.toggle("is-placeholder", !nextArrive);
       departDisplay.classList.toggle("is-placeholder", !nextDepart);
-
-      if ([...guestsSelect.options].some((option) => option.value === String(nextGuests))) {
-        guestsSelect.value = String(nextGuests);
-      } else {
-        guestsSelect.value = "1";
-      }
+      adultsValueEl.textContent = String(nextAdults);
+      childrenValueEl.textContent = String(nextChildren);
+      guestsInput.value = String(nextAdults + nextChildren);
+      root.dataset.childAges = JSON.stringify(nextChildAges.slice(0, nextChildren));
     };
 
     const initBookingSummary = (root, location) => {
       const arriveInput = root.querySelector("#bookArrive");
       const departInput = root.querySelector("#bookDepart");
-      const guestsSelect = root.querySelector("#bookGuests");
+      const guestsInput = root.querySelector("#bookGuests");
+      const adultsValueEl = root.querySelector("#bookAdultsValue");
+      const childrenValueEl = root.querySelector("#bookChildrenValue");
+      const adultsMinusBtn = root.querySelector("#bookAdultsMinus");
+      const adultsPlusBtn = root.querySelector("#bookAdultsPlus");
+      const childrenMinusBtn = root.querySelector("#bookChildrenMinus");
+      const childrenPlusBtn = root.querySelector("#bookChildrenPlus");
+      const childAgesGroup = root.querySelector("#bookChildAgesGroup");
+      const childAgesList = root.querySelector("#bookChildAgesList");
       const bannerTotalEl = root.querySelector("#bookingBannerTotal");
       const bannerMetaEl = root.querySelector("#bookingBannerMeta");
       const nightsEl = root.querySelector("#bookingNights");
@@ -1762,12 +1862,57 @@
       const requestBtn = root.querySelector("#bookingRequestBtn");
       const whatsappBtn = root.querySelector("#bookingWhatsappBtn");
 
-      if (!arriveInput || !departInput || !guestsSelect || !bannerTotalEl || !bannerMetaEl || !nightsEl || !totalEl || !noteEl || !summaryEl || !requestBtn || !whatsappBtn) return;
+      if (!arriveInput || !departInput || !guestsInput || !adultsValueEl || !childrenValueEl || !adultsMinusBtn || !adultsPlusBtn || !childrenMinusBtn || !childrenPlusBtn || !childAgesGroup || !childAgesList || !bannerTotalEl || !bannerMetaEl || !nightsEl || !totalEl || !noteEl || !summaryEl || !requestBtn || !whatsappBtn) return;
 
       const nightlyPrice = Number(location.priceValue);
       const hasNightlyPrice = Number.isFinite(nightlyPrice) && nightlyPrice > 0;
+      let childAges = (() => {
+        try {
+          const raw = JSON.parse(root.dataset.childAges || "[]");
+          return Array.isArray(raw) ? raw : [];
+        } catch {
+          return [];
+        }
+      })();
 
-      const persistReservationDraft = ({ arriveIso = "", departIso = "", guests = guestsSelect.value || "1" } = {}) => {
+      const getAdults = () => Math.max(1, Number(adultsValueEl.textContent || 1));
+      const getChildren = () => Math.max(0, Number(childrenValueEl.textContent || 0));
+      const getGuests = () => getAdults() + getChildren();
+      const renderChildAges = () => {
+        const children = getChildren();
+        childAges = childAges.slice(0, children);
+        while (childAges.length < children) childAges.push("2");
+        childAgesGroup.hidden = !children;
+        childAgesList.innerHTML = childAges.map((age, index) => `
+          <div class="booking-child-age-item">
+            <label for="bookChildAge${index}">Enfant ${index + 1}</label>
+            <select id="bookChildAge${index}" data-child-age-index="${index}">
+              ${Array.from({ length: 16 }, (_, ageIndex) => {
+                const value = String(ageIndex + 2);
+                return `<option value="${value}" ${value === String(age) ? "selected" : ""}>${value} ans</option>`;
+              }).join("")}
+            </select>
+          </div>
+        `).join("");
+        childAgesList.querySelectorAll("[data-child-age-index]").forEach((select) => {
+          select.addEventListener("change", () => {
+            const index = Number(select.getAttribute("data-child-age-index"));
+            childAges[index] = select.value;
+            updateBookingSummary();
+          });
+        });
+      };
+      const setTravelers = ({ adults = getAdults(), children = getChildren() } = {}) => {
+        adultsValueEl.textContent = String(Math.max(1, adults));
+        childrenValueEl.textContent = String(Math.max(0, children));
+        guestsInput.value = String(getGuests());
+        renderChildAges();
+      };
+
+      const persistReservationDraft = ({ arriveIso = "", departIso = "" } = {}) => {
+        const adults = getAdults();
+        const children = getChildren();
+        const guests = getGuests();
         const draft = {
           id: location.id,
           title: location.title,
@@ -1780,8 +1925,9 @@
           arrive: arriveIso,
           depart: departIso,
           guests,
-          adults: guests,
-          children: 0,
+          adults,
+          children,
+          childAges: [...childAges],
           babies: 0
         };
         try {
@@ -1794,10 +1940,12 @@
       const updateBookingSummary = () => {
         const arriveIso = arriveInput.value;
         const departIso = departInput.value;
-        const guests = guestsSelect.value;
+        const adults = getAdults();
+        const children = getChildren();
+        const guests = getGuests();
         const nights = bookingDiffNights(arriveIso, departIso);
 
-        persistReservationDraft({ arriveIso, departIso, guests });
+        persistReservationDraft({ arriveIso, departIso });
 
         summaryEl.hidden = false;
 
@@ -1818,21 +1966,25 @@
         const nightsLabel = `${nights} nuit${nights > 1 ? "s" : ""}`;
         const totalLabel = hasNightlyPrice ? formatPrice(nightlyPrice * nights) : "Tarif sur demande";
         bannerTotalEl.textContent = totalLabel;
-        bannerMetaEl.textContent = `${nightsLabel} • ${guests} voyageur${guests > 1 ? "s" : ""}`;
+          bannerMetaEl.textContent = `${nightsLabel} • ${adults} adulte${adults > 1 ? "s" : ""}${children ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}`;
         nightsEl.textContent = nightsLabel;
         totalEl.textContent = totalLabel;
         noteEl.textContent = hasNightlyPrice
-          ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${guests} voyageur${guests > 1 ? "s" : ""}.`
-          : `Durée sélectionnée : ${nightsLabel} pour ${guests} voyageur${guests > 1 ? "s" : ""}. Le tarif exact sera confirmé sur demande.`;
+          ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${adults} adulte${adults > 1 ? "s" : ""}${children ? ` et ${children} enfant${children > 1 ? "s" : ""}` : ""}.`
+          : `Durée sélectionnée : ${nightsLabel} pour ${adults} adulte${adults > 1 ? "s" : ""}${children ? ` et ${children} enfant${children > 1 ? "s" : ""}` : ""}. Le tarif exact sera confirme sur demande.`;
+
+        const bookingData = createBookingDataFromListing({
+          propertyId: location.id,
+          checkIn: arriveIso,
+          checkOut: departIso,
+          adults,
+          children
+        });
+        saveBookingData(bookingData);
 
         requestBtn.textContent = "Continuer la réservation";
         requestBtn.href = buildReservationPageHref({
-          id: location.id,
-          arriveIso,
-          departIso,
-          guests,
-          children: 0,
-          babies: 0
+          id: location.id
         });
         requestBtn.classList.remove("is-disabled");
         whatsappBtn.href = buildBookingWhatsappHref({
@@ -1840,7 +1992,7 @@
           location: location.location,
           arriveIso,
           departIso,
-          guests,
+          guests: `${adults} adulte${adults > 1 ? "s" : ""}${children ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}`,
           totalLabel,
           nights
         });
@@ -1849,7 +2001,23 @@
 
       arriveInput.addEventListener("change", updateBookingSummary);
       departInput.addEventListener("change", updateBookingSummary);
-      guestsSelect.addEventListener("change", updateBookingSummary);
+      adultsMinusBtn.addEventListener("click", () => {
+        setTravelers({ adults: getAdults() - 1, children: getChildren() });
+        updateBookingSummary();
+      });
+      adultsPlusBtn.addEventListener("click", () => {
+        setTravelers({ adults: getAdults() + 1, children: getChildren() });
+        updateBookingSummary();
+      });
+      childrenMinusBtn.addEventListener("click", () => {
+        setTravelers({ adults: getAdults(), children: getChildren() - 1 });
+        updateBookingSummary();
+      });
+      childrenPlusBtn.addEventListener("click", () => {
+        setTravelers({ adults: getAdults(), children: getChildren() + 1 });
+        updateBookingSummary();
+      });
+      setTravelers();
       updateBookingSummary();
     };
 
@@ -2237,14 +2405,36 @@
                 </div>
               </div>
               <div class="booking-field">
-                <label for="bookGuests">Voyageurs</label>
-                <select id="bookGuests" name="guests">
-                  <option value="1">1 voyageur</option>
-                  <option value="2">2 voyageurs</option>
-                  <option value="3">3 voyageurs</option>
-                  <option value="4">4 voyageurs</option>
-                  <option value="5">5 voyageurs ou plus</option>
-                </select>
+                <label for="bookAdultsValue">Voyageurs</label>
+                <input type="hidden" id="bookGuests" name="guests" value="1" />
+                <div class="booking-travelers">
+                  <div class="booking-traveler-row">
+                    <div class="booking-traveler-copy">
+                      <strong>Adultes</strong>
+                      <span>18 ans et plus</span>
+                    </div>
+                    <div class="booking-stepper" aria-label="Nombre d'adultes">
+                      <button type="button" id="bookAdultsMinus" aria-label="Retirer un adulte">-</button>
+                      <strong id="bookAdultsValue">1</strong>
+                      <button type="button" id="bookAdultsPlus" aria-label="Ajouter un adulte">+</button>
+                    </div>
+                  </div>
+                  <div class="booking-traveler-row">
+                    <div class="booking-traveler-copy">
+                      <strong>Enfants</strong>
+                      <span>De 2 a 17 ans</span>
+                    </div>
+                    <div class="booking-stepper" aria-label="Nombre d'enfants">
+                      <button type="button" id="bookChildrenMinus" aria-label="Retirer un enfant">-</button>
+                      <strong id="bookChildrenValue">0</strong>
+                      <button type="button" id="bookChildrenPlus" aria-label="Ajouter un enfant">+</button>
+                    </div>
+                  </div>
+                  <div class="booking-child-ages" id="bookChildAgesGroup" hidden>
+                    <span class="booking-aside">Age des enfants</span>
+                    <div class="booking-child-age-list" id="bookChildAgesList"></div>
+                  </div>
+                </div>
               </div>
               <div class="booking-summary" id="bookingSummary" hidden>
                 <div class="booking-summary-line">
