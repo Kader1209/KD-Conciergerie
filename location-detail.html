@@ -2169,7 +2169,7 @@
               </div>
             </div>
 
-            <aside class="detail-booking-card" aria-label="Tarif et disponibilité">
+            <aside class="detail-booking-card" id="booking" aria-label="Tarif et disponibilité">
               <div class="booking-total-banner">
                 <strong id="bookingBannerTotal">${location.priceValue ? `${escapeHtml(formatPrice(location.priceValue))} / nuit` : "Tarif sur demande"}</strong>
                 <span id="bookingBannerMeta">Choisissez vos dates pour afficher le total estimé du séjour.</span>
@@ -2317,6 +2317,13 @@
       hydrateBookingDraft(mount, location);
       initBookingDatePickers(mount);
       initBookingSummary(mount, location);
+
+      if (window.location.hash === "#booking") {
+        window.requestAnimationFrame(() => {
+          const bookingCard = document.getElementById("booking");
+          bookingCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
     };
 
     const setupPageTransitions = () => {
