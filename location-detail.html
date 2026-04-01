@@ -1234,9 +1234,21 @@
 
     @media (max-width: 760px) {
       .nav {
-        flex-direction: column;
-        align-items: flex-start;
+        min-height: 70px;
+        align-items: center;
+        justify-content: space-between;
         padding: 8px 0;
+      }
+
+      .brand-logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .menu-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
       }
 
       .content-card,
@@ -1345,9 +1357,62 @@
     syncHeader();
 
     const params = new URLSearchParams(window.location.search);
-    const locationId = params.get("id");
+    const STORAGE_KEY = "kd-reservation-draft";
+    const readReservationDraft = () => {
+      try {
+        const sessionRaw = window.sessionStorage.getItem(STORAGE_KEY);
+        if (sessionRaw) return JSON.parse(sessionRaw);
+      } catch {}
+      try {
+        const localRaw = window.localStorage.getItem(STORAGE_KEY);
+        if (localRaw) return JSON.parse(localRaw);
+      } catch {}
+      return {};
+    };
+    const normalizeListingId = (value) => {
+      const cleaned = String(value || "").trim();
+      return cleaned && cleaned !== "undefined" && cleaned !== "null" ? cleaned : "";
+    };
+    const normalizeText = (value) =>
+      String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+    const reservationDraft = readReservationDraft();
+    const locationId = normalizeListingId(params.get("id")) || normalizeListingId(reservationDraft.id) || "";
     const locations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
-    const currentLocation = locations.find((item) => item.id === locationId);
+    const resolveLocationFromSources = (collection) => {
+      const byId = collection.find((item) => normalizeListingId(item.id) === locationId);
+      if (byId) return byId;
+
+      const draftId = normalizeListingId(reservationDraft.id);
+      const byDraftId = draftId ? collection.find((item) => normalizeListingId(item.id) === draftId) : null;
+      if (byDraftId) return byDraftId;
+
+      const draftTitle = normalizeText(reservationDraft.title);
+      const draftPlace = normalizeText(reservationDraft.location);
+      const byFingerprint = collection.find((item) => {
+        const sameTitle = draftTitle && normalizeText(item.title) === draftTitle;
+        const samePlace = !draftPlace || normalizeText(item.location) === draftPlace;
+        return sameTitle && samePlace;
+      });
+      return byFingerprint || null;
+    };
+    const currentLocation = resolveLocationFromSources(locations);
+    const draftLocation = normalizeListingId(reservationDraft.id)
+      ? enrichListing({
+          id: normalizeListingId(reservationDraft.id),
+          title: reservationDraft.title || "Annonce",
+          type: reservationDraft.type || "Appartement",
+          location: reservationDraft.location || "Port-de-Bouc",
+          heroImage: reservationDraft.heroImage || "",
+          gallery: Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : [],
+          priceValue: reservationDraft.priceValue || null,
+          reservation: reservationDraft.reservation || null,
+          equipments: ["WiFi", "Linge de maison fourni"]
+        })
+      : null;
     let catalog = [...locations];
     let feedbackTimeout;
 
@@ -1527,6 +1592,25 @@
         </section>
       `;
     };
+    const persistResolvedLocation = (resolvedLocation) => {
+      if (!resolvedLocation) return;
+      try {
+        const existing = readReservationDraft();
+        const serialized = JSON.stringify({
+          ...existing,
+          id: normalizeListingId(resolvedLocation.id),
+          title: resolvedLocation.title || existing.title || "",
+          type: resolvedLocation.type || existing.type || "",
+          location: resolvedLocation.location || existing.location || "",
+          heroImage: resolvedLocation.heroImage || existing.heroImage || "",
+          gallery: Array.isArray(resolvedLocation.gallery) ? resolvedLocation.gallery : (Array.isArray(existing.gallery) ? existing.gallery : []),
+          priceValue: resolvedLocation.priceValue ?? existing.priceValue ?? null,
+          reservation: resolvedLocation.reservation || existing.reservation || null
+        });
+        window.sessionStorage.setItem(STORAGE_KEY, serialized);
+        window.localStorage.setItem(STORAGE_KEY, serialized);
+      } catch {}
+    };
 
     const BOOKING_MONTHS_FR = [
       "janvier",
@@ -1624,7 +1708,7 @@
       return `https://wa.me/33781957161?text=${message}`;
     };
 
-    const buildReservationPageHref = ({ id, arriveIso, departIso, guests }) => {
+    const buildReservationPageHref = ({ id, arriveIso, departIso, guests, children = 0, babies = 0 }) => {
       const next = new URLSearchParams();
       next.set("id", id);
       if (arriveIso) next.set("arrive", arriveIso);
@@ -1633,7 +1717,36 @@
         next.set("guests", guests);
         next.set("adults", guests);
       }
+      if (children) next.set("children", children);
+      if (babies) next.set("babies", babies);
       return `./reservation.html?${next.toString()}`;
+    };
+
+    const hydrateBookingDraft = (root, location) => {
+      const arriveInput = root.querySelector("#bookArrive");
+      const departInput = root.querySelector("#bookDepart");
+      const guestsSelect = root.querySelector("#bookGuests");
+      const arriveDisplay = root.querySelector("#bookArriveDisplay");
+      const departDisplay = root.querySelector("#bookDepartDisplay");
+      if (!arriveInput || !departInput || !guestsSelect || !arriveDisplay || !departDisplay) return;
+
+      const draft = normalizeListingId(reservationDraft.id) === location.id ? reservationDraft : {};
+      const nextArrive = params.get("arrive") || draft.arrive || "";
+      const nextDepart = params.get("depart") || draft.depart || "";
+      const nextGuests = params.get("guests") || params.get("adults") || draft.guests || draft.adults || "1";
+
+      arriveInput.value = nextArrive;
+      departInput.value = nextDepart;
+      arriveDisplay.textContent = nextArrive ? bookingFormatFR(nextArrive) : "jj/mm/aaaa";
+      departDisplay.textContent = nextDepart ? bookingFormatFR(nextDepart) : "jj/mm/aaaa";
+      arriveDisplay.classList.toggle("is-placeholder", !nextArrive);
+      departDisplay.classList.toggle("is-placeholder", !nextDepart);
+
+      if ([...guestsSelect.options].some((option) => option.value === String(nextGuests))) {
+        guestsSelect.value = String(nextGuests);
+      } else {
+        guestsSelect.value = "1";
+      }
     };
 
     const initBookingSummary = (root, location) => {
@@ -1654,11 +1767,37 @@
       const nightlyPrice = Number(location.priceValue);
       const hasNightlyPrice = Number.isFinite(nightlyPrice) && nightlyPrice > 0;
 
+      const persistReservationDraft = ({ arriveIso = "", departIso = "", guests = guestsSelect.value || "1" } = {}) => {
+        const draft = {
+          id: location.id,
+          title: location.title,
+          type: location.type,
+          location: location.location,
+          heroImage: location.heroImage,
+          priceValue: location.priceValue,
+          gallery: Array.isArray(location.gallery) ? location.gallery : [],
+          reservation: location.reservation || null,
+          arrive: arriveIso,
+          depart: departIso,
+          guests,
+          adults: guests,
+          children: 0,
+          babies: 0
+        };
+        try {
+          const serialized = JSON.stringify(draft);
+          window.sessionStorage.setItem("kd-reservation-draft", serialized);
+          window.localStorage.setItem("kd-reservation-draft", serialized);
+        } catch {}
+      };
+
       const updateBookingSummary = () => {
         const arriveIso = arriveInput.value;
         const departIso = departInput.value;
         const guests = guestsSelect.value;
         const nights = bookingDiffNights(arriveIso, departIso);
+
+        persistReservationDraft({ arriveIso, departIso, guests });
 
         summaryEl.hidden = false;
 
@@ -1686,24 +1825,14 @@
           ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${guests} voyageur${guests > 1 ? "s" : ""}.`
           : `Durée sélectionnée : ${nightsLabel} pour ${guests} voyageur${guests > 1 ? "s" : ""}. Le tarif exact sera confirmé sur demande.`;
 
-        try {
-          window.sessionStorage.setItem("kd-reservation-draft", JSON.stringify({
-            id: location.id,
-            arrive: arriveIso,
-            depart: departIso,
-            guests,
-            adults: guests,
-            children: 0,
-            babies: 0
-          }));
-        } catch {}
-
         requestBtn.textContent = "Continuer la réservation";
         requestBtn.href = buildReservationPageHref({
           id: location.id,
           arriveIso,
           departIso,
-          guests
+          guests,
+          children: 0,
+          babies: 0
         });
         requestBtn.classList.remove("is-disabled");
         whatsappBtn.href = buildBookingWhatsappHref({
@@ -2185,6 +2314,7 @@
         showFeedback(result.isFavorite ? "Ajouté aux favoris" : "Retiré des favoris");
       });
 
+      hydrateBookingDraft(mount, location);
       initBookingDatePickers(mount);
       initBookingSummary(mount, location);
     };
@@ -2206,8 +2336,11 @@
 
     setupPageTransitions();
     Promise.all([loadRemoteCatalog(), currentLocation ? Promise.resolve(currentLocation) : loadRemoteLocation()]).then(([, remoteLocation]) => {
-      const resolvedLocation = currentLocation || remoteLocation;
-      if (resolvedLocation) renderDetail(resolvedLocation);
+      const resolvedLocation = currentLocation || remoteLocation || resolveLocationFromSources(catalog) || draftLocation || null;
+      if (resolvedLocation) {
+        persistResolvedLocation(resolvedLocation);
+        renderDetail(resolvedLocation);
+      }
       else renderNotFound();
     });
   </script>
