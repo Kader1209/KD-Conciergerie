@@ -348,7 +348,8 @@
       border-radius: 18px;
       border: 1px solid rgba(209, 219, 232, 0.96);
       background: #fff;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
     }
 
     .payment-choice.active {
@@ -357,9 +358,45 @@
       box-shadow: 0 10px 22px rgba(183, 144, 115, 0.08);
     }
 
+    .payment-choice:hover {
+      transform: translateY(-1px);
+    }
+
     .payment-choice input {
-      margin-top: 4px;
-      accent-color: var(--sand);
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .payment-choice-indicator {
+      flex: 0 0 20px;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(148, 163, 184, 0.96);
+      background: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      position: relative;
+    }
+
+    .payment-choice-indicator::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 999px;
+      background: var(--sand);
+      transform: scale(0);
+      transition: transform 0.2s ease;
+    }
+
+    .payment-choice.active .payment-choice-indicator {
+      border-color: rgba(183, 144, 115, 0.72);
+      box-shadow: 0 0 0 4px rgba(183, 144, 115, 0.12);
+    }
+
+    .payment-choice.active .payment-choice-indicator::after {
+      transform: scale(1);
     }
 
     .payment-choice strong {
@@ -621,18 +658,18 @@
         <div class="hero-image" id="heroImage"></div>
         <div class="hero-body">
           <span class="eyebrow">Réservation premium</span>
-          <h1 id="reservationTitle">Votre séjour KD Conciergerie</h1>
-          <p class="lead" id="reservationLead">Un récapitulatif clair, détaillé et rassurant avant la confirmation finale.</p>
+          <h1 id="reservationTitle">Chargement de votre réservation...</h1>
+          <p class="lead" id="reservationLead">Nous récupérons les informations de votre séjour.</p>
           <div class="date-cards">
             <article class="date-card">
               <div class="date-label">Arrivée</div>
-              <div class="date-day" id="arriveDay">-</div>
-              <div class="date-month" id="arriveMonth">À préciser</div>
+              <div class="date-day" id="arriveDay">--</div>
+              <div class="date-month" id="arriveMonth">Chargement...</div>
             </article>
             <article class="date-card">
               <div class="date-label">Départ</div>
-              <div class="date-day" id="departDay">-</div>
-              <div class="date-month" id="departMonth">À préciser</div>
+              <div class="date-day" id="departDay">--</div>
+              <div class="date-month" id="departMonth">Chargement...</div>
             </article>
           </div>
         </div>
@@ -642,7 +679,7 @@
         <div class="traveler-summary">
           <div>
             <div class="section-title">Détails des voyageurs</div>
-            <div class="traveler-counts" id="travelerCounts">1 adulte, 0 enfant</div>
+            <div class="traveler-counts" id="travelerCounts">Chargement des voyageurs...</div>
           </div>
           <a class="edit-link" id="editStayLink" href="./location-detail.html">Modifier</a>
         </div>
@@ -712,15 +749,17 @@
       <section class="card section">
         <div class="section-title">Modalité de paiement</div>
         <div class="choice-grid" id="paymentChoices">
-          <label class="payment-choice">
+          <label class="payment-choice" data-payment-choice="card">
             <input type="radio" name="paymentMethod" value="card" />
+            <span class="payment-choice-indicator" aria-hidden="true"></span>
             <div>
               <strong>Carte bancaire</strong>
               <span>Paiement en ligne après confirmation du séjour.</span>
             </div>
           </label>
-          <label class="payment-choice">
+          <label class="payment-choice" data-payment-choice="transfer">
             <input type="radio" name="paymentMethod" value="transfer" />
+            <span class="payment-choice-indicator" aria-hidden="true"></span>
             <div>
               <strong>Virement bancaire</strong>
               <span>Coordonnées transmises après validation de la demande.</span>
@@ -751,7 +790,7 @@
 
       <section class="card section">
         <div class="cta-area">
-          <a class="cta-button is-disabled" id="continuePaymentBtn" href="https://wa.me/33781957161" target="_blank" rel="noopener noreferrer">CONTINUER LE PAIEMENT</a>
+          <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true" target="_blank" rel="noopener noreferrer">Valider le paiement</a>
           <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
           <p class="small-note">Le bouton final devient actif après acceptation des conditions et calcul valide du séjour.</p>
         </div>
@@ -770,6 +809,7 @@
 
     const params = new URLSearchParams(window.location.search);
     const STORAGE_KEY = "kd-reservation-draft";
+    const BOOKING_STORAGE_KEY = "kd_booking";
     const readReservationDraft = () => {
       try {
         const sessionRaw = window.sessionStorage.getItem(STORAGE_KEY);
@@ -789,6 +829,17 @@
         window.localStorage.setItem(STORAGE_KEY, serialized);
       } catch {}
     };
+    const loadBookingData = () => {
+      try {
+        const raw = window.sessionStorage.getItem(BOOKING_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        console.log("[kd_booking] loaded on reservation", parsed);
+        return parsed;
+      } catch (error) {
+        console.log("[kd_booking] invalid bookingData", error);
+        return null;
+      }
+    };
     const normalizeListingId = (value) => {
       const cleaned = String(value || "").trim();
       return cleaned && cleaned !== "undefined" && cleaned !== "null" ? cleaned : "";
@@ -806,22 +857,37 @@
       next.set("id", targetId);
       if (reservationData.arrive) next.set("arrive", reservationData.arrive);
       if (reservationData.depart) next.set("depart", reservationData.depart);
+      const totalGuests = Number(reservationData.adults || 0) + Number(reservationData.children || 0) + Number(reservationData.babies || 0);
       if (reservationData.adults) {
-        next.set("guests", String(reservationData.adults));
+        next.set("guests", String(totalGuests || reservationData.adults));
         next.set("adults", String(reservationData.adults));
       }
       if (reservationData.children) next.set("children", String(reservationData.children));
       if (reservationData.babies) next.set("babies", String(reservationData.babies));
+      if (reservationData.childAges?.length) next.set("childAges", reservationData.childAges.join(","));
       return `./location-detail.html?${next.toString()}#booking`;
     };
     const reservationDraft = readReservationDraft();
+    const bookingData = loadBookingData();
+    const urlPropertyId = normalizeListingId(params.get("id"));
+    const bookingPropertyId = normalizeListingId(bookingData?.propertyId);
     const reservationData = {
-      id: normalizeListingId(params.get("id")) || normalizeListingId(reservationDraft.id) || "",
-      arrive: params.get("arrive") || reservationDraft.arrive || "",
-      depart: params.get("depart") || reservationDraft.depart || "",
-      adults: Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
-      children: Number(params.get("children") || reservationDraft.children || 0),
-      babies: Number(params.get("babies") || reservationDraft.babies || 0)
+      id: urlPropertyId || bookingPropertyId || normalizeListingId(reservationDraft.id) || "",
+      arrive: bookingPropertyId && bookingPropertyId === urlPropertyId ? (bookingData?.checkIn || "") : (params.get("arrive") || reservationDraft.arrive || ""),
+      depart: bookingPropertyId && bookingPropertyId === urlPropertyId ? (bookingData?.checkOut || "") : (params.get("depart") || reservationDraft.depart || ""),
+      adults: bookingPropertyId && bookingPropertyId === urlPropertyId ? Number(bookingData?.adults || 0) : Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
+      children: bookingPropertyId && bookingPropertyId === urlPropertyId ? Number(bookingData?.children || 0) : Number(params.get("children") || reservationDraft.children || 0),
+      babies: Number(params.get("babies") || reservationDraft.babies || 0),
+      childAges: (() => {
+        const raw = params.get("childAges");
+        if (raw) return raw.split(",").map((item) => String(item || "").trim()).filter(Boolean);
+        return Array.isArray(reservationDraft.childAges) ? reservationDraft.childAges : [];
+      })()
+    };
+    const reservationState = {
+      selectedPaymentMethod: "",
+      termsAccepted: false,
+      marketingAccepted: false
     };
     writeReservationDraft(reservationData);
     const locationId = reservationData.id;
@@ -863,7 +929,6 @@
     let feedbackTimeout;
     let activePromo = null;
     let selectedOptionKeys = new Set();
-    let selectedPaymentMethod = "";
 
     const DEFAULT_RESERVATION = {
       cityTaxPerNightPerAdult: 2,
@@ -1007,7 +1072,10 @@
       if (location?.id && normalizeListingId(reservationData.id) !== normalizeListingId(location.id)) {
         reservationData.id = normalizeListingId(location.id);
       }
-      if (!reservationData.adults || reservationData.adults < 1) reservationData.adults = 1;
+      reservationData.adults = Number.isFinite(Number(reservationData.adults)) ? Math.max(Number(reservationData.adults), 0) : 0;
+      reservationData.children = Number.isFinite(Number(reservationData.children)) ? Math.max(Number(reservationData.children), 0) : 0;
+      reservationData.babies = Number.isFinite(Number(reservationData.babies)) ? Math.max(Number(reservationData.babies), 0) : 0;
+      reservationData.childAges = Array.isArray(reservationData.childAges) ? reservationData.childAges.slice(0, reservationData.children) : [];
       writeReservationDraft({
         ...reservationData,
         id: reservationData.id,
@@ -1018,7 +1086,7 @@
         gallery: Array.isArray(location?.gallery) ? location.gallery : (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : []),
         priceValue: location?.priceValue ?? reservationDraft.priceValue ?? null,
         reservation: location?.reservation || reservationDraft.reservation || null,
-        guests: reservationData.adults
+        guests: reservationData.adults + reservationData.children + reservationData.babies
       });
     };
 
@@ -1026,7 +1094,11 @@
       reservation.optionalServices.filter((item) => selectedOptionKeys.has(item.key));
 
     const getSelectedPayment = () =>
-      selectedPaymentMethod === "transfer" ? "Virement bancaire" : "Carte bancaire";
+      reservationState.selectedPaymentMethod === "transfer"
+        ? "Virement bancaire"
+        : reservationState.selectedPaymentMethod === "card"
+          ? "Carte bancaire"
+          : "Aucun mode sélectionné";
 
     const computeDiscount = (subtotal, reservation) => {
       if (!activePromo) return { amount: 0, label: "" };
@@ -1040,37 +1112,144 @@
     const renderPaymentChoiceState = () => {
       document.querySelectorAll(".payment-choice").forEach((choice) => {
         const input = choice.querySelector('input[type="radio"]');
-        const isActive = input?.value === selectedPaymentMethod;
+        const isActive = input?.value === reservationState.selectedPaymentMethod;
         if (input) input.checked = isActive;
         choice.classList.toggle("active", isActive);
+        choice.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
     };
 
     const loadReservationData = () => {
+      const hasValidProperty = Boolean(normalizeListingId(reservationData.id) || normalizeListingId(location?.id));
+      const hasValidDates = Boolean(reservationData.arrive && reservationData.depart && diffNights(reservationData.arrive, reservationData.depart) > 0);
       const data = {
         ...reservationData,
-        hasDates: Boolean(reservationData.arrive && reservationData.depart),
+        hasProperty: hasValidProperty,
+        hasDates: hasValidDates,
         hasTravelers: Number(reservationData.adults) > 0
       };
       writeReservationDraft(data);
       return data;
     };
 
-    const isReservationComplete = () => {
-      const data = loadReservationData();
-      return data.hasDates && data.hasTravelers && diffNights(data.arrive, data.depart) > 0;
+    const validateBookingData = () => {
+      if (!bookingData) {
+        console.log("[kd_booking] invalid bookingData");
+        return { valid: false, reason: "invalid bookingData" };
+      }
+      if (!bookingPropertyId) {
+        console.log("[kd_booking] missing propertyId");
+        return { valid: false, reason: "missing propertyId" };
+      }
+      if (!bookingData.checkIn) {
+        console.log("[kd_booking] missing checkIn");
+        return { valid: false, reason: "missing checkIn" };
+      }
+      if (!bookingData.checkOut) {
+        console.log("[kd_booking] missing checkOut");
+        return { valid: false, reason: "missing checkOut" };
+      }
+      if (bookingData.adults == null) {
+        console.log("[kd_booking] missing adults");
+        return { valid: false, reason: "missing adults" };
+      }
+      if (urlPropertyId && bookingPropertyId !== urlPropertyId) {
+        console.log("[kd_booking] invalid bookingData", { urlPropertyId, bookingPropertyId });
+        return { valid: false, reason: "invalid bookingData" };
+      }
+      return { valid: true, reason: "" };
     };
 
-    const validateReservationForm = () => {
-      const hasPayment = selectedPaymentMethod === "card" || selectedPaymentMethod === "transfer";
-      const termsAccepted = document.getElementById("acceptRequiredTerms")?.checked;
-      return Boolean(isReservationComplete() && hasPayment && termsAccepted);
+    const loadSelectedProperty = () => location;
+
+    const validateReservation = () => {
+      const data = loadReservationData();
+      const hasPayment = reservationState.selectedPaymentMethod === "card" || reservationState.selectedPaymentMethod === "transfer";
+      const termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
+      reservationState.termsAccepted = termsAccepted;
+      reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
+      return {
+        isValid: Boolean(data.hasProperty && data.hasDates && data.hasTravelers && hasPayment && termsAccepted),
+        data,
+        hasPayment,
+        termsAccepted
+      };
     };
 
     const updateSubmitButtonState = () => {
       const continuePaymentBtn = document.getElementById("continuePaymentBtn");
       if (!continuePaymentBtn) return;
-      continuePaymentBtn.classList.toggle("is-disabled", !validateReservationForm());
+      const validation = validateReservation();
+      continuePaymentBtn.classList.toggle("is-disabled", !validation.isValid);
+      continuePaymentBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
+      if (validation.isValid) {
+        continuePaymentBtn.href = buildWhatsappHref({
+          totalLabel: continuePaymentBtn.dataset.totalLabel || formatMoney(0),
+          nights: Number(continuePaymentBtn.dataset.nights || 0),
+          selectedOptions: getSelectedOptions(mergeReservation(location?.reservation)),
+          payment: getSelectedPayment()
+        });
+      } else {
+        continuePaymentBtn.removeAttribute("href");
+      }
+    };
+
+    const preloadReservationUi = () => {
+      const draftTitle = reservationDraft.title || "Votre réservation KD Conciergerie";
+      const draftLead = reservationDraft.location
+        ? `Séjour en préparation pour ${reservationDraft.location}.`
+        : "Nous récupérons les informations de votre séjour.";
+      const arriveCard = reservationData.arrive ? formatDateCard(reservationData.arrive) : null;
+      const departCard = reservationData.depart ? formatDateCard(reservationData.depart) : null;
+      const heroSrc = reservationDraft.heroImage || (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery[0] : "") || "";
+
+      document.getElementById("reservationTitle").textContent = draftTitle;
+      document.getElementById("reservationLead").textContent = draftLead;
+      document.getElementById("heroImage").innerHTML = heroSrc
+        ? `<img src="${heroSrc}" alt="${draftTitle}" />`
+        : `<div style="height:100%;display:grid;place-items:center;color:#64748b;background:linear-gradient(135deg,#eef4ff,#edf9f6);">Chargement du bien</div>`;
+      document.getElementById("arriveDay").textContent = arriveCard ? arriveCard.day : "--";
+      document.getElementById("arriveMonth").textContent = arriveCard ? `${arriveCard.month} · ${formatLongDate(reservationData.arrive)}` : "À compléter depuis l’annonce";
+      document.getElementById("departDay").textContent = departCard ? departCard.day : "--";
+      document.getElementById("departMonth").textContent = departCard ? `${departCard.month} · ${formatLongDate(reservationData.depart)}` : "À compléter depuis l’annonce";
+      document.getElementById("travelerCounts").textContent = reservationData.adults > 0
+        ? `${reservationData.adults} adulte${reservationData.adults > 1 ? "s" : ""}, ${reservationData.children} enfant${reservationData.children > 1 ? "s" : ""}${reservationData.childAges.length ? ` (${reservationData.childAges.map((age) => `${age} ans`).join(", ")})` : ""}${reservationData.babies ? `, ${reservationData.babies} bébé${reservationData.babies > 1 ? "s" : ""}` : ""}`
+        : "À compléter depuis l’annonce";
+    };
+
+    const renderReservationHero = (property) => {
+      const data = loadReservationData();
+      const heroSrc = property?.heroImage || reservationDraft.heroImage || (Array.isArray(property?.gallery) ? property.gallery[0] : "") || "";
+      document.getElementById("heroImage").innerHTML = heroSrc
+        ? `<img src="${heroSrc}" alt="${property?.title || "Annonce KD Conciergerie"}" />`
+        : `<div style="height:100%;display:grid;place-items:center;color:#64748b;background:linear-gradient(135deg,#eef4ff,#edf9f6);">Annonce sélectionnée</div>`;
+      document.getElementById("reservationTitle").textContent = property?.title || reservationDraft.title || "Votre séjour KD Conciergerie";
+      document.getElementById("reservationLead").textContent = property
+        ? `${property.type || "Bien"} à ${property.location || "Port-de-Bouc"} avec récapitulatif premium, échéancier clair et validation finale sécurisée.`
+        : data.hasProperty
+          ? "Le bien sélectionné est en cours de récupération."
+          : "Complétez votre sélection depuis l’annonce pour afficher le récapitulatif complet.";
+    };
+
+    const renderReservationDates = (data) => {
+      const arriveCard = formatDateCard(data.arrive);
+      const departCard = formatDateCard(data.depart);
+      document.getElementById("arriveDay").textContent = data.hasDates ? arriveCard.day : "";
+      document.getElementById("arriveMonth").textContent = data.hasDates ? `${arriveCard.month} · ${formatLongDate(data.arrive)}` : "Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.";
+      document.getElementById("departDay").textContent = data.hasDates ? departCard.day : "";
+      document.getElementById("departMonth").textContent = data.hasDates ? `${departCard.month} · ${formatLongDate(data.depart)}` : "Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.";
+    };
+
+    const renderTravelerDetails = (data) => {
+      document.getElementById("travelerCounts").textContent = data.hasTravelers
+        ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}, ${data.children} enfant${data.children > 1 ? "s" : ""}${data.childAges?.length ? ` (${data.childAges.map((age) => `${age} ans`).join(", ")})` : ""}${data.babies ? `, ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}`
+        : "Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.";
+    };
+
+    const togglePaymentMethod = (method) => {
+      reservationState.selectedPaymentMethod = reservationState.selectedPaymentMethod === method ? "" : method;
+      renderPaymentChoiceState();
+      renderReservation();
     };
 
     const buildMailHref = ({ totalLabel, nights, selectedOptions, payment }) => {
@@ -1110,6 +1289,12 @@
     };
 
     const renderReservation = () => {
+      const bookingValidation = validateBookingData();
+      if (!bookingValidation.valid) {
+        document.getElementById("backToListing").href = buildListingBackHref();
+        document.querySelector("main").innerHTML = `<section class="card section"><div class="section-title">Réservation incomplète</div><p class="section-note">Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
+        return;
+      }
       if (!location) {
         document.getElementById("backToListing").href = buildListingBackHref();
         document.querySelector("main").innerHTML = `<section class="card section"><div class="section-title">Réservation introuvable</div><p class="section-note">Aucune annonce valide n’a été trouvée pour cette réservation.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
@@ -1117,6 +1302,7 @@
       }
 
       const data = loadReservationData();
+      const property = loadSelectedProperty();
       const reservation = mergeReservation(location.reservation);
       const nights = diffNights(data.arrive, data.depart);
       const nightlyPrice = Number(location.priceValue) || 0;
@@ -1139,23 +1325,11 @@
       const balanceAmount = Math.max(grandTotal - depositAmount - onSiteAmount, 0);
       const balanceDate = addDays(data.arrive, -(Number(reservation.paymentSchedule.balanceDaysBeforeArrival || 0)));
 
-      const arriveCard = formatDateCard(data.arrive);
-      const departCard = formatDateCard(data.depart);
-      const heroSrc = location.heroImage || reservationDraft.heroImage || "";
-      document.getElementById("heroImage").innerHTML = heroSrc
-        ? `<img src="${heroSrc}" alt="${location.title}" />`
-        : `<div style="height:100%;display:grid;place-items:center;color:#64748b;background:linear-gradient(135deg,#eef4ff,#edf9f6);">Image du bien</div>`;
-      document.getElementById("reservationTitle").textContent = location.title;
-      document.getElementById("reservationLead").textContent = `${location.type || "Bien"} à ${location.location || "Port-de-Bouc"} avec récapitulatif premium, échéancier et conditions détaillées.`;
+      renderReservationHero(property);
       document.getElementById("backToListing").href = buildListingBackHref();
       document.getElementById("editStayLink").href = buildListingBackHref();
-      document.getElementById("arriveDay").textContent = arriveCard.day;
-      document.getElementById("arriveMonth").textContent = arriveCard.month;
-      document.getElementById("departDay").textContent = departCard.day;
-      document.getElementById("departMonth").textContent = departCard.month;
-      document.getElementById("travelerCounts").textContent = data.hasTravelers
-        ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}, ${data.children} enfant${data.children > 1 ? "s" : ""}${data.babies ? `, ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}`
-        : "Veuillez sélectionner vos dates et voyageurs avant de continuer.";
+      renderReservationDates(data);
+      renderTravelerDetails(data);
 
       document.getElementById("priceBreakdown").innerHTML = `
         <div class="price-row">
@@ -1273,21 +1447,17 @@
         selectedOptions,
         payment
       });
-      continuePaymentBtn.href = buildWhatsappHref({
-        totalLabel: formatMoney(grandTotal),
-        nights,
-        selectedOptions,
-        payment
-      });
+      continuePaymentBtn.dataset.totalLabel = formatMoney(grandTotal);
+      continuePaymentBtn.dataset.nights = String(nights);
 
       updateSubmitButtonState();
 
-      document.querySelectorAll(".payment-choice input").forEach((input) => {
-        input.onchange = () => {
-          selectedPaymentMethod = input.value;
-          renderPaymentChoiceState();
-          updateSubmitButtonState();
-          renderReservation();
+      document.querySelectorAll(".payment-choice").forEach((choice) => {
+        choice.onclick = (event) => {
+          event.preventDefault();
+          const method = choice.getAttribute("data-payment-choice");
+          if (!method) return;
+          togglePaymentMethod(method);
         };
       });
 
@@ -1326,16 +1496,23 @@
         showFeedback(`Code promo ${code} appliqué.`);
       });
 
-      document.getElementById("acceptRequiredTerms").addEventListener("change", updateSubmitButtonState);
-      document.getElementById("acceptPromos").addEventListener("change", () => {});
+      document.getElementById("acceptRequiredTerms").addEventListener("change", () => {
+        reservationState.termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
+        updateSubmitButtonState();
+      });
+      document.getElementById("acceptPromos").addEventListener("change", () => {
+        reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
+        updateSubmitButtonState();
+      });
       document.getElementById("continuePaymentBtn").addEventListener("click", (event) => {
         if (event.currentTarget.classList.contains("is-disabled")) {
           event.preventDefault();
-          showFeedback("Veuillez accepter les conditions et vérifier les dates du séjour.");
+          showFeedback("Complétez les dates, les voyageurs, le paiement et les conditions pour valider.");
         }
       });
     };
 
+    preloadReservationUi();
     Promise.resolve(location ? location : loadRemoteLocation()).then((resolved) => {
       if (resolved) location = resolved;
       if (!location) location = resolveLocationFromSources(fallbackLocations);
