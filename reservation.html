@@ -71,9 +71,9 @@
     }
 
     .topbar {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
       gap: 16px;
     }
 
@@ -83,17 +83,26 @@
       gap: 8px;
       min-height: 44px;
       padding: 0 14px;
+      width: fit-content;
+      max-width: 100%;
       border-radius: 999px;
       border: 1px solid rgba(209, 219, 232, 0.96);
       background: rgba(255, 255, 255, 0.9);
       color: #334155;
       font-weight: 600;
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .brand-logo {
       width: 58px;
       height: 58px;
       object-fit: contain;
+      justify-self: end;
+      flex-shrink: 0;
     }
 
     main {
@@ -385,20 +394,106 @@
     }
 
     .check-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: start;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      background: rgba(248, 250, 252, 0.96);
       color: #334155;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .check-row:hover {
+      border-color: rgba(30, 64, 175, 0.18);
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
     }
 
     .check-row input {
-      margin-top: 3px;
-      accent-color: var(--sand);
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .check-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(148, 163, 184, 0.96);
+      background: #fff;
+      box-shadow: inset 0 1px 1px rgba(15, 23, 42, 0.04);
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      margin-top: 1px;
+    }
+
+    .check-mark::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 3px;
+      width: 6px;
+      height: 11px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(45deg) scale(0.85);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+    }
+
+    .check-copy {
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    .check-row input:checked + .check-mark {
+      background: linear-gradient(135deg, var(--blue), #173b8f);
+      border-color: transparent;
+      box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
+    }
+
+    .check-row input:checked + .check-mark::after {
+      opacity: 1;
+    }
+
+    .check-row input:focus-visible + .check-mark {
+      outline: 3px solid rgba(59, 130, 246, 0.22);
+      outline-offset: 2px;
     }
 
     .check-row a {
       text-decoration: underline;
       font-weight: 700;
+    }
+
+    @media (max-width: 720px) {
+      .check-row {
+        grid-template-columns: 22px minmax(0, 1fr);
+        gap: 12px;
+        padding: 13px 14px;
+        border-radius: 16px;
+      }
+
+      .check-mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+      }
+
+      .check-mark::after {
+        left: 6px;
+        top: 2px;
+      }
+
+      .check-copy {
+        font-size: 0.94rem;
+      }
     }
 
     .cta-area {
@@ -475,6 +570,25 @@
     }
 
     @media (max-width: 760px) {
+      header {
+        padding: 12px 0 10px;
+      }
+
+      .topbar {
+        gap: 10px;
+      }
+
+      .back-link {
+        min-height: 42px;
+        padding: 0 12px;
+        font-size: 0.95rem;
+      }
+
+      .brand-logo {
+        width: 46px;
+        height: 46px;
+      }
+
       .choice-grid {
         grid-template-columns: 1fr;
       }
@@ -624,11 +738,13 @@
         <div class="checks">
           <label class="check-row">
             <input type="checkbox" id="acceptRequiredTerms" />
-            <span>J’ai lu et j’accepte les <a href="./index.html#contact">conditions générales de contrat</a> et la politique de protection des données.</span>
+            <span class="check-mark" aria-hidden="true"></span>
+            <span class="check-copy">J’ai lu et j’accepte les <a href="./conditions-generales.html">conditions générales de contrat</a> et la politique de protection des données.</span>
           </label>
           <label class="check-row">
             <input type="checkbox" id="acceptPromos" />
-            <span>J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
+            <span class="check-mark" aria-hidden="true"></span>
+            <span class="check-copy">J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
           </label>
         </div>
       </section>
@@ -667,14 +783,40 @@
     };
     const writeReservationDraft = (data) => {
       try {
-        const serialized = JSON.stringify(data);
+        const existing = readReservationDraft();
+        const serialized = JSON.stringify({ ...existing, ...data });
         window.sessionStorage.setItem(STORAGE_KEY, serialized);
         window.localStorage.setItem(STORAGE_KEY, serialized);
       } catch {}
     };
+    const normalizeListingId = (value) => {
+      const cleaned = String(value || "").trim();
+      return cleaned && cleaned !== "undefined" && cleaned !== "null" ? cleaned : "";
+    };
+    const normalizeText = (value) =>
+      String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+    const buildListingBackHref = () => {
+      const targetId = normalizeListingId(reservationData.id) || normalizeListingId(reservationDraft.id) || normalizeListingId(location?.id) || "";
+      if (!targetId) return "./locations.html";
+      const next = new URLSearchParams();
+      next.set("id", targetId);
+      if (reservationData.arrive) next.set("arrive", reservationData.arrive);
+      if (reservationData.depart) next.set("depart", reservationData.depart);
+      if (reservationData.adults) {
+        next.set("guests", String(reservationData.adults));
+        next.set("adults", String(reservationData.adults));
+      }
+      if (reservationData.children) next.set("children", String(reservationData.children));
+      if (reservationData.babies) next.set("babies", String(reservationData.babies));
+      return `./location-detail.html?${next.toString()}`;
+    };
     const reservationDraft = readReservationDraft();
     const reservationData = {
-      id: params.get("id") || reservationDraft.id || "",
+      id: normalizeListingId(params.get("id")) || normalizeListingId(reservationDraft.id) || "",
       arrive: params.get("arrive") || reservationDraft.arrive || "",
       depart: params.get("depart") || reservationDraft.depart || "",
       adults: Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
@@ -685,7 +827,39 @@
     const locationId = reservationData.id;
 
     const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
-    let location = fallbackLocations.find((item) => item.id === locationId) || null;
+    const draftLocation = reservationDraft && reservationDraft.id
+      ? enrichListing({
+          id: reservationDraft.id,
+          title: reservationDraft.title || "Annonce",
+          type: reservationDraft.type || "Appartement",
+          location: reservationDraft.location || "Port-de-Bouc",
+          heroImage: reservationDraft.heroImage || "",
+          gallery: Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : [],
+          priceValue: reservationDraft.priceValue || null,
+          reservation: reservationDraft.reservation || null,
+          equipments: ["WiFi", "Linge de maison fourni"]
+        })
+      : null;
+    const resolveLocationFromSources = (collection) => {
+      const byId = collection.find((item) => normalizeListingId(item.id) === locationId);
+      if (byId) return byId;
+
+      const draftId = normalizeListingId(reservationDraft.id);
+      const byDraftId = draftId ? collection.find((item) => normalizeListingId(item.id) === draftId) : null;
+      if (byDraftId) return byDraftId;
+
+      const draftTitle = normalizeText(reservationDraft.title);
+      const draftPlace = normalizeText(reservationDraft.location);
+      const byFingerprint = collection.find((item) => {
+        const sameTitle = draftTitle && normalizeText(item.title) === draftTitle;
+        const samePlace = !draftPlace || normalizeText(item.location) === draftPlace;
+        return sameTitle && samePlace;
+      });
+      if (byFingerprint) return byFingerprint;
+
+      return draftLocation;
+    };
+    let location = resolveLocationFromSources(fallbackLocations);
     let feedbackTimeout;
     let activePromo = null;
     let selectedOptionKeys = new Set();
@@ -829,6 +1003,24 @@
       }
       return null;
     };
+    const sanitizeReservationData = () => {
+      if (location?.id && normalizeListingId(reservationData.id) !== normalizeListingId(location.id)) {
+        reservationData.id = normalizeListingId(location.id);
+      }
+      if (!reservationData.adults || reservationData.adults < 1) reservationData.adults = 1;
+      writeReservationDraft({
+        ...reservationData,
+        id: reservationData.id,
+        title: location?.title || reservationDraft.title || "",
+        type: location?.type || reservationDraft.type || "",
+        location: location?.location || reservationDraft.location || "",
+        heroImage: location?.heroImage || reservationDraft.heroImage || "",
+        gallery: Array.isArray(location?.gallery) ? location.gallery : (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : []),
+        priceValue: location?.priceValue ?? reservationDraft.priceValue ?? null,
+        reservation: location?.reservation || reservationDraft.reservation || null,
+        guests: reservationData.adults
+      });
+    };
 
     const getSelectedOptions = (reservation) =>
       reservation.optionalServices.filter((item) => selectedOptionKeys.has(item.key));
@@ -919,7 +1111,8 @@
 
     const renderReservation = () => {
       if (!location) {
-        document.querySelector("main").innerHTML = `<section class="card section"><div class="section-title">Réservation introuvable</div><p class="section-note">Aucune annonce valide n’a été trouvée pour cette réservation.</p></section>`;
+        document.getElementById("backToListing").href = buildListingBackHref();
+        document.querySelector("main").innerHTML = `<section class="card section"><div class="section-title">Réservation introuvable</div><p class="section-note">Aucune annonce valide n’a été trouvée pour cette réservation.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
         return;
       }
 
@@ -948,11 +1141,14 @@
 
       const arriveCard = formatDateCard(data.arrive);
       const departCard = formatDateCard(data.depart);
-      document.getElementById("heroImage").innerHTML = `<img src="${location.heroImage || ""}" alt="${location.title}" />`;
+      const heroSrc = location.heroImage || reservationDraft.heroImage || "";
+      document.getElementById("heroImage").innerHTML = heroSrc
+        ? `<img src="${heroSrc}" alt="${location.title}" />`
+        : `<div style="height:100%;display:grid;place-items:center;color:#64748b;background:linear-gradient(135deg,#eef4ff,#edf9f6);">Image du bien</div>`;
       document.getElementById("reservationTitle").textContent = location.title;
       document.getElementById("reservationLead").textContent = `${location.type || "Bien"} à ${location.location || "Port-de-Bouc"} avec récapitulatif premium, échéancier et conditions détaillées.`;
-      document.getElementById("backToListing").href = `./location-detail.html?id=${location.id}`;
-      document.getElementById("editStayLink").href = `./location-detail.html?id=${location.id}`;
+      document.getElementById("backToListing").href = buildListingBackHref();
+      document.getElementById("editStayLink").href = buildListingBackHref();
       document.getElementById("arriveDay").textContent = arriveCard.day;
       document.getElementById("arriveMonth").textContent = arriveCard.month;
       document.getElementById("departDay").textContent = departCard.day;
@@ -1142,6 +1338,8 @@
 
     Promise.resolve(location ? location : loadRemoteLocation()).then((resolved) => {
       if (resolved) location = resolved;
+      if (!location) location = resolveLocationFromSources(fallbackLocations);
+      sanitizeReservationData();
       bindStaticEvents();
       renderPaymentChoiceState();
       renderReservation();
