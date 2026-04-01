@@ -812,7 +812,7 @@
       }
       if (reservationData.children) next.set("children", String(reservationData.children));
       if (reservationData.babies) next.set("babies", String(reservationData.babies));
-      return `./location-detail.html?${next.toString()}`;
+      return `./location-detail.html?${next.toString()}#booking`;
     };
     const reservationDraft = readReservationDraft();
     const reservationData = {
