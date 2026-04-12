@@ -960,36 +960,6 @@
       margin-top: 12px;
     }
 
-    .booking-whatsapp-btn {
-      width: 100%;
-      min-height: 48px;
-      border-radius: 14px;
-      border: 1px solid rgba(15, 118, 110, 0.18);
-      background: linear-gradient(180deg, #12b886, #0f9f74);
-      color: #fff;
-      font: inherit;
-      font-size: 0.9rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 16px;
-      text-decoration: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-      box-shadow: 0 14px 28px rgba(15, 184, 134, 0.18);
-    }
-
-    .booking-whatsapp-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .booking-whatsapp-btn.is-disabled {
-      opacity: 0.55;
-      pointer-events: none;
-      box-shadow: none;
-    }
-
     .listing-stats-inline {
       display: flex;
       flex-wrap: wrap;
@@ -1771,21 +1741,6 @@
       return `mailto:kd.conciergerie13@gmail.com?subject=${subject}&body=${body}`;
     };
 
-    const buildBookingWhatsappHref = ({ title, location, arriveIso, departIso, guests, totalLabel, nights }) => {
-      const message = encodeURIComponent(
-        [
-          `Bonjour, je souhaite réserver ce logement : ${title}.`,
-          `Localisation : ${location || "Non précisée"}`,
-          `Arrivée : ${bookingFormatFR(arriveIso) || "À préciser"}`,
-          `Départ : ${bookingFormatFR(departIso) || "À préciser"}`,
-          `Voyageurs : ${guests || "À préciser"}`,
-          nights ? `Durée : ${nights} nuit${nights > 1 ? "s" : ""}` : `Durée : À préciser`,
-          totalLabel ? `Prix estimé affiché : ${totalLabel}` : `Prix estimé : Sur demande`
-        ].join("\n")
-      );
-      return `https://wa.me/33781957161?text=${message}`;
-    };
-
     const BOOKING_STORAGE_KEY = "kd_booking";
     const createBookingDataFromListing = ({ propertyId, checkIn, checkOut, adults, children }) => {
       const bookingData = {
@@ -1860,9 +1815,8 @@
       const noteEl = root.querySelector("#bookingSummaryNote");
       const summaryEl = root.querySelector("#bookingSummary");
       const requestBtn = root.querySelector("#bookingRequestBtn");
-      const whatsappBtn = root.querySelector("#bookingWhatsappBtn");
 
-      if (!arriveInput || !departInput || !guestsInput || !adultsValueEl || !childrenValueEl || !adultsMinusBtn || !adultsPlusBtn || !childrenMinusBtn || !childrenPlusBtn || !childAgesGroup || !childAgesList || !bannerTotalEl || !bannerMetaEl || !nightsEl || !totalEl || !noteEl || !summaryEl || !requestBtn || !whatsappBtn) return;
+      if (!arriveInput || !departInput || !guestsInput || !adultsValueEl || !childrenValueEl || !adultsMinusBtn || !adultsPlusBtn || !childrenMinusBtn || !childrenPlusBtn || !childAgesGroup || !childAgesList || !bannerTotalEl || !bannerMetaEl || !nightsEl || !totalEl || !noteEl || !summaryEl || !requestBtn) return;
 
       const nightlyPrice = Number(location.priceValue);
       const hasNightlyPrice = Number.isFinite(nightlyPrice) && nightlyPrice > 0;
@@ -1958,8 +1912,6 @@
           requestBtn.textContent = "Sélectionnez vos dates";
           requestBtn.href = "./estimation.html";
           requestBtn.classList.add("is-disabled");
-          whatsappBtn.href = "https://wa.me/33781957161";
-          whatsappBtn.classList.add("is-disabled");
           return;
         }
 
@@ -1987,16 +1939,6 @@
           id: location.id
         });
         requestBtn.classList.remove("is-disabled");
-        whatsappBtn.href = buildBookingWhatsappHref({
-          title: location.title,
-          location: location.location,
-          arriveIso,
-          departIso,
-          guests: `${adults} adulte${adults > 1 ? "s" : ""}${children ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}`,
-          totalLabel,
-          nights
-        });
-        whatsappBtn.classList.remove("is-disabled");
       };
 
       arriveInput.addEventListener("change", updateBookingSummary);
@@ -2348,16 +2290,16 @@
               </div>
               <div class="booking-field-row">
                 <div class="booking-field">
-                  <label for="bookArriveTrigger">Arrivée</label>
-                  <div class="booking-date-shell" data-booking-date="arrive">
-                    <input type="hidden" id="bookArrive" name="arrive" value="" autocomplete="off" />
-                    <button type="button" class="booking-date-trigger" id="bookArriveTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookArriveCal">
-                      <span class="booking-date-display is-placeholder" id="bookArriveDisplay">jj/mm/aaaa</span>
+                  <label for="bookDepartTrigger">Départ</label>
+                  <div class="booking-date-shell" data-booking-date="depart">
+                    <input type="hidden" id="bookDepart" name="depart" value="" autocomplete="off" />
+                    <button type="button" class="booking-date-trigger" id="bookDepartTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookDepartCal">
+                      <span class="booking-date-display is-placeholder" id="bookDepartDisplay">jj/mm/aaaa</span>
                       <span class="booking-date-chevron" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
                       </span>
                     </button>
-                    <div class="booking-calendar-popover" id="bookArriveCal" hidden role="dialog" aria-label="Choisir la date d'arrivée">
+                    <div class="booking-calendar-popover" id="bookDepartCal" hidden role="dialog" aria-label="Choisir la date de départ">
                       <div class="booking-cal-toolbar">
                         <button type="button" class="booking-cal-nav-btn" data-cal-dir="-1" aria-label="Mois précédent">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
@@ -2376,16 +2318,16 @@
                   </div>
                 </div>
                 <div class="booking-field">
-                  <label for="bookDepartTrigger">Départ</label>
-                  <div class="booking-date-shell" data-booking-date="depart">
-                    <input type="hidden" id="bookDepart" name="depart" value="" autocomplete="off" />
-                    <button type="button" class="booking-date-trigger" id="bookDepartTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookDepartCal">
-                      <span class="booking-date-display is-placeholder" id="bookDepartDisplay">jj/mm/aaaa</span>
+                  <label for="bookArriveTrigger">Arrivée</label>
+                  <div class="booking-date-shell" data-booking-date="arrive">
+                    <input type="hidden" id="bookArrive" name="arrive" value="" autocomplete="off" />
+                    <button type="button" class="booking-date-trigger" id="bookArriveTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="bookArriveCal">
+                      <span class="booking-date-display is-placeholder" id="bookArriveDisplay">jj/mm/aaaa</span>
                       <span class="booking-date-chevron" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
                       </span>
                     </button>
-                    <div class="booking-calendar-popover" id="bookDepartCal" hidden role="dialog" aria-label="Choisir la date de départ">
+                    <div class="booking-calendar-popover" id="bookArriveCal" hidden role="dialog" aria-label="Choisir la date d'arrivée">
                       <div class="booking-cal-toolbar">
                         <button type="button" class="booking-cal-nav-btn" data-cal-dir="-1" aria-label="Mois précédent">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
@@ -2449,7 +2391,6 @@
               </div>
               <div class="booking-actions">
                 <a class="booking-request-btn is-disabled" id="bookingRequestBtn" href="./estimation.html">Sélectionnez vos dates</a>
-                <a class="booking-whatsapp-btn is-disabled" id="bookingWhatsappBtn" href="https://wa.me/33781957161" target="_blank" rel="noopener noreferrer">Réserver sur WhatsApp</a>
               </div>
               <p class="booking-footnote">Aucun montant ne sera débité pour le moment. Indiquez vos dates pour une demande de disponibilité.</p>
             </aside>

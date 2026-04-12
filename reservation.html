@@ -662,14 +662,14 @@
           <p class="lead" id="reservationLead">Nous récupérons les informations de votre séjour.</p>
           <div class="date-cards">
             <article class="date-card">
-              <div class="date-label">Arrivée</div>
-              <div class="date-day" id="arriveDay">--</div>
-              <div class="date-month" id="arriveMonth">Chargement...</div>
-            </article>
-            <article class="date-card">
               <div class="date-label">Départ</div>
               <div class="date-day" id="departDay">--</div>
               <div class="date-month" id="departMonth">Chargement...</div>
+            </article>
+            <article class="date-card">
+              <div class="date-label">Arrivée</div>
+              <div class="date-day" id="arriveDay">--</div>
+              <div class="date-month" id="arriveMonth">Chargement...</div>
             </article>
           </div>
         </div>
@@ -790,7 +790,7 @@
 
       <section class="card section">
         <div class="cta-area">
-          <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true" target="_blank" rel="noopener noreferrer">Valider le paiement</a>
+          <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true">Valider le paiement</a>
           <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
           <p class="small-note">Le bouton final devient actif après acceptation des conditions et calcul valide du séjour.</p>
         </div>
@@ -1183,7 +1183,7 @@
       continuePaymentBtn.classList.toggle("is-disabled", !validation.isValid);
       continuePaymentBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
       if (validation.isValid) {
-        continuePaymentBtn.href = buildWhatsappHref({
+        continuePaymentBtn.href = buildMailHref({
           totalLabel: continuePaymentBtn.dataset.totalLabel || formatMoney(0),
           nights: Number(continuePaymentBtn.dataset.nights || 0),
           selectedOptions: getSelectedOptions(mergeReservation(location?.reservation)),
@@ -1269,23 +1269,6 @@
         `Total estimé : ${totalLabel}`
       ].join("\n"));
       return `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(`Demande de réservation - ${location.title}`)}&body=${body}`;
-    };
-
-    const buildWhatsappHref = ({ totalLabel, nights, selectedOptions, payment }) => {
-      const data = loadReservationData();
-      const body = encodeURIComponent([
-        `Bonjour, je souhaite confirmer ma demande pour ${location.title}.`,
-        `Arrivée : ${formatLongDate(data.arrive)}`,
-        `Départ : ${formatLongDate(data.depart)}`,
-        `Adultes : ${data.adults}`,
-        `Enfants : ${data.children}`,
-        `Bébés : ${data.babies}`,
-        `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
-        `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
-        `Paiement choisi : ${payment}`,
-        `Total estimé : ${totalLabel}`
-      ].join("\n"));
-      return `https://wa.me/33781957161?text=${body}`;
     };
 
     const renderReservation = () => {
