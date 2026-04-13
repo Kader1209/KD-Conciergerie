@@ -77,6 +77,11 @@
       margin: 0 auto;
     }
 
+    .container.pay-wide {
+      max-width: 1100px;
+      width: min(94%, 1100px);
+    }
+
     header {
       padding: 20px 0 8px;
     }
@@ -801,6 +806,292 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .pay-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 0 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .pay-steps .pay-step {
+      opacity: 0.55;
+    }
+
+    .pay-steps .pay-step.is-current {
+      opacity: 1;
+      color: var(--bronze-deep);
+    }
+
+    .pay-steps .pay-step[aria-hidden="true"] {
+      opacity: 0.35;
+      letter-spacing: 0;
+    }
+
+    .pay-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .pay-main {
+      display: grid;
+      gap: 22px;
+      min-width: 0;
+    }
+
+    .pay-aside {
+      position: relative;
+    }
+
+    .pay-sticky-card {
+      position: sticky;
+      top: 16px;
+      padding: 22px 20px;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-lg);
+      display: grid;
+      gap: 14px;
+    }
+
+    .pay-sticky-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 16px;
+      right: 16px;
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: var(--gold-line);
+      opacity: 0.85;
+    }
+
+    .aside-kicker {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      padding-top: 8px;
+    }
+
+    .aside-lines {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+      display: grid;
+      gap: 6px;
+    }
+
+    .aside-total-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .aside-total-value {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .aside-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .included-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 520px;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      background: rgba(255, 252, 248, 0.14);
+      border: 1px solid rgba(255, 252, 248, 0.22);
+      color: rgba(250, 247, 242, 0.92);
+    }
+
+    .stay-form .stay-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stay-form .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .stay-form input[type="date"],
+    .stay-form input[type="number"],
+    .stay-form input[type="text"] {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      width: 100%;
+    }
+
+    .stay-form input[type="number"] {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stay-form input:focus {
+      outline: none;
+      border-color: rgba(154, 115, 73, 0.45);
+      box-shadow: 0 0 0 3px var(--bronze-glow);
+    }
+
+    .stay-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .btn-save-stay {
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(165deg, #3d5550, var(--forest));
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(30, 77, 69, 0.22);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-save-stay:hover {
+      transform: translateY(-2px);
+    }
+
+    .stay-saved-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .stay-saved-hint.is-visible {
+      color: var(--forest);
+      font-weight: 600;
+    }
+
+    .stay-alert {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: rgba(154, 115, 73, 0.1);
+      border: 1px solid rgba(154, 115, 73, 0.25);
+      color: var(--ink);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .stay-alert[hidden] {
+      display: none !important;
+    }
+
+    .optional-empty {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .pay-details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface-2);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .pay-details summary {
+      padding: 16px 20px;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pay-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .pay-details summary::after {
+      content: "+";
+      font-family: var(--font-ui);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--bronze);
+    }
+
+    .pay-details[open] summary::after {
+      content: "−";
+    }
+
+    .pay-details .pay-details-body {
+      padding: 0 20px 20px;
+      display: grid;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .pay-details h4 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .pay-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .pay-aside {
+        order: -1;
+      }
+
+      .pay-sticky-card {
+        position: relative;
+        top: 0;
+      }
+
+    }
+
+    @media (max-width: 560px) {
+      .stay-form .stay-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @keyframes pay-pulse {
       0%,
       100% {
@@ -893,153 +1184,208 @@
     </div>
   </header>
 
-  <main class="container">
-    <div class="reservation-shell">
-      <section class="card pay-hero-card">
-        <div class="pay-hero">
-          <div class="hero-image" id="heroImage"></div>
-          <div class="hero-body">
-            <span class="eyebrow">Réservation premium</span>
-            <h1 id="reservationTitle">Préparation de votre récapitulatif</h1>
-            <p class="lead" id="reservationLead">Vos dates et le détail du séjour s’affichent ici.</p>
-            <div class="date-cards">
-              <article class="date-card">
-                <div class="date-label">Arrivée</div>
-                <div class="date-day" id="arriveDay">--</div>
-                <div class="date-month" id="arriveMonth">…</div>
-              </article>
-              <article class="date-card">
-                <div class="date-label">Départ</div>
-                <div class="date-day" id="departDay">--</div>
-                <div class="date-month" id="departMonth">…</div>
-              </article>
+  <main class="container pay-wide">
+    <nav class="pay-steps" aria-label="Étapes de réservation">
+      <span class="pay-step is-current">Votre séjour</span>
+      <span class="pay-step" aria-hidden="true">·</span>
+      <span class="pay-step">Montant</span>
+      <span class="pay-step" aria-hidden="true">·</span>
+      <span class="pay-step">Confirmation</span>
+    </nav>
+    <div class="pay-layout">
+      <div class="pay-main reservation-shell">
+        <section class="card pay-hero-card">
+          <div class="pay-hero">
+            <div class="hero-image" id="heroImage"></div>
+            <div class="hero-body">
+              <span class="eyebrow">Réservation premium</span>
+              <h1 id="reservationTitle">Préparation de votre récapitulatif</h1>
+              <p class="lead" id="reservationLead">Vos dates et le détail du séjour s’affichent ici.</p>
+              <div class="date-cards">
+                <article class="date-card">
+                  <div class="date-label">Arrivée</div>
+                  <div class="date-day" id="arriveDay">--</div>
+                  <div class="date-month" id="arriveMonth">…</div>
+                </article>
+                <article class="date-card">
+                  <div class="date-label">Départ</div>
+                  <div class="date-day" id="departDay">--</div>
+                  <div class="date-month" id="departMonth">…</div>
+                </article>
+              </div>
+              <div class="included-chips" id="includedChips"></div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="card section">
-        <div class="traveler-panel">
-          <div class="traveler-summary">
+        <section class="card section">
+          <div class="section-head">
             <div>
-              <div class="section-title">Voyageurs</div>
-              <div class="traveler-counts" id="travelerCounts">Composition du groupe en cours d’affichage.</div>
+              <div class="section-title">Dates et voyageurs</div>
+              <div class="section-note">Modifiez ici votre séjour : tout est enregistré sur cet appareil (navigateur) pour que vous puissiez reprendre plus tard.</div>
             </div>
-            <a class="edit-link" id="editStayLink" href="./location-detail.html">Modifier le séjour</a>
+            <a class="edit-link" id="editStayLink" href="./location-detail.html">Voir l’annonce</a>
           </div>
-        </div>
-      </section>
+          <div class="stay-alert" id="stayAlert" role="status" hidden></div>
+          <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;">
+            <div class="stay-grid">
+              <div class="field">
+                <label for="stayArrive">Arrivée</label>
+                <input id="stayArrive" name="arrive" type="date" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="stayDepart">Départ</label>
+                <input id="stayDepart" name="depart" type="date" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="stayAdults">Adultes</label>
+                <input id="stayAdults" name="adults" type="number" inputmode="numeric" min="1" max="30" step="1" />
+              </div>
+              <div class="field">
+                <label for="stayChildren">Enfants</label>
+                <input id="stayChildren" name="children" type="number" inputmode="numeric" min="0" max="20" step="1" />
+              </div>
+              <div class="field">
+                <label for="stayBabies">Bébés</label>
+                <input id="stayBabies" name="babies" type="number" inputmode="numeric" min="0" max="10" step="1" />
+              </div>
+              <div class="field field-full">
+                <label for="stayChildAges">Âges des enfants <span style="font-weight:400;color:var(--muted)">(facultatif, ex. 4, 7)</span></label>
+                <input id="stayChildAges" name="childAges" type="text" placeholder="Ex. : 4, 7" autocomplete="off" />
+              </div>
+            </div>
+            <div class="stay-actions">
+              <button type="button" class="btn-save-stay" id="saveStayBtn">Enregistrer le séjour</button>
+              <span class="stay-saved-hint" id="staySavedHint" aria-live="polite"></span>
+            </div>
+          </form>
+        </section>
 
-      <section class="card section">
-        <div class="section-head">
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Détail du montant</div>
+              <div class="section-note">Loyer, frais, taxes et options : le total se met à jour tout de suite.</div>
+            </div>
+          </div>
+          <div class="price-breakdown" id="priceBreakdown"></div>
+          <div class="price-total">
+            <span>Total du séjour</span>
+            <span id="grandTotal">-</span>
+          </div>
+          <div class="promo-row">
+            <div class="field">
+              <label for="promoCodeInput">Code promo</label>
+              <input id="promoCodeInput" type="text" placeholder="Ex. : ETE10" autocomplete="off" />
+            </div>
+            <button class="btn-inline" id="applyPromoBtn" type="button">Appliquer</button>
+          </div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Services additionnels</div>
+              <div class="section-note">Ajouts ponctuels pour votre confort — prix par séjour sauf mention contraire.</div>
+            </div>
+          </div>
+          <div id="optionalServices"></div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <div class="section-title">Calendrier de paiement</div>
+              <div class="section-note">Acompte, solde et éventuel montant sur place avant validation.</div>
+            </div>
+          </div>
+          <div class="payment-schedule" id="paymentSchedule"></div>
+          <div class="price-total">
+            <span>Total</span>
+            <span id="scheduleTotal">-</span>
+          </div>
+        </section>
+
+        <details class="pay-details">
+          <summary>Infos pratiques, clés et caution</summary>
+          <div class="pay-details-body">
+            <div>
+              <h4>Organisation du séjour</h4>
+              <div class="notes-list">
+                <ul id="notesList"></ul>
+              </div>
+            </div>
+            <div>
+              <h4>Caution remboursable</h4>
+              <div class="deposit-list">
+                <ul id="depositList"></ul>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <section class="card section">
+          <div class="section-title">Modalité de paiement</div>
+          <div class="choice-grid" id="paymentChoices">
+            <label class="payment-choice" data-payment-choice="card">
+              <input type="radio" name="paymentMethod" value="card" />
+              <span class="payment-choice-indicator" aria-hidden="true"></span>
+              <div>
+                <strong>Carte bancaire</strong>
+                <span>Paiement en ligne après confirmation du séjour.</span>
+              </div>
+            </label>
+            <label class="payment-choice" data-payment-choice="transfer">
+              <input type="radio" name="paymentMethod" value="transfer" />
+              <span class="payment-choice-indicator" aria-hidden="true"></span>
+              <div>
+                <strong>Virement bancaire</strong>
+                <span>Coordonnées transmises après validation de la demande.</span>
+              </div>
+            </label>
+          </div>
+          <div class="reassurance-box">
+            <strong>Votre réservation est en attente de confirmation.</strong>
+            <div id="reassuranceText">KD Conciergerie traite votre demande avec soin. Aucun montant n’est débité immédiatement tant que la disponibilité n’est pas confirmée.</div>
+          </div>
+        </section>
+
+        <section class="card section">
+          <div class="section-title">Conditions</div>
+          <div class="checks">
+            <label class="check-row">
+              <input type="checkbox" id="acceptRequiredTerms" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="check-copy">J’ai lu et j’accepte les <a href="./conditions-generales.html">conditions générales de contrat</a> et la politique de protection des données.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="acceptPromos" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="check-copy">J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="card section">
+          <div class="cta-area">
+            <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true">Confirmer la demande</a>
+            <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Recevoir le récapitulatif par email</a>
+            <p class="small-note">Un email prérempli s’ouvre pour envoyer votre demande à l’équipe. Aucun paiement n’est débité sans confirmation.</p>
+          </div>
+        </section>
+      </div>
+
+      <aside class="pay-aside" aria-label="Résumé">
+        <div class="pay-sticky-card">
+          <div class="aside-kicker">Résumé</div>
+          <div class="aside-lines" id="asideRecapLines"></div>
           <div>
-            <div class="section-title">Décomposition complète des prix</div>
-            <div class="section-note">Calcul automatique selon le bien, les nuits, les taxes et les services choisis.</div>
+            <div class="aside-total-label">Total estimé</div>
+            <div class="aside-total-value" id="asideGrandTotal">—</div>
           </div>
+          <p class="aside-hint" id="asideHint">Complétez les dates et les voyageurs pour calculer le montant.</p>
         </div>
-        <div class="price-breakdown" id="priceBreakdown"></div>
-        <div class="price-total">
-          <span>Total final</span>
-          <span id="grandTotal">-</span>
-        </div>
-        <div class="promo-row">
-          <div class="field">
-            <label for="promoCodeInput">Code promo</label>
-            <input id="promoCodeInput" type="text" placeholder="Ex. : ETE10" autocomplete="off" />
-          </div>
-          <button class="btn-inline" id="applyPromoBtn" type="button">Appliquer</button>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-head">
-          <div>
-            <div class="section-title">Répartition du paiement</div>
-            <div class="section-note">Un échéancier clair avant toute confirmation.</div>
-          </div>
-        </div>
-        <div class="payment-schedule" id="paymentSchedule"></div>
-        <div class="price-total">
-          <span>Total</span>
-          <span id="scheduleTotal">-</span>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Services inclus</div>
-        <div class="notes-list">
-          <ul id="includedServices"></ul>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Services optionnels</div>
-        <div id="optionalServices"></div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Notes complémentaires</div>
-        <div class="notes-list">
-          <ul id="notesList"></ul>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Caution (remboursable)</div>
-        <div class="deposit-list">
-          <ul id="depositList"></ul>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Modalité de paiement</div>
-        <div class="choice-grid" id="paymentChoices">
-          <label class="payment-choice" data-payment-choice="card">
-            <input type="radio" name="paymentMethod" value="card" />
-            <span class="payment-choice-indicator" aria-hidden="true"></span>
-            <div>
-              <strong>Carte bancaire</strong>
-              <span>Paiement en ligne après confirmation du séjour.</span>
-            </div>
-          </label>
-          <label class="payment-choice" data-payment-choice="transfer">
-            <input type="radio" name="paymentMethod" value="transfer" />
-            <span class="payment-choice-indicator" aria-hidden="true"></span>
-            <div>
-              <strong>Virement bancaire</strong>
-              <span>Coordonnées transmises après validation de la demande.</span>
-            </div>
-          </label>
-        </div>
-        <div class="reassurance-box">
-          <strong>Votre réservation est en attente de confirmation.</strong>
-          <div id="reassuranceText">KD Conciergerie traite votre demande avec soin. Aucun montant n’est débité immédiatement tant que la disponibilité n’est pas confirmée.</div>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="section-title">Conditions</div>
-        <div class="checks">
-          <label class="check-row">
-            <input type="checkbox" id="acceptRequiredTerms" />
-            <span class="check-mark" aria-hidden="true"></span>
-            <span class="check-copy">J’ai lu et j’accepte les <a href="./conditions-generales.html">conditions générales de contrat</a> et la politique de protection des données.</span>
-          </label>
-          <label class="check-row">
-            <input type="checkbox" id="acceptPromos" />
-            <span class="check-mark" aria-hidden="true"></span>
-            <span class="check-copy">J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
-          </label>
-        </div>
-      </section>
-
-      <section class="card section">
-        <div class="cta-area">
-          <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true">Valider le paiement</a>
-          <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
-          <p class="small-note">Validez votre demande une fois les conditions acceptées et le montant du séjour affiché.</p>
-        </div>
-      </section>
+      </aside>
     </div>
   </main>
 
@@ -1074,16 +1420,23 @@
         window.localStorage.setItem(STORAGE_KEY, serialized);
       } catch {}
     };
+    const saveBookingData = (payload) => {
+      try {
+        const serialized = JSON.stringify({ ...payload, selectedAt: Date.now() });
+        window.sessionStorage.setItem(BOOKING_STORAGE_KEY, serialized);
+        window.localStorage.setItem(BOOKING_STORAGE_KEY, serialized);
+      } catch {}
+    };
     const loadBookingData = () => {
       try {
-        const raw = window.sessionStorage.getItem(BOOKING_STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : null;
-        console.log("[kd_booking] loaded on reservation", parsed);
-        return parsed;
+        const sessionRaw = window.sessionStorage.getItem(BOOKING_STORAGE_KEY);
+        if (sessionRaw) return JSON.parse(sessionRaw);
+        const localRaw = window.localStorage.getItem(BOOKING_STORAGE_KEY);
+        if (localRaw) return JSON.parse(localRaw);
       } catch (error) {
         console.log("[kd_booking] invalid bookingData", error);
-        return null;
       }
+      return null;
     };
     const normalizeListingId = (value) => {
       const cleaned = String(value || "").trim();
@@ -1116,25 +1469,55 @@
     const bookingData = loadBookingData();
     const urlPropertyId = normalizeListingId(params.get("id"));
     const bookingPropertyId = normalizeListingId(bookingData?.propertyId);
+    const draftListingId = normalizeListingId(reservationDraft.id);
+    const resolvedListingId = urlPropertyId || bookingPropertyId || draftListingId || "";
+    const bookingMatchesListing =
+      Boolean(bookingData) &&
+      Boolean(resolvedListingId) &&
+      normalizeListingId(bookingData?.propertyId) === normalizeListingId(resolvedListingId);
     const reservationData = {
-      id: urlPropertyId || bookingPropertyId || normalizeListingId(reservationDraft.id) || "",
-      arrive: bookingPropertyId && bookingPropertyId === urlPropertyId ? (bookingData?.checkIn || "") : (params.get("arrive") || reservationDraft.arrive || ""),
-      depart: bookingPropertyId && bookingPropertyId === urlPropertyId ? (bookingData?.checkOut || "") : (params.get("depart") || reservationDraft.depart || ""),
-      adults: bookingPropertyId && bookingPropertyId === urlPropertyId ? Number(bookingData?.adults || 0) : Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
-      children: bookingPropertyId && bookingPropertyId === urlPropertyId ? Number(bookingData?.children || 0) : Number(params.get("children") || reservationDraft.children || 0),
-      babies: Number(params.get("babies") || reservationDraft.babies || 0),
+      id: resolvedListingId,
+      arrive: bookingMatchesListing
+        ? String(bookingData?.checkIn || "")
+        : params.get("arrive") || reservationDraft.arrive || "",
+      depart: bookingMatchesListing
+        ? String(bookingData?.checkOut || "")
+        : params.get("depart") || reservationDraft.depart || "",
+      adults: bookingMatchesListing
+        ? Number(bookingData?.adults || 0)
+        : Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
+      children: bookingMatchesListing
+        ? Number(bookingData?.children || 0)
+        : Number(params.get("children") || reservationDraft.children || 0),
+      babies: (() => {
+        const fromParam = params.get("babies");
+        if (fromParam !== null && fromParam !== "") return Math.max(0, Number(fromParam) || 0);
+        if (reservationDraft.babies != null && reservationDraft.babies !== "") return Math.max(0, Number(reservationDraft.babies) || 0);
+        if (bookingMatchesListing && bookingData?.babies != null && bookingData?.babies !== "")
+          return Math.max(0, Number(bookingData.babies) || 0);
+        return 0;
+      })(),
       childAges: (() => {
         const raw = params.get("childAges");
         if (raw) return raw.split(",").map((item) => String(item || "").trim()).filter(Boolean);
-        return Array.isArray(reservationDraft.childAges) ? reservationDraft.childAges : [];
+        return Array.isArray(reservationDraft.childAges) ? reservationDraft.childAges.slice() : [];
       })()
     };
     const reservationState = {
-      selectedPaymentMethod: "",
+      selectedPaymentMethod:
+        reservationDraft.paymentMethod === "card" || reservationDraft.paymentMethod === "transfer"
+          ? reservationDraft.paymentMethod
+          : "",
       termsAccepted: false,
       marketingAccepted: false
     };
-    writeReservationDraft(reservationData);
+    let activePromo =
+      reservationDraft.activePromo && String(reservationDraft.activePromo).trim()
+        ? String(reservationDraft.activePromo).trim().toUpperCase()
+        : null;
+    let selectedOptionKeys = new Set(
+      Array.isArray(reservationDraft.selectedOptions) ? reservationDraft.selectedOptions.filter(Boolean) : []
+    );
     const locationId = reservationData.id;
 
     const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
@@ -1172,8 +1555,6 @@
     };
     let location = resolveLocationFromSources(fallbackLocations);
     let feedbackTimeout;
-    let activePromo = null;
-    let selectedOptionKeys = new Set();
 
     const DEFAULT_RESERVATION = {
       cityTaxPerNightPerAdult: 2,
@@ -1208,6 +1589,101 @@
     const finishReservationPaint = () => {
       document.body.classList.remove("reservation-loading");
       document.body.classList.add("reservation-ready");
+    };
+
+    let stayAutoSaveTimer = 0;
+
+    const readStayFromForm = () => {
+      const arriveEl = document.getElementById("stayArrive");
+      const departEl = document.getElementById("stayDepart");
+      if (!arriveEl || !departEl) return;
+      reservationData.arrive = String(arriveEl.value || "").trim();
+      reservationData.depart = String(departEl.value || "").trim();
+      reservationData.adults = Math.min(30, Math.max(0, Number(document.getElementById("stayAdults")?.value) || 0));
+      reservationData.children = Math.min(20, Math.max(0, Number(document.getElementById("stayChildren")?.value) || 0));
+      reservationData.babies = Math.min(10, Math.max(0, Number(document.getElementById("stayBabies")?.value) || 0));
+      const agesRaw = String(document.getElementById("stayChildAges")?.value || "")
+        .split(/[,;]/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      reservationData.childAges = agesRaw.slice(0, Math.max(0, reservationData.children));
+    };
+
+    const populateStayForm = () => {
+      const arriveEl = document.getElementById("stayArrive");
+      const departEl = document.getElementById("stayDepart");
+      if (!arriveEl || !departEl) return;
+      const today = new Date();
+      const minStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      arriveEl.min = minStr;
+      departEl.min = minStr;
+      arriveEl.value = reservationData.arrive || "";
+      departEl.value = reservationData.depart || "";
+      const adultsEl = document.getElementById("stayAdults");
+      const childrenEl = document.getElementById("stayChildren");
+      const babiesEl = document.getElementById("stayBabies");
+      const agesEl = document.getElementById("stayChildAges");
+      if (adultsEl) adultsEl.value = String(Math.max(1, Number(reservationData.adults) || 0));
+      if (childrenEl) childrenEl.value = String(Math.max(0, Number(reservationData.children) || 0));
+      if (babiesEl) babiesEl.value = String(Math.max(0, Number(reservationData.babies) || 0));
+      if (agesEl) agesEl.value = (reservationData.childAges || []).join(", ");
+    };
+
+    const persistGuestAndDates = (showHint = false) => {
+      readStayFromForm();
+      const draft = readReservationDraft();
+      writeReservationDraft({
+        ...draft,
+        ...reservationData,
+        id: normalizeListingId(reservationData.id) || draft.id,
+        guests: Number(reservationData.adults || 0) + Number(reservationData.children || 0) + Number(reservationData.babies || 0),
+        childAges: Array.isArray(reservationData.childAges) ? reservationData.childAges : [],
+        selectedOptions: [...selectedOptionKeys],
+        activePromo,
+        paymentMethod: reservationState.selectedPaymentMethod || ""
+      });
+      const pid = normalizeListingId(reservationData.id);
+      if (pid) {
+        saveBookingData({
+          propertyId: pid,
+          checkIn: reservationData.arrive || "",
+          checkOut: reservationData.depart || "",
+          adults: Number(reservationData.adults || 0),
+          children: Number(reservationData.children || 0),
+          babies: Number(reservationData.babies || 0)
+        });
+      }
+      if (showHint) {
+        const el = document.getElementById("staySavedHint");
+        if (el) {
+          el.textContent = "Séjour enregistré sur cet appareil.";
+          el.classList.add("is-visible");
+          window.setTimeout(() => {
+            el.textContent = "";
+            el.classList.remove("is-visible");
+          }, 2600);
+        }
+      }
+      try {
+        const next = new URLSearchParams(window.location.search);
+        if (reservationData.id) next.set("id", reservationData.id);
+        if (reservationData.arrive) next.set("arrive", reservationData.arrive);
+        if (reservationData.depart) next.set("depart", reservationData.depart);
+        if (reservationData.adults) next.set("adults", String(reservationData.adults));
+        if (reservationData.children) next.set("children", String(reservationData.children));
+        if (reservationData.babies) next.set("babies", String(reservationData.babies));
+        if (reservationData.childAges?.length) next.set("childAges", reservationData.childAges.join(","));
+        const path = `${window.location.pathname}?${next.toString()}`;
+        window.history.replaceState(null, "", path);
+      } catch {}
+    };
+
+    const scheduleStayAutoSave = () => {
+      window.clearTimeout(stayAutoSaveTimer);
+      stayAutoSaveTimer = window.setTimeout(() => {
+        persistGuestAndDates(false);
+        renderReservation();
+      }, 600);
     };
 
     const showFeedback = (message) => {
@@ -1336,7 +1812,10 @@
         gallery: Array.isArray(location?.gallery) ? location.gallery : (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : []),
         priceValue: location?.priceValue ?? reservationDraft.priceValue ?? null,
         reservation: location?.reservation || reservationDraft.reservation || null,
-        guests: reservationData.adults + reservationData.children + reservationData.babies
+        guests: reservationData.adults + reservationData.children + reservationData.babies,
+        selectedOptions: [...selectedOptionKeys],
+        activePromo,
+        paymentMethod: reservationState.selectedPaymentMethod || ""
       });
     };
 
@@ -1380,34 +1859,6 @@
       };
       writeReservationDraft(data);
       return data;
-    };
-
-    const validateBookingData = () => {
-      if (!bookingData) {
-        console.log("[kd_booking] invalid bookingData");
-        return { valid: false, reason: "invalid bookingData" };
-      }
-      if (!bookingPropertyId) {
-        console.log("[kd_booking] missing propertyId");
-        return { valid: false, reason: "missing propertyId" };
-      }
-      if (!bookingData.checkIn) {
-        console.log("[kd_booking] missing checkIn");
-        return { valid: false, reason: "missing checkIn" };
-      }
-      if (!bookingData.checkOut) {
-        console.log("[kd_booking] missing checkOut");
-        return { valid: false, reason: "missing checkOut" };
-      }
-      if (bookingData.adults == null) {
-        console.log("[kd_booking] missing adults");
-        return { valid: false, reason: "missing adults" };
-      }
-      if (urlPropertyId && bookingPropertyId !== urlPropertyId) {
-        console.log("[kd_booking] invalid bookingData", { urlPropertyId, bookingPropertyId });
-        return { valid: false, reason: "invalid bookingData" };
-      }
-      return { valid: true, reason: "" };
     };
 
     const loadSelectedProperty = () => location;
@@ -1462,9 +1913,7 @@
       document.getElementById("arriveMonth").textContent = arriveCard ? `${arriveCard.month} · ${formatLongDate(reservationData.arrive)}` : "À compléter depuis l’annonce";
       document.getElementById("departDay").textContent = departCard ? departCard.day : "--";
       document.getElementById("departMonth").textContent = departCard ? `${departCard.month} · ${formatLongDate(reservationData.depart)}` : "À compléter depuis l’annonce";
-      document.getElementById("travelerCounts").textContent = reservationData.adults > 0
-        ? `${reservationData.adults} adulte${reservationData.adults > 1 ? "s" : ""}, ${reservationData.children} enfant${reservationData.children > 1 ? "s" : ""}${reservationData.childAges.length ? ` (${reservationData.childAges.map((age) => `${age} ans`).join(", ")})` : ""}${reservationData.babies ? `, ${reservationData.babies} bébé${reservationData.babies > 1 ? "s" : ""}` : ""}`
-        : "À compléter depuis l’annonce";
+      populateStayForm();
     };
 
     const renderReservationHero = (property) => {
@@ -1490,14 +1939,9 @@
       document.getElementById("departMonth").textContent = data.hasDates ? `${departCard.month} · ${formatLongDate(data.depart)}` : "Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.";
     };
 
-    const renderTravelerDetails = (data) => {
-      document.getElementById("travelerCounts").textContent = data.hasTravelers
-        ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}, ${data.children} enfant${data.children > 1 ? "s" : ""}${data.childAges?.length ? ` (${data.childAges.map((age) => `${age} ans`).join(", ")})` : ""}${data.babies ? `, ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}`
-        : "Veuillez revenir à l’annonce pour sélectionner vos dates et voyageurs.";
-    };
-
     const togglePaymentMethod = (method) => {
       reservationState.selectedPaymentMethod = reservationState.selectedPaymentMethod === method ? "" : method;
+      persistGuestAndDates(false);
       renderPaymentChoiceState();
       renderReservation();
     };
@@ -1522,13 +1966,7 @@
     };
 
     const renderReservation = () => {
-      const bookingValidation = validateBookingData();
-      if (!bookingValidation.valid) {
-        document.getElementById("backToListing").href = buildListingBackHref();
-        document.querySelector("main").innerHTML = `<section class="card section pay-alert"><div class="section-title">Réservation à compléter</div><p class="section-note">Sélectionnez vos dates et le nombre de voyageurs sur l’annonce pour afficher ce récapitulatif.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
-        finishReservationPaint();
-        return;
-      }
+      readStayFromForm();
       if (!location) {
         document.getElementById("backToListing").href = buildListingBackHref();
         document.querySelector("main").innerHTML = `<section class="card section pay-alert"><div class="section-title">Séjour introuvable</div><p class="section-note">Cette page ne correspond à aucune annonce valide. Reprenez depuis le détail du bien.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
@@ -1560,11 +1998,57 @@
       const balanceAmount = Math.max(grandTotal - depositAmount - onSiteAmount, 0);
       const balanceDate = addDays(data.arrive, -(Number(reservation.paymentSchedule.balanceDaysBeforeArrival || 0)));
 
+      const stayAlert = document.getElementById("stayAlert");
+      if (stayAlert) {
+        if (data.hasDates && data.hasTravelers) {
+          stayAlert.hidden = true;
+          stayAlert.textContent = "";
+        } else {
+          stayAlert.hidden = false;
+          stayAlert.textContent =
+            "Indiquez une arrivée, un départ (au moins une nuit) et au moins un adulte. Vos choix sont enregistrés automatiquement sur cet appareil après modification.";
+        }
+      }
+
       renderReservationHero(property);
       document.getElementById("backToListing").href = buildListingBackHref();
       document.getElementById("editStayLink").href = buildListingBackHref();
       renderReservationDates(data);
-      renderTravelerDetails(data);
+
+      const chipsEl = document.getElementById("includedChips");
+      if (chipsEl) {
+        chipsEl.textContent = "";
+        reservation.includedServices.forEach((label) => {
+          const span = document.createElement("span");
+          span.className = "chip";
+          span.textContent = label;
+          chipsEl.appendChild(span);
+        });
+      }
+
+      const asideLines = document.getElementById("asideRecapLines");
+      const asideTotal = document.getElementById("asideGrandTotal");
+      const asideHint = document.getElementById("asideHint");
+      if (asideLines) {
+        if (data.hasDates && data.hasTravelers && nights > 0) {
+          asideLines.innerHTML = [
+            `<div>${formatLongDate(data.arrive)} → ${formatLongDate(data.depart)}</div>`,
+            `<div>${nights} nuit${nights > 1 ? "s" : ""}</div>`,
+            `<div>${data.adults} adulte${data.adults > 1 ? "s" : ""}${data.children ? ` · ${data.children} enfant${data.children > 1 ? "s" : ""}` : ""}${data.babies ? ` · ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}</div>`
+          ].join("");
+        } else {
+          asideLines.innerHTML = "<div>Renseignez les dates et les voyageurs dans le formulaire.</div>";
+        }
+      }
+      if (asideTotal) {
+        asideTotal.textContent = data.hasDates && data.hasTravelers && nights > 0 ? formatMoney(grandTotal) : "—";
+      }
+      if (asideHint) {
+        asideHint.textContent =
+          data.hasDates && data.hasTravelers && nights > 0
+            ? "Montant indicatif avant confirmation par KD Conciergerie."
+            : "Complétez le séjour pour afficher le total.";
+      }
 
       document.getElementById("priceBreakdown").innerHTML = `
         <div class="price-row">
@@ -1639,9 +2123,12 @@
 
       document.getElementById("scheduleTotal").textContent = formatMoney(grandTotal);
 
-      document.getElementById("includedServices").innerHTML = reservation.includedServices.map((item) => `<li>${item}</li>`).join("");
-
-      document.getElementById("optionalServices").innerHTML = reservation.optionalServices.map((item) => `
+      const optHost = document.getElementById("optionalServices");
+      if (optHost) {
+        optHost.innerHTML = reservation.optionalServices.length
+          ? reservation.optionalServices
+              .map(
+                (item) => `
         <label class="price-row optional-row">
           <div>
             <strong>${item.label}</strong>
@@ -1652,7 +2139,11 @@
             <input type="checkbox" data-option="${item.key}" ${selectedOptionKeys.has(item.key) ? "checked" : ""} />
           </div>
         </label>
-      `).join("");
+      `
+              )
+              .join("")
+          : `<p class="section-note optional-empty">Aucun service additionnel n’est proposé pour ce logement.</p>`;
+      }
 
       document.getElementById("notesList").innerHTML = [
         `Heures d’arrivée : ${reservation.checkInWindow}`,
@@ -1702,32 +2193,52 @@
           if (!key) return;
           if (input.checked) selectedOptionKeys.add(key);
           else selectedOptionKeys.delete(key);
+          persistGuestAndDates(false);
           renderReservation();
         };
       });
 
+      populateStayForm();
       renderPaymentChoiceState();
       finishReservationPaint();
     };
 
     const bindStaticEvents = () => {
+      ["stayArrive", "stayDepart", "stayAdults", "stayChildren", "stayBabies", "stayChildAges"].forEach((fieldId) => {
+        const el = document.getElementById(fieldId);
+        if (!el) return;
+        el.addEventListener("change", scheduleStayAutoSave);
+        el.addEventListener("input", scheduleStayAutoSave);
+      });
+      const saveStayBtn = document.getElementById("saveStayBtn");
+      if (saveStayBtn) {
+        saveStayBtn.addEventListener("click", () => {
+          readStayFromForm();
+          persistGuestAndDates(true);
+          renderReservation();
+        });
+      }
+
       document.getElementById("applyPromoBtn").addEventListener("click", () => {
         const reservation = mergeReservation(location?.reservation);
         const input = document.getElementById("promoCodeInput");
         const code = String(input.value || "").trim().toUpperCase();
         if (!code) {
           activePromo = null;
+          persistGuestAndDates(false);
           renderReservation();
           showFeedback("Aucun code promo saisi.");
           return;
         }
         if (!reservation.promoCodes[code]) {
           activePromo = null;
+          persistGuestAndDates(false);
           renderReservation();
           showFeedback("Code promo non reconnu.");
           return;
         }
         activePromo = code;
+        persistGuestAndDates(false);
         renderReservation();
         showFeedback(`Code promo ${code} appliqué.`);
       });
@@ -1753,6 +2264,8 @@
       if (resolved) location = resolved;
       if (!location) location = resolveLocationFromSources(fallbackLocations);
       sanitizeReservationData();
+      populateStayForm();
+      persistGuestAndDates(false);
       bindStaticEvents();
       renderPaymentChoiceState();
       renderReservation();
