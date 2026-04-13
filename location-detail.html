@@ -1756,7 +1756,9 @@
     };
     const saveBookingData = (bookingData) => {
       try {
-        window.sessionStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(bookingData));
+        const serialized = JSON.stringify({ ...bookingData, selectedAt: Date.now() });
+        window.sessionStorage.setItem(BOOKING_STORAGE_KEY, serialized);
+        window.localStorage.setItem(BOOKING_STORAGE_KEY, serialized);
         console.log("[kd_booking] saved", bookingData);
       } catch (error) {
         console.log("[kd_booking] save failed", error);
