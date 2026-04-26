@@ -270,6 +270,9 @@
       font-size: 0.9rem;
       white-space: nowrap;
       padding: 8px 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
       border-bottom: 1px solid transparent;
       transition: border-color 0.2s ease, color 0.2s ease;
     }
@@ -479,13 +482,16 @@
 
     .payment-choice input {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
       opacity: 0;
-      cursor: pointer;
-      z-index: 2;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .payment-choice-indicator {
@@ -690,6 +696,8 @@
     }
 
     .cta-button {
+      border: none;
+      cursor: pointer;
       background: linear-gradient(165deg, #b8926a, var(--bronze) 40%, var(--bronze-deep));
       color: #fff;
       box-shadow: 0 16px 40px var(--bronze-glow);
@@ -846,6 +854,57 @@
 
     .stay-form .field-full {
       grid-column: 1 / -1;
+    }
+
+    .stay-summary-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(155deg, #fff, #f8f4ee);
+      padding: 16px 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .stay-summary-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px dashed rgba(28, 25, 23, 0.14);
+      padding-bottom: 8px;
+    }
+
+    .stay-summary-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .stay-summary-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .stay-summary-value {
+      color: var(--ink);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .stay-form[hidden] {
+      display: none !important;
+    }
+
+    .missing-stay-info {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(154, 115, 73, 0.32);
+      background: rgba(154, 115, 73, 0.12);
+      color: var(--ink);
+      font-size: 0.92rem;
+      line-height: 1.45;
     }
 
     .stay-calendar-intro {
@@ -1168,13 +1227,32 @@
         <section class="card section">
           <div class="section-head">
             <div>
-              <div class="section-title">Dates et voyageurs</div>
-              <div class="section-note">Modifiez ici votre séjour : tout est enregistré sur cet appareil (navigateur) pour que vous puissiez reprendre plus tard.</div>
+              <div class="section-title">Votre séjour</div>
+              <div class="section-note">Vos informations sont reprises automatiquement. Modifiez uniquement si nécessaire.</div>
             </div>
-            <a class="edit-link" id="editStayLink" href="./location-detail.html">Voir l’annonce</a>
+            <button type="button" class="edit-link" id="toggleStayEditBtn" aria-expanded="false">Modifier</button>
+          </div>
+          <div class="missing-stay-info" id="missingStayInfo" hidden>Informations de séjour manquantes. Retournez à l’annonce pour sélectionner vos dates.</div>
+          <div class="stay-summary-card" id="staySummaryCard">
+            <div class="stay-summary-row">
+              <span class="stay-summary-label">Arrivée</span>
+              <span class="stay-summary-value" id="staySummaryArrive">—</span>
+            </div>
+            <div class="stay-summary-row">
+              <span class="stay-summary-label">Départ</span>
+              <span class="stay-summary-value" id="staySummaryDepart">—</span>
+            </div>
+            <div class="stay-summary-row">
+              <span class="stay-summary-label">Voyageurs</span>
+              <span class="stay-summary-value" id="staySummaryGuests">—</span>
+            </div>
+            <div class="stay-summary-row">
+              <span class="stay-summary-label">Total estimé</span>
+              <span class="stay-summary-value" id="staySummaryTotal">—</span>
+            </div>
           </div>
           <div class="stay-alert" id="stayAlert" role="status" hidden></div>
-          <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;">
+          <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;" hidden>
             <div class="stay-grid">
               <div class="field field-full stay-calendar-intro" aria-hidden="true">
                 <strong>Calendrier de séjour</strong>
@@ -1208,7 +1286,7 @@
               </div>
             </div>
             <div class="stay-actions">
-              <button type="button" class="btn-save-stay" id="saveStayBtn">Enregistrer le séjour</button>
+              <button type="button" class="btn-save-stay" id="saveStayBtn">Mettre à jour le séjour</button>
               <span class="stay-saved-hint" id="staySavedHint" aria-live="polite"></span>
             </div>
           </form>
@@ -1295,7 +1373,7 @@
 
         <section class="card section">
           <div class="cta-area">
-            <a class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true" rel="noopener noreferrer">Payer sur la page sécurisée</a>
+            <button type="button" class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true">Valider le paiement</button>
             <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
             <p class="small-note">Le paiement s’effectue sur une page sécurisée qui s’ouvre dans un nouvel onglet.</p>
           </div>
@@ -1324,9 +1402,6 @@
     const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
     const { enrichListing } = window.KDSite;
-
-    /** Remplacez par votre lien Stripe (Payment Link ou Checkout). */
-    const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/votre-lien";
 
     const params = new URLSearchParams(window.location.search);
     const STORAGE_KEY = "kd-reservation-draft";
@@ -1431,7 +1506,14 @@
         const raw = params.get("childAges");
         if (raw) return raw.split(",").map((item) => String(item || "").trim()).filter(Boolean);
         return Array.isArray(reservationDraft.childAges) ? reservationDraft.childAges.slice() : [];
-      })()
+      })(),
+      estimatedTotal: Number(
+        params.get("total") ||
+        params.get("estimatedTotal") ||
+        reservationDraft.estimatedTotal ||
+        bookingData?.estimatedTotal ||
+        0
+      ) || 0
     };
     const reservationState = {
       selectedPaymentMethod:
@@ -1439,7 +1521,8 @@
           ? reservationDraft.paymentMethod
           : "",
       termsAccepted: false,
-      marketingAccepted: false
+      marketingAccepted: false,
+      lastComputedTotal: 0
     };
     let activePromo =
       reservationDraft.activePromo && String(reservationDraft.activePromo).trim()
@@ -1581,7 +1664,8 @@
           checkOut: reservationData.depart || "",
           adults: Number(reservationData.adults || 0),
           children: Number(reservationData.children || 0),
-          babies: Number(reservationData.babies || 0)
+          babies: Number(reservationData.babies || 0),
+          estimatedTotal: Number(reservationState.lastComputedTotal || reservationData.estimatedTotal || 0)
         });
       }
       if (showHint) {
@@ -1759,6 +1843,7 @@
         if (input) input.checked = isActive;
         choice.classList.toggle("active", isActive);
         choice.setAttribute("aria-pressed", isActive ? "true" : "false");
+        choice.setAttribute("aria-checked", isActive ? "true" : "false");
       });
     };
 
@@ -1777,15 +1862,17 @@
 
     const validateReservation = () => {
       const data = loadReservationData();
-      const hasPayment = reservationState.selectedPaymentMethod === "card" || reservationState.selectedPaymentMethod === "transfer";
+      const totalValue = Number(reservationState.lastComputedTotal || reservationData.estimatedTotal || 0);
+      const hasValidTotal = Number.isFinite(totalValue) && totalValue > 0;
       const termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
       reservationState.termsAccepted = termsAccepted;
       reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
       return {
-        isValid: Boolean(data.hasProperty && data.hasDates && data.hasTravelers && hasPayment && termsAccepted),
+        isValid: Boolean(data.hasDates && data.hasTravelers && hasValidTotal),
         data,
-        hasPayment,
-        termsAccepted
+        hasValidTotal,
+        termsAccepted,
+        totalValue
       };
     };
 
@@ -1795,14 +1882,7 @@
       const validation = validateReservation();
       continuePaymentBtn.classList.toggle("is-disabled", !validation.isValid);
       continuePaymentBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
-      if (validation.isValid) {
-        continuePaymentBtn.href = STRIPE_CHECKOUT_URL;
-        continuePaymentBtn.target = "_blank";
-        continuePaymentBtn.rel = "noopener noreferrer";
-      } else {
-        continuePaymentBtn.removeAttribute("href");
-        continuePaymentBtn.removeAttribute("target");
-      }
+      continuePaymentBtn.disabled = !validation.isValid;
     };
 
     const preloadReservationUi = () => {
@@ -1872,9 +1952,17 @@
       const cleaningFee = Number(reservation.cleaningFee || 0);
       const serviceFee = Number(reservation.serviceFee || 0);
       const grandTotal = rentTotal + cityTax + cleaningFee + serviceFee;
+      reservationState.lastComputedTotal = grandTotal;
+      reservationData.estimatedTotal = grandTotal > 0 ? grandTotal : reservationData.estimatedTotal;
       const payment = getSelectedPayment();
+      const totalGuests = Number(data.adults || 0) + Number(data.children || 0) + Number(data.babies || 0);
+      const hasAnyStayInfo = Boolean(data.arrive || data.depart || totalGuests > 0);
 
       const stayAlert = document.getElementById("stayAlert");
+      const missingStayInfo = document.getElementById("missingStayInfo");
+      if (missingStayInfo) {
+        missingStayInfo.hidden = hasAnyStayInfo;
+      }
       if (stayAlert) {
         if (data.hasDates && data.hasTravelers) {
           stayAlert.hidden = true;
@@ -1882,13 +1970,28 @@
         } else {
           stayAlert.hidden = false;
           stayAlert.textContent =
-            "Indiquez une arrivée, un départ (au moins une nuit) et au moins un adulte. Vos choix sont enregistrés automatiquement sur cet appareil après modification.";
+            "Indiquez une arrivée, un départ (au moins une nuit) et au moins un adulte. Vos choix sont enregistrés automatiquement sur cet appareil.";
         }
       }
 
       renderReservationHero(property);
       document.getElementById("backToListing").href = buildListingBackHref();
-      document.getElementById("editStayLink").href = buildListingBackHref();
+
+      const staySummaryArrive = document.getElementById("staySummaryArrive");
+      const staySummaryDepart = document.getElementById("staySummaryDepart");
+      const staySummaryGuests = document.getElementById("staySummaryGuests");
+      const staySummaryTotal = document.getElementById("staySummaryTotal");
+      if (staySummaryArrive) staySummaryArrive.textContent = data.arrive ? formatLongDate(data.arrive) : "À renseigner";
+      if (staySummaryDepart) staySummaryDepart.textContent = data.depart ? formatLongDate(data.depart) : "À renseigner";
+      if (staySummaryGuests) {
+        staySummaryGuests.textContent = totalGuests > 0
+          ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}${data.children ? ` · ${data.children} enfant${data.children > 1 ? "s" : ""}` : ""}${data.babies ? ` · ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""} (${totalGuests} total)`
+          : "À renseigner";
+      }
+      if (staySummaryTotal) {
+        const totalToShow = grandTotal > 0 ? grandTotal : Number(reservationData.estimatedTotal || 0);
+        staySummaryTotal.textContent = totalToShow > 0 ? formatMoney(totalToShow) : "À calculer";
+      }
 
       const chipsEl = document.getElementById("includedChips");
       if (chipsEl) {
@@ -2015,6 +2118,20 @@
           readStayFromForm();
           persistGuestAndDates(true);
           renderReservation();
+          const stayForm = document.getElementById("stayForm");
+          const toggleStayEditBtn = document.getElementById("toggleStayEditBtn");
+          if (stayForm) stayForm.hidden = true;
+          if (toggleStayEditBtn) toggleStayEditBtn.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      const toggleStayEditBtn = document.getElementById("toggleStayEditBtn");
+      if (toggleStayEditBtn) {
+        toggleStayEditBtn.addEventListener("click", () => {
+          const stayForm = document.getElementById("stayForm");
+          if (!stayForm) return;
+          stayForm.hidden = !stayForm.hidden;
+          toggleStayEditBtn.setAttribute("aria-expanded", stayForm.hidden ? "false" : "true");
         });
       }
 
@@ -2027,6 +2144,24 @@
           updateSubmitButtonState();
         });
       });
+      document.querySelectorAll(".payment-choice").forEach((choice) => {
+        choice.setAttribute("tabindex", "0");
+        choice.setAttribute("role", "radio");
+        choice.addEventListener("click", () => {
+          const input = choice.querySelector('input[name="paymentMethod"]');
+          if (!input) return;
+          input.checked = true;
+          reservationState.selectedPaymentMethod = input.value;
+          persistGuestAndDates(false);
+          renderPaymentChoiceState();
+          updateSubmitButtonState();
+        });
+        choice.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          choice.click();
+        });
+      });
 
       document.getElementById("acceptRequiredTerms").addEventListener("change", () => {
         reservationState.termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
@@ -2036,10 +2171,24 @@
         reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
         updateSubmitButtonState();
       });
-      document.getElementById("continuePaymentBtn").addEventListener("click", (event) => {
-        if (event.currentTarget.classList.contains("is-disabled")) {
+      document.getElementById("continuePaymentBtn").addEventListener("click", async (event) => {
+        const validation = validateReservation();
+        if (!validation.isValid || event.currentTarget.classList.contains("is-disabled")) {
           event.preventDefault();
-          showFeedback("Complétez les dates, les voyageurs, le paiement et les conditions pour valider.");
+          showFeedback("Complétez les dates, les voyageurs et le total estimé pour valider.");
+          return;
+        }
+        try {
+          const response = await fetch("http://localhost:4242/create-checkout-session", { method: "POST" });
+          const data = await response.json();
+          if (data?.url) {
+            window.location.href = data.url;
+          } else {
+            showFeedback("Erreur : URL de paiement introuvable.");
+          }
+        } catch (error) {
+          console.error(error);
+          showFeedback("Erreur de connexion au paiement.");
         }
       });
     };
@@ -2055,27 +2204,12 @@
       bindStaticEvents();
       renderPaymentChoiceState();
       renderReservation();
-      <button id="checkout-button">Payer maintenant</button>
-
-<script>
-  const checkoutButton = document.getElementById("checkout-button");
-
-  checkoutButton.addEventListener("click", async () => {
-    try {
-      const response = await fetch("http://localhost:4242/create-checkout-session", {
-        method: "POST"
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert("Erreur : URL Stripe introuvable");
-      }
-    } catch (error) {
+    }).catch((error) => {
       console.error(error);
-      alert("Erreur de connexion au paiement");
-    }
-  });
-</script>
+      finishReservationPaint();
+      showFeedback("Impossible de charger les informations de réservation.");
+    });
+  </script>
+
+</body>
+</html>
