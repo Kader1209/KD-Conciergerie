@@ -47,6 +47,7 @@
       color: var(--text);
       line-height: 1.55;
       min-height: 100vh;
+      scroll-behavior: smooth;
     }
 
     body.reservation-loading {
@@ -143,6 +144,7 @@
       box-shadow: var(--shadow-lg);
       overflow: hidden;
       position: relative;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
     }
 
     .card::before {
@@ -474,9 +476,9 @@
     }
 
     .payment-choice.active {
-      border-color: rgba(154, 115, 73, 0.55);
-      background: #fffdf9;
-      box-shadow: 0 12px 36px var(--bronze-glow);
+      border-color: rgba(28, 25, 23, 0.2);
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
 
     .payment-choice input {
@@ -518,8 +520,8 @@
     }
 
     .payment-choice.active .payment-choice-indicator {
-      border-color: var(--bronze);
-      box-shadow: 0 0 0 4px var(--bronze-glow);
+      border-color: rgba(28, 25, 23, 0.45);
+      box-shadow: 0 0 0 2px rgba(28, 25, 23, 0.08);
     }
 
     .payment-choice.active .payment-choice-indicator::after {
@@ -931,30 +933,38 @@
     .stay-date-field {
       padding: 12px;
       border-radius: 14px;
-      border: 1px solid rgba(20, 18, 16, 0.08);
-      background: linear-gradient(180deg, #fff, #fdfbf8);
+      border: 1px solid var(--line);
+      background: var(--surface);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
       transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
 
     .stay-date-field:focus-within {
-      border-color: rgba(154, 115, 73, 0.42);
-      box-shadow: 0 0 0 3px rgba(154, 115, 73, 0.14);
+      border-color: rgba(28, 25, 23, 0.2);
+      box-shadow: 0 0 0 2px rgba(28, 25, 23, 0.08);
       transform: translateY(-1px);
     }
 
     .stay-date-field input[type="date"] {
       background: transparent;
       border-color: rgba(20, 18, 16, 0.12);
-      padding-right: 12px;
+      min-height: 58px;
+      padding: 0 14px;
+      padding-right: 48px;
       font-weight: 600;
+      font-size: clamp(1rem, 1.8vw, 1.08rem);
       letter-spacing: 0.01em;
     }
 
     .stay-date-field input[type="date"]::-webkit-calendar-picker-indicator {
       cursor: pointer;
-      opacity: 0.85;
-      filter: sepia(20%) saturate(120%) brightness(90%);
+      opacity: 1;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background-color: rgba(28, 25, 23, 0.08);
+      padding: 6px;
+      filter: contrast(140%);
     }
 
     .stay-date-help {
@@ -1113,6 +1123,16 @@
     @media (max-width: 560px) {
       .stay-form .stay-grid {
         grid-template-columns: 1fr;
+      }
+
+      .stay-date-field input[type="date"] {
+        min-height: 56px;
+        font-size: 1rem;
+      }
+
+      .stay-date-field input[type="date"]::-webkit-calendar-picker-indicator {
+        width: 24px;
+        height: 24px;
       }
     }
 
@@ -1533,7 +1553,7 @@
       selectedPaymentMethod:
         reservationDraft.paymentMethod === "card" || reservationDraft.paymentMethod === "transfer"
           ? reservationDraft.paymentMethod
-          : "",
+          : "card",
       termsAccepted: false,
       marketingAccepted: false,
       lastComputedTotal: 0
@@ -1724,9 +1744,7 @@
       arriveEl.min = minToday;
       departEl.min = arriveEl.value || minToday;
       if (arriveEl.value && departEl.value && arriveEl.value > departEl.value) {
-        const previousDepart = departEl.value;
         departEl.value = arriveEl.value;
-        arriveEl.value = previousDepart;
       }
     };
 
@@ -1917,6 +1935,7 @@
       const validation = validateReservation();
       checkoutBtn.classList.toggle("is-disabled", !validation.isValid);
       checkoutBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
+      checkoutBtn.style.cursor = "pointer";
     };
 
     const preloadReservationUi = () => {
@@ -2062,7 +2081,8 @@
         }
       }
       if (asideTotal) {
-        asideTotal.textContent = data.hasDates && data.hasTravelers && nights > 0 ? formatMoney(grandTotal) : "—";
+        const totalToShow = grandTotal > 0 ? grandTotal : Number(reservationData.estimatedTotal || 0);
+        asideTotal.textContent = totalToShow > 0 ? formatMoney(totalToShow) : "—";
       }
       if (asideHint) {
         asideHint.textContent =
