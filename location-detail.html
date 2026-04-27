@@ -1750,13 +1750,16 @@
     };
 
     const BOOKING_STORAGE_KEY = "kd_booking";
-    const createBookingDataFromListing = ({ propertyId, checkIn, checkOut, adults, children }) => {
+    const createBookingDataFromListing = ({ propertyId, checkIn, checkOut, adults, children, babies, guests, estimatedTotal }) => {
       const bookingData = {
         propertyId: normalizeListingId(propertyId),
         checkIn: String(checkIn || ""),
         checkOut: String(checkOut || ""),
         adults: Number(adults || 0),
         children: Number(children || 0),
+        babies: Number(babies || 0),
+        guests: Number(guests || 0),
+        estimatedTotal: Number(estimatedTotal || 0),
         selectedAt: Date.now()
       };
       console.log("[kd_booking] createBookingDataFromListing", bookingData);
@@ -1772,7 +1775,18 @@
         console.log("[kd_booking] save failed", error);
       }
     };
-    const buildReservationPageHref = ({ id }) => `./reservation.html?id=${encodeURIComponent(id)}`;
+    const buildReservationPageHref = ({ id, arriveIso, departIso, adults, children, babies, guests, estimatedTotal }) => {
+      const next = new URLSearchParams();
+      next.set("id", String(id || ""));
+      if (arriveIso) next.set("arrive", arriveIso);
+      if (departIso) next.set("depart", departIso);
+      if (adults) next.set("adults", String(adults));
+      if (children) next.set("children", String(children));
+      if (babies) next.set("babies", String(babies));
+      if (guests) next.set("guests", String(guests));
+      if (estimatedTotal) next.set("estimatedTotal", String(estimatedTotal));
+      return `./reservation.html?${next.toString()}`;
+    };
 
     const hydrateBookingDraft = (root, location) => {
       const arriveInput = root.querySelector("#bookArrive");
@@ -1935,18 +1949,29 @@
           ? `${formatPrice(nightlyPrice)} / nuit x ${nights} pour ${adults} adulte${adults > 1 ? "s" : ""}${children ? ` et ${children} enfant${children > 1 ? "s" : ""}` : ""}.`
           : `Durée sélectionnée : ${nightsLabel} pour ${adults} adulte${adults > 1 ? "s" : ""}${children ? ` et ${children} enfant${children > 1 ? "s" : ""}` : ""}. Le tarif exact sera confirme sur demande.`;
 
+        const estimatedTotal = hasNightlyPrice ? nightlyPrice * nights : 0;
         const bookingData = createBookingDataFromListing({
           propertyId: location.id,
           checkIn: arriveIso,
           checkOut: departIso,
           adults,
-          children
+          children,
+          babies: 0,
+          guests,
+          estimatedTotal
         });
         saveBookingData(bookingData);
 
         requestBtn.textContent = "Continuer la réservation";
         requestBtn.href = buildReservationPageHref({
-          id: location.id
+          id: location.id,
+          arriveIso,
+          departIso,
+          adults,
+          children,
+          babies: 0,
+          guests,
+          estimatedTotal
         });
         requestBtn.classList.remove("is-disabled");
       };
