@@ -1229,190 +1229,78 @@
   </header>
 
   <main class="container pay-wide">
-    <div class="pay-layout">
-      <div class="pay-main reservation-shell">
-        <section class="card">
-          <div class="hero-light">
-            <div class="hero-image" id="heroImage"></div>
-            <div class="hero-body">
-              <h1 id="reservationTitle">Votre récapitulatif</h1>
-              <p class="lead" id="reservationLead">Vérifiez les informations du logement, puis renseignez vos dates et voyageurs ci-dessous.</p>
-              <div class="included-chips" id="includedChips"></div>
-            </div>
+    <div class="reservation-shell">
+      <section class="card">
+        <div class="hero-light">
+          <div class="hero-image" id="heroImage"></div>
+          <div class="hero-body">
+            <h1 id="reservationTitle">Votre récapitulatif</h1>
+            <p class="lead" id="reservationLead">Vérifiez les informations du logement avant de finaliser votre réservation.</p>
+            <div class="included-chips" id="includedChips"></div>
           </div>
-        </section>
-
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <div class="section-title">Votre séjour</div>
-              <div class="section-note">Vos informations sont reprises automatiquement. Modifiez uniquement si nécessaire.</div>
-            </div>
-            <button type="button" class="edit-link" id="toggleStayEditBtn" aria-expanded="false">Modifier</button>
-          </div>
-          <div class="missing-stay-info" id="missingStayInfo" hidden>Informations de séjour manquantes. Retournez à l’annonce pour sélectionner vos dates.</div>
-          <div class="stay-summary-card" id="staySummaryCard">
-            <div class="stay-summary-row">
-              <span class="stay-summary-label">Arrivée</span>
-              <span class="stay-summary-value" id="staySummaryArrive">—</span>
-            </div>
-            <div class="stay-summary-row">
-              <span class="stay-summary-label">Départ</span>
-              <span class="stay-summary-value" id="staySummaryDepart">—</span>
-            </div>
-            <div class="stay-summary-row">
-              <span class="stay-summary-label">Voyageurs</span>
-              <span class="stay-summary-value" id="staySummaryGuests">—</span>
-            </div>
-            <div class="stay-summary-row">
-              <span class="stay-summary-label">Total estimé</span>
-              <span class="stay-summary-value" id="staySummaryTotal">—</span>
-            </div>
-            <div class="stay-summary-row">
-              <span class="stay-summary-label">Paiement</span>
-              <span class="stay-summary-value" id="staySummaryPayment">À sélectionner</span>
-            </div>
-          </div>
-          <div class="stay-alert" id="stayAlert" role="status" hidden></div>
-          <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;" hidden>
-            <div class="stay-grid">
-              <div class="field field-full stay-calendar-intro" aria-hidden="true">
-                <strong>Calendrier de séjour</strong>
-                <span>Sélectionnez vos dates pour mettre à jour automatiquement le montant du séjour.</span>
-              </div>
-              <div class="field stay-date-field">
-                <label for="stayArrive">Arrivée</label>
-                <input id="stayArrive" name="arrive" type="date" autocomplete="off" />
-                <small class="stay-date-help">Date de début du séjour.</small>
-              </div>
-              <div class="field stay-date-field">
-                <label for="stayDepart">Départ</label>
-                <input id="stayDepart" name="depart" type="date" autocomplete="off" />
-                <small class="stay-date-help">Date de fin du séjour.</small>
-              </div>
-              <div class="field">
-                <label for="stayAdults">Adultes</label>
-                <input id="stayAdults" name="adults" type="number" inputmode="numeric" min="1" max="30" step="1" />
-              </div>
-              <div class="field">
-                <label for="stayChildren">Enfants</label>
-                <input id="stayChildren" name="children" type="number" inputmode="numeric" min="0" max="20" step="1" />
-              </div>
-              <div class="field">
-                <label for="stayBabies">Bébés</label>
-                <input id="stayBabies" name="babies" type="number" inputmode="numeric" min="0" max="10" step="1" />
-              </div>
-              <div class="field field-full">
-                <label for="stayChildAges">Âges des enfants <span style="font-weight:400;color:var(--muted)">(facultatif, ex. 4, 7)</span></label>
-                <input id="stayChildAges" name="childAges" type="text" placeholder="Ex. : 4, 7" autocomplete="off" />
-              </div>
-            </div>
-            <div class="stay-actions">
-              <button type="button" class="btn-save-stay" id="saveStayBtn">Mettre à jour le séjour</button>
-              <span class="stay-saved-hint" id="staySavedHint" aria-live="polite"></span>
-            </div>
-          </form>
-        </section>
-
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <div class="section-title">Détail du montant</div>
-              <div class="section-note">Loyer, frais et taxes : le total se met à jour selon vos dates et le nombre de voyageurs.</div>
-            </div>
-          </div>
-          <div class="price-breakdown" id="priceBreakdown"></div>
-          <div class="price-total">
-            <span>Total du séjour</span>
-            <span id="grandTotal">-</span>
-          </div>
-        </section>
-
-        <details class="pay-details">
-          <summary>Infos pratiques, clés et caution</summary>
-          <div class="pay-details-body">
-            <div>
-              <h4>Organisation du séjour</h4>
-              <div class="notes-list">
-                <ul id="notesList"></ul>
-              </div>
-            </div>
-            <div>
-              <h4>Caution remboursable</h4>
-              <div class="deposit-list">
-                <ul id="depositList"></ul>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <div class="section-title">Moyen de paiement</div>
-              <div class="section-note">Indiquez votre préférence. Pour la carte, la page de paiement sécurisée s’ouvre dans un nouvel onglet une fois vos informations validées.</div>
-            </div>
-          </div>
-          <div class="choice-grid" id="paymentChoices">
-            <label class="payment-choice" data-payment-choice="card">
-              <input type="radio" name="paymentMethod" value="card" />
-              <span class="payment-choice-indicator" aria-hidden="true"></span>
-              <div>
-                <strong>Carte bancaire</strong>
-                <span>Règlement en ligne sur une page sécurisée après validation de votre demande.</span>
-              </div>
-            </label>
-            <label class="payment-choice" data-payment-choice="transfer">
-              <input type="radio" name="paymentMethod" value="transfer" />
-              <span class="payment-choice-indicator" aria-hidden="true"></span>
-              <div>
-                <strong>Virement bancaire</strong>
-                <span>Les coordonnées vous sont communiquées après validation de votre demande.</span>
-              </div>
-            </label>
-          </div>
-          <div class="reassurance-box">
-            <strong>Demande soumise à confirmation</strong>
-            <div id="reassuranceText">KD Conciergerie vérifie la disponibilité du logement. Aucun prélèvement n’est effectué tant que votre séjour n’est pas confirmé.</div>
-          </div>
-        </section>
-
-        <section class="card section">
-          <div class="section-title">Conditions</div>
-          <div class="checks">
-            <label class="check-row">
-              <input type="checkbox" id="acceptRequiredTerms" />
-              <span class="check-mark" aria-hidden="true"></span>
-              <span class="check-copy">J’ai lu et j’accepte les <a href="./conditions-generales.html">conditions générales de contrat</a> et la politique de protection des données.</span>
-            </label>
-            <label class="check-row">
-              <input type="checkbox" id="acceptPromos" />
-              <span class="check-mark" aria-hidden="true"></span>
-              <span class="check-copy">J’accepte de recevoir les offres et promotions KD Conciergerie.</span>
-            </label>
-          </div>
-        </section>
-
-        <section class="card section">
-          <div class="cta-area">
-            <button type="button" class="cta-button is-disabled" id="checkout-button" aria-disabled="true">Valider le paiement</button>
-            <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
-            <p class="small-note">Le paiement s’effectue sur une page sécurisée qui s’ouvre dans un nouvel onglet.</p>
-          </div>
-        </section>
-      </div>
-
-      <aside class="pay-aside" aria-label="Résumé">
-        <div class="pay-sticky-card">
-          <div class="aside-kicker">Résumé</div>
-          <div class="aside-lines" id="asideRecapLines"></div>
-          <div>
-            <div class="aside-total-label">Total estimé</div>
-            <div class="aside-total-value" id="asideGrandTotal">—</div>
-          </div>
-          <p class="aside-hint" id="asideHint">Complétez les dates et les voyageurs pour calculer le montant.</p>
         </div>
-      </aside>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Récapitulatif du séjour</div>
+            <div class="section-note">Les informations sont récupérées automatiquement depuis votre sélection.</div>
+          </div>
+          <button type="button" class="edit-link" id="toggleStayEditBtn" aria-expanded="false">Modifier</button>
+        </div>
+        <div class="missing-stay-info" id="missingStayInfo" hidden>Informations de séjour manquantes. Retournez à l’annonce pour sélectionner vos dates.</div>
+        <div class="stay-summary-card">
+          <div class="stay-summary-row"><span class="stay-summary-label">Arrivée</span><span class="stay-summary-value" id="staySummaryArrive">—</span></div>
+          <div class="stay-summary-row"><span class="stay-summary-label">Départ</span><span class="stay-summary-value" id="staySummaryDepart">—</span></div>
+          <div class="stay-summary-row"><span class="stay-summary-label">Voyageurs</span><span class="stay-summary-value" id="staySummaryGuests">—</span></div>
+          <div class="stay-summary-row"><span class="stay-summary-label">Total estimé</span><span class="stay-summary-value" id="staySummaryTotal">—</span></div>
+        </div>
+        <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;" hidden>
+          <div class="stay-grid">
+            <div class="field stay-date-field">
+              <label for="stayArrive">Arrivée</label>
+              <input id="stayArrive" name="arrive" type="date" autocomplete="off" />
+            </div>
+            <div class="field stay-date-field">
+              <label for="stayDepart">Départ</label>
+              <input id="stayDepart" name="depart" type="date" autocomplete="off" />
+            </div>
+            <div class="field"><label for="stayAdults">Adultes</label><input id="stayAdults" name="adults" type="number" min="1" max="30" step="1" /></div>
+            <div class="field"><label for="stayChildren">Enfants</label><input id="stayChildren" name="children" type="number" min="0" max="20" step="1" /></div>
+            <div class="field"><label for="stayBabies">Bébés</label><input id="stayBabies" name="babies" type="number" min="0" max="10" step="1" /></div>
+          </div>
+          <div class="stay-actions">
+            <button type="button" class="btn-save-stay" id="saveStayBtn">Mettre à jour le séjour</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Paiement</div>
+            <div class="section-note">Sélectionnez votre mode de paiement pour finaliser.</div>
+          </div>
+        </div>
+        <div class="choice-grid" id="paymentChoices">
+          <button type="button" class="payment-choice" data-payment-choice="card" aria-pressed="false">
+            <span class="payment-choice-indicator" aria-hidden="true"></span>
+            <div><strong>Carte bancaire</strong><span>Paiement immédiat sur la page Stripe sécurisée.</span></div>
+          </button>
+          <button type="button" class="payment-choice" data-payment-choice="transfer" aria-pressed="false">
+            <span class="payment-choice-indicator" aria-hidden="true"></span>
+            <div><strong>Virement bancaire</strong><span>Les instructions de virement vous seront envoyées après validation.</span></div>
+          </button>
+        </div>
+        <div class="price-total">
+          <span>Total à régler</span>
+          <span id="grandTotal">—</span>
+        </div>
+        <div class="cta-area">
+          <button type="button" class="cta-button" id="checkout-button">Valider le paiement</button>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -1424,871 +1312,239 @@
     const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
     const { enrichListing } = window.KDSite;
-
     const params = new URLSearchParams(window.location.search);
     const STORAGE_KEY = "kd-reservation-draft";
     const BOOKING_STORAGE_KEY = "kd_booking";
-    const readReservationDraft = () => {
+    const state = { paymentMethod: "card", location: null, data: {} };
+
+    const formatMoney = (value) =>
+      new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value || 0));
+    const formatDateFr = (iso) => (iso ? new Date(iso).toLocaleDateString("fr-FR") : "—");
+    const diffNights = (start, end) => {
+      if (!start || !end) return 0;
+      const diff = Math.round((new Date(end) - new Date(start)) / 86400000);
+      return diff > 0 ? diff : 0;
+    };
+    const normalizeId = (v) => {
+      const s = String(v || "").trim();
+      return s && s !== "undefined" && s !== "null" ? s : "";
+    };
+    const readJson = (key) => {
       try {
-        const sessionRaw = window.sessionStorage.getItem(STORAGE_KEY);
-        if (sessionRaw) return JSON.parse(sessionRaw);
+        const s = window.sessionStorage.getItem(key);
+        if (s) return JSON.parse(s);
       } catch {}
       try {
-        const localRaw = window.localStorage.getItem(STORAGE_KEY);
-        if (localRaw) return JSON.parse(localRaw);
+        const s = window.localStorage.getItem(key);
+        if (s) return JSON.parse(s);
       } catch {}
       return {};
     };
-    const writeReservationDraft = (data) => {
+    const saveState = () => {
+      const payload = {
+        id: state.data.id,
+        title: state.location?.title || "",
+        location: state.location?.location || "",
+        heroImage: state.location?.heroImage || "",
+        priceValue: state.location?.priceValue || 0,
+        arrive: state.data.arrive || "",
+        depart: state.data.depart || "",
+        adults: Number(state.data.adults || 0),
+        children: Number(state.data.children || 0),
+        babies: Number(state.data.babies || 0),
+        guests: Number(state.data.adults || 0) + Number(state.data.children || 0) + Number(state.data.babies || 0),
+        estimatedTotal: Number(state.data.estimatedTotal || 0),
+        paymentMethod: state.paymentMethod
+      };
       try {
-        const existing = readReservationDraft();
-        const serialized = JSON.stringify({ ...existing, ...data });
+        const serialized = JSON.stringify(payload);
         window.sessionStorage.setItem(STORAGE_KEY, serialized);
         window.localStorage.setItem(STORAGE_KEY, serialized);
-      } catch {}
-    };
-    const saveBookingData = (payload) => {
-      try {
-        const serialized = JSON.stringify({ ...payload, selectedAt: Date.now() });
         window.sessionStorage.setItem(BOOKING_STORAGE_KEY, serialized);
         window.localStorage.setItem(BOOKING_STORAGE_KEY, serialized);
       } catch {}
     };
-    const loadBookingData = () => {
-      try {
-        const sessionRaw = window.sessionStorage.getItem(BOOKING_STORAGE_KEY);
-        if (sessionRaw) return JSON.parse(sessionRaw);
-        const localRaw = window.localStorage.getItem(BOOKING_STORAGE_KEY);
-        if (localRaw) return JSON.parse(localRaw);
-      } catch (error) {
-        console.log("[kd_booking] invalid bookingData", error);
-      }
-      return null;
+
+    const draft = readJson(STORAGE_KEY);
+    const booking = readJson(BOOKING_STORAGE_KEY);
+    state.data = {
+      id: normalizeId(params.get("id") || booking.propertyId || draft.id),
+      arrive: params.get("arrive") || params.get("checkIn") || booking.checkIn || draft.arrive || "",
+      depart: params.get("depart") || params.get("checkOut") || booking.checkOut || draft.depart || "",
+      adults: Number(params.get("adults") || booking.adults || draft.adults || params.get("guests") || draft.guests || 1),
+      children: Number(params.get("children") || booking.children || draft.children || 0),
+      babies: Number(params.get("babies") || booking.babies || draft.babies || 0),
+      estimatedTotal: Number(params.get("estimatedTotal") || params.get("total") || booking.estimatedTotal || draft.estimatedTotal || 0)
     };
-    const normalizeListingId = (value) => {
-      const cleaned = String(value || "").trim();
-      return cleaned && cleaned !== "undefined" && cleaned !== "null" ? cleaned : "";
-    };
-    const normalizeText = (value) =>
-      String(value || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim()
-        .toLowerCase();
-    const buildListingBackHref = () => {
-      const targetId = normalizeListingId(reservationData.id) || normalizeListingId(reservationDraft.id) || normalizeListingId(location?.id) || "";
-      if (!targetId) return "./locations.html";
-      const next = new URLSearchParams();
-      next.set("id", targetId);
-      if (reservationData.arrive) next.set("arrive", reservationData.arrive);
-      if (reservationData.depart) next.set("depart", reservationData.depart);
-      const totalGuests = Number(reservationData.adults || 0) + Number(reservationData.children || 0) + Number(reservationData.babies || 0);
-      if (reservationData.adults) {
-        next.set("guests", String(totalGuests || reservationData.adults));
-        next.set("adults", String(reservationData.adults));
-      }
-      if (reservationData.children) next.set("children", String(reservationData.children));
-      if (reservationData.babies) next.set("babies", String(reservationData.babies));
-      if (reservationData.childAges?.length) next.set("childAges", reservationData.childAges.join(","));
-      return `./location-detail.html?${next.toString()}#booking`;
-    };
-    const reservationDraft = readReservationDraft();
-    const bookingData = loadBookingData();
-    const urlPropertyId = normalizeListingId(params.get("id"));
-    const bookingPropertyId = normalizeListingId(bookingData?.propertyId);
-    const draftListingId = normalizeListingId(reservationDraft.id);
-    const resolvedListingId = urlPropertyId || bookingPropertyId || draftListingId || "";
-    const bookingMatchesListing =
-      Boolean(bookingData) &&
-      Boolean(resolvedListingId) &&
-      normalizeListingId(bookingData?.propertyId) === normalizeListingId(resolvedListingId);
-    const reservationData = {
-      id: resolvedListingId,
-      arrive: bookingMatchesListing
-        ? String(bookingData?.checkIn || "")
-        : params.get("arrive") || params.get("checkIn") || reservationDraft.arrive || reservationDraft.checkIn || "",
-      depart: bookingMatchesListing
-        ? String(bookingData?.checkOut || "")
-        : params.get("depart") || params.get("checkOut") || reservationDraft.depart || reservationDraft.checkOut || "",
-      adults: bookingMatchesListing
-        ? Number(bookingData?.adults || 0)
-        : Number(
-            params.get("adults") ||
-            params.get("adultes") ||
-            reservationDraft.adults ||
-            params.get("guests") ||
-            reservationDraft.guests ||
-            0
-          ),
-      children: bookingMatchesListing
-        ? Number(bookingData?.children || 0)
-        : Number(params.get("children") || params.get("enfants") || reservationDraft.children || 0),
-      babies: (() => {
-        const fromParam = params.get("babies");
-        if (fromParam !== null && fromParam !== "") return Math.max(0, Number(fromParam) || 0);
-        if (reservationDraft.babies != null && reservationDraft.babies !== "") return Math.max(0, Number(reservationDraft.babies) || 0);
-        if (bookingMatchesListing && bookingData?.babies != null && bookingData?.babies !== "")
-          return Math.max(0, Number(bookingData.babies) || 0);
-        return 0;
-      })(),
-      childAges: (() => {
-        const raw = params.get("childAges");
-        if (raw) return raw.split(",").map((item) => String(item || "").trim()).filter(Boolean);
-        return Array.isArray(reservationDraft.childAges) ? reservationDraft.childAges.slice() : [];
-      })(),
-      estimatedTotal: Number(
-        params.get("total") ||
-        params.get("estimatedTotal") ||
-        params.get("amount") ||
-        reservationDraft.estimatedTotal ||
-        reservationDraft.total ||
-        bookingData?.estimatedTotal ||
-        0
-      ) || 0
-    };
-    if (!reservationData.arrive && bookingData?.checkIn) {
-      reservationData.arrive = String(bookingData.checkIn || "");
-    }
-    if (!reservationData.depart && bookingData?.checkOut) {
-      reservationData.depart = String(bookingData.checkOut || "");
-    }
-    if (!reservationData.adults && bookingData?.adults) {
-      reservationData.adults = Math.max(0, Number(bookingData.adults) || 0);
-    }
-    if (!reservationData.children && bookingData?.children) {
-      reservationData.children = Math.max(0, Number(bookingData.children) || 0);
-    }
-    if (!reservationData.babies && bookingData?.babies) {
-      reservationData.babies = Math.max(0, Number(bookingData.babies) || 0);
-    }
-    if (!reservationData.estimatedTotal && bookingData?.estimatedTotal) {
-      reservationData.estimatedTotal = Math.max(0, Number(bookingData.estimatedTotal) || 0);
-    }
-    if (!reservationData.adults && (reservationData.arrive || reservationData.depart)) {
-      reservationData.adults = 1;
-    }
-    const reservationState = {
-      selectedPaymentMethod:
-        reservationDraft.paymentMethod === "card" || reservationDraft.paymentMethod === "transfer"
-          ? reservationDraft.paymentMethod
-          : "card",
-      termsAccepted: false,
-      marketingAccepted: false,
-      lastComputedTotal: 0
-    };
-    let activePromo =
-      reservationDraft.activePromo && String(reservationDraft.activePromo).trim()
-        ? String(reservationDraft.activePromo).trim().toUpperCase()
-        : null;
-    let selectedOptionKeys = new Set(
-      Array.isArray(reservationDraft.selectedOptions) ? reservationDraft.selectedOptions.filter(Boolean) : []
-    );
-    const locationId = reservationData.id;
+    state.paymentMethod = draft.paymentMethod === "transfer" ? "transfer" : "card";
 
     const fallbackLocations = (window.KD_LOCATIONS || []).map((item) => enrichListing(item));
-    const draftLocation = reservationDraft && reservationDraft.id
-      ? enrichListing({
-          id: reservationDraft.id,
-          title: reservationDraft.title || "Annonce",
-          type: reservationDraft.type || "Appartement",
-          location: reservationDraft.location || "Port-de-Bouc",
-          heroImage: reservationDraft.heroImage || "",
-          gallery: Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : [],
-          priceValue: reservationDraft.priceValue || null,
-          reservation: reservationDraft.reservation || null,
+    const findLocation = () => {
+      const id = normalizeId(state.data.id);
+      if (!id) return null;
+      return fallbackLocations.find((item) => normalizeId(item.id) === id) || null;
+    };
+    const loadRemoteLocation = async () => {
+      const id = normalizeId(state.data.id);
+      if (!id) return null;
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description&id=eq.${encodeURIComponent(id)}`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Accept: "application/json" }
+        });
+        if (!response.ok) return null;
+        const rows = await response.json();
+        if (!Array.isArray(rows) || !rows.length) return null;
+        return enrichListing({
+          id: rows[0].id,
+          title: rows[0].title || "Annonce",
+          type: rows[0].type || "Appartement",
+          location: rows[0].location || "",
+          heroImage: rows[0].image_url || (rows[0].images || [])[0] || "",
+          gallery: [rows[0].image_url, ...(rows[0].images || [])].filter(Boolean),
+          description: rows[0].description || "",
+          priceValue: Number(rows[0].price || 0),
           equipments: ["WiFi", "Linge de maison fourni"]
-        })
-      : null;
-    const resolveLocationFromSources = (collection) => {
-      const byId = collection.find((item) => normalizeListingId(item.id) === locationId);
-      if (byId) return byId;
+        });
+      } catch {
+        return null;
+      }
+    };
 
-      const draftId = normalizeListingId(reservationDraft.id);
-      const byDraftId = draftId ? collection.find((item) => normalizeListingId(item.id) === draftId) : null;
-      if (byDraftId) return byDraftId;
-
-      const draftTitle = normalizeText(reservationDraft.title);
-      const draftPlace = normalizeText(reservationDraft.location);
-      const byFingerprint = collection.find((item) => {
-        const sameTitle = draftTitle && normalizeText(item.title) === draftTitle;
-        const samePlace = !draftPlace || normalizeText(item.location) === draftPlace;
-        return sameTitle && samePlace;
+    const renderProperty = () => {
+      const loc = state.location;
+      const title = loc?.title || draft.title || "Votre logement";
+      const lead = loc ? `${loc.type || "Bien"} · ${loc.location || ""}` : "Logement sélectionné";
+      const hero = loc?.heroImage || draft.heroImage || "";
+      document.getElementById("reservationTitle").textContent = title;
+      document.getElementById("reservationLead").textContent = lead;
+      document.getElementById("heroImage").innerHTML = hero ? `<img src="${hero}" alt="${title}" />` : `<div class="hero-placeholder">Photo du bien</div>`;
+      const chips = document.getElementById("includedChips");
+      chips.textContent = "";
+      (loc?.equipments || ["Linge de maison inclus", "WiFi inclus"]).slice(0, 4).forEach((label) => {
+        const span = document.createElement("span");
+        span.className = "chip";
+        span.textContent = label;
+        chips.appendChild(span);
       });
-      if (byFingerprint) return byFingerprint;
-
-      return draftLocation;
-    };
-    let location = resolveLocationFromSources(fallbackLocations);
-    let feedbackTimeout;
-
-    const DEFAULT_RESERVATION = {
-      cityTaxPerNightPerAdult: 2,
-      cleaningFee: 45,
-      serviceFee: 30,
-      securityDeposit: 300,
-      securityDepositMethod: "Carte bancaire",
-      securityDepositDue: "Avant l’arrivée",
-      refundTerms: "Restituée après vérification du logement.",
-      checkInWindow: "Arrivée entre 17:00 et 20:00",
-      checkOutWindow: "Départ avant 10:00",
-      keyHandover: "Remise des clés organisée avant votre arrivée.",
-      contactTiming: "Prise de contact avant le séjour pour confirmer l’accueil.",
-      specialNotes: [
-        "Merci de confirmer votre heure d’arrivée avant le séjour."
-      ],
-      includedServices: [
-        "Linge de maison inclus",
-        "WiFi inclus"
-      ],
-      optionalServices: [
-        { key: "baby-bed", label: "Lit bébé", description: "Installation sur demande.", price: 18 }
-      ],
-      paymentSchedule: {
-        depositPercent: 30,
-        balanceDaysBeforeArrival: 10,
-        onSitePercent: 0
-      },
-      promoCodes: {}
+      const backHref = loc?.id ? `./location-detail.html?id=${encodeURIComponent(loc.id)}#booking` : "./locations.html";
+      document.getElementById("backToListing").href = backHref;
     };
 
-    const finishReservationPaint = () => {
-      document.body.classList.remove("reservation-loading");
-      document.body.classList.add("reservation-ready");
+    const syncChronology = () => {
+      if (!state.data.arrive || !state.data.depart) return;
+      if (state.data.arrive > state.data.depart) {
+        state.data.depart = state.data.arrive;
+      }
     };
 
-    let stayAutoSaveTimer = 0;
-
-    const readStayFromForm = () => {
+    const renderStay = () => {
+      syncChronology();
+      const nights = diffNights(state.data.arrive, state.data.depart);
+      const travelers = Number(state.data.adults || 0) + Number(state.data.children || 0) + Number(state.data.babies || 0);
+      const nightly = Number(state.location?.priceValue || draft.priceValue || 0);
+      const total = nights > 0 ? nightly * nights : Number(state.data.estimatedTotal || 0);
+      if (total > 0) state.data.estimatedTotal = total;
+      document.getElementById("staySummaryArrive").textContent = formatDateFr(state.data.arrive);
+      document.getElementById("staySummaryDepart").textContent = formatDateFr(state.data.depart);
+      document.getElementById("staySummaryGuests").textContent = travelers > 0 ? `${state.data.adults} adulte(s), ${state.data.children} enfant(s), ${state.data.babies} bébé(s)` : "—";
+      document.getElementById("staySummaryTotal").textContent = total > 0 ? formatMoney(total) : "—";
+      document.getElementById("grandTotal").textContent = total > 0 ? formatMoney(total) : "—";
+      document.getElementById("missingStayInfo").hidden = Boolean(state.data.arrive || state.data.depart || travelers > 0);
       const arriveEl = document.getElementById("stayArrive");
       const departEl = document.getElementById("stayDepart");
-      if (!arriveEl || !departEl) return;
-      reservationData.arrive = String(arriveEl.value || "").trim();
-      reservationData.depart = String(departEl.value || "").trim();
-      reservationData.adults = Math.min(30, Math.max(0, Number(document.getElementById("stayAdults")?.value) || 0));
-      reservationData.children = Math.min(20, Math.max(0, Number(document.getElementById("stayChildren")?.value) || 0));
-      reservationData.babies = Math.min(10, Math.max(0, Number(document.getElementById("stayBabies")?.value) || 0));
-      const agesRaw = String(document.getElementById("stayChildAges")?.value || "")
-        .split(/[,;]/)
-        .map((s) => s.trim())
-        .filter(Boolean);
-      reservationData.childAges = agesRaw.slice(0, Math.max(0, reservationData.children));
-    };
-
-    const populateStayForm = () => {
-      const arriveEl = document.getElementById("stayArrive");
-      const departEl = document.getElementById("stayDepart");
-      if (!arriveEl || !departEl) return;
-      const today = new Date();
-      const minStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-      arriveEl.min = minStr;
-      departEl.min = minStr;
-      arriveEl.value = reservationData.arrive || "";
-      departEl.value = reservationData.depart || "";
-      if (arriveEl.value) departEl.min = arriveEl.value;
       const adultsEl = document.getElementById("stayAdults");
       const childrenEl = document.getElementById("stayChildren");
       const babiesEl = document.getElementById("stayBabies");
-      const agesEl = document.getElementById("stayChildAges");
-      if (adultsEl) adultsEl.value = String(Math.max(1, Number(reservationData.adults) || 0));
-      if (childrenEl) childrenEl.value = String(Math.max(0, Number(reservationData.children) || 0));
-      if (babiesEl) babiesEl.value = String(Math.max(0, Number(reservationData.babies) || 0));
-      if (agesEl) agesEl.value = (reservationData.childAges || []).join(", ");
-    };
-
-    const persistGuestAndDates = (showHint = false) => {
-      readStayFromForm();
-      const draft = readReservationDraft();
-      writeReservationDraft({
-        ...draft,
-        ...reservationData,
-        id: normalizeListingId(reservationData.id) || draft.id,
-        guests: Number(reservationData.adults || 0) + Number(reservationData.children || 0) + Number(reservationData.babies || 0),
-        childAges: Array.isArray(reservationData.childAges) ? reservationData.childAges : [],
-        selectedOptions: [...selectedOptionKeys],
-        activePromo,
-        paymentMethod: reservationState.selectedPaymentMethod || ""
-      });
-      const pid = normalizeListingId(reservationData.id);
-      if (pid) {
-        saveBookingData({
-          propertyId: pid,
-          checkIn: reservationData.arrive || "",
-          checkOut: reservationData.depart || "",
-          adults: Number(reservationData.adults || 0),
-          children: Number(reservationData.children || 0),
-          babies: Number(reservationData.babies || 0),
-          estimatedTotal: Number(reservationState.lastComputedTotal || reservationData.estimatedTotal || 0)
-        });
-      }
-      if (showHint) {
-        const el = document.getElementById("staySavedHint");
-        if (el) {
-          el.textContent = "Séjour enregistré sur cet appareil.";
-          el.classList.add("is-visible");
-          window.setTimeout(() => {
-            el.textContent = "";
-            el.classList.remove("is-visible");
-          }, 2600);
-        }
-      }
-      try {
-        const next = new URLSearchParams(window.location.search);
-        if (reservationData.id) next.set("id", reservationData.id);
-        if (reservationData.arrive) next.set("arrive", reservationData.arrive);
-        if (reservationData.depart) next.set("depart", reservationData.depart);
-        if (reservationData.adults) next.set("adults", String(reservationData.adults));
-        if (reservationData.children) next.set("children", String(reservationData.children));
-        if (reservationData.babies) next.set("babies", String(reservationData.babies));
-        if (reservationData.childAges?.length) next.set("childAges", reservationData.childAges.join(","));
-        const path = `${window.location.pathname}?${next.toString()}`;
-        window.history.replaceState(null, "", path);
-      } catch {}
-    };
-
-    const scheduleStayAutoSave = () => {
-      window.clearTimeout(stayAutoSaveTimer);
-      stayAutoSaveTimer = window.setTimeout(() => {
-        persistGuestAndDates(false);
-        renderReservation();
-      }, 600);
-    };
-
-    const syncDateConstraints = () => {
-      const arriveEl = document.getElementById("stayArrive");
-      const departEl = document.getElementById("stayDepart");
-      if (!arriveEl || !departEl) return;
       const today = new Date();
       const minToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
       arriveEl.min = minToday;
-      departEl.min = arriveEl.value || minToday;
-      if (arriveEl.value && departEl.value && arriveEl.value > departEl.value) {
-        departEl.value = arriveEl.value;
-      }
+      departEl.min = state.data.arrive || minToday;
+      arriveEl.value = state.data.arrive || "";
+      departEl.value = state.data.depart || "";
+      adultsEl.value = String(Math.max(1, Number(state.data.adults || 1)));
+      childrenEl.value = String(Math.max(0, Number(state.data.children || 0)));
+      babiesEl.value = String(Math.max(0, Number(state.data.babies || 0)));
+      saveState();
     };
 
-    const showFeedback = (message) => {
-      const uiFeedback = document.getElementById("uiFeedback");
-      uiFeedback.textContent = message;
-      uiFeedback.classList.add("visible");
-      window.clearTimeout(feedbackTimeout);
-      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1800);
-    };
-
-    const formatMoney = (value) =>
-      new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value || 0));
-
-    const diffNights = (startIso, endIso) => {
-      if (!startIso || !endIso) return 0;
-      const start = new Date(startIso);
-      const end = new Date(endIso);
-      const diff = Math.round((end - start) / 86400000);
-      return diff > 0 ? diff : 0;
-    };
-
-    const formatLongDate = (iso) => {
-      if (!iso) return "À préciser";
-      const date = new Date(iso);
-      return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-    };
-
-    const mergeReservation = (base) => ({
-      ...DEFAULT_RESERVATION,
-      ...(base || {}),
-      paymentSchedule: {
-        ...DEFAULT_RESERVATION.paymentSchedule,
-        ...((base || {}).paymentSchedule || {})
-      },
-      specialNotes: Array.isArray((base || {}).specialNotes) ? base.specialNotes : DEFAULT_RESERVATION.specialNotes,
-      includedServices: Array.isArray((base || {}).includedServices) ? base.includedServices : DEFAULT_RESERVATION.includedServices,
-      optionalServices: Array.isArray((base || {}).optionalServices) ? base.optionalServices : DEFAULT_RESERVATION.optionalServices,
-      promoCodes: typeof ((base || {}).promoCodes) === "object" && base.promoCodes ? base.promoCodes : DEFAULT_RESERVATION.promoCodes
-    });
-
-    const buildRemoteReservation = () => ({
-      ...DEFAULT_RESERVATION,
-      includedServices: [
-        "Linge de maison inclus",
-        "Internet WiFi inclus",
-        "Climatisation incluse"
-      ],
-      optionalServices: [
-        { key: "baby-bed", label: "Lit bébé", description: "Préparation avant arrivée.", price: 18 },
-        { key: "late-arrival", label: "Arrivée hors horaires", description: "Organisation tardive de l’accueil.", price: 25 },
-        { key: "breakfast", label: "Petit-déjeuner d’accueil", description: "Prévu pour le premier matin.", price: 22 }
-      ]
-    });
-
-    const normalizeRemoteLocation = (row) =>
-      enrichListing({
-        id: row.id,
-        title: row.title || "Annonce",
-        type: row.type || "Appartement",
-        location: row.location || "Port-de-Bouc",
-        heroImage: row.image_url || (row.images || [])[0] || "",
-        gallery: [row.image_url, ...(row.images || [])].filter(Boolean),
-        description: row.description || "Description à venir.",
-        fullDescription: row.description || "Description à venir.",
-        priceValue: Number(row.price) || null,
-        price: row.price ? `${formatMoney(row.price)} / nuit` : "Sur demande",
-        equipments: [
-          "WiFi",
-          "Climatisation",
-          "Linge de maison fourni"
-        ],
-        reservation: buildRemoteReservation()
-      });
-
-    const loadRemoteLocation = async () => {
-      if (!locationId) return null;
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/properties?select=id,title,type,location,price,image_url,images,description,max_guests,bedrooms,bathrooms,rental_duration&id=eq.${encodeURIComponent(locationId)}`, {
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            Accept: "application/json"
-          }
-        });
-        if (!response.ok) throw new Error("Impossible de charger la réservation");
-        const rows = await response.json();
-        if (Array.isArray(rows) && rows.length) return normalizeRemoteLocation(rows[0]);
-      } catch (error) {
-        console.error(error);
-      }
-      return null;
-    };
-    const sanitizeReservationData = () => {
-      if (location?.id && normalizeListingId(reservationData.id) !== normalizeListingId(location.id)) {
-        reservationData.id = normalizeListingId(location.id);
-      }
-      reservationData.adults = Number.isFinite(Number(reservationData.adults)) ? Math.max(Number(reservationData.adults), 0) : 0;
-      reservationData.children = Number.isFinite(Number(reservationData.children)) ? Math.max(Number(reservationData.children), 0) : 0;
-      reservationData.babies = Number.isFinite(Number(reservationData.babies)) ? Math.max(Number(reservationData.babies), 0) : 0;
-      reservationData.childAges = Array.isArray(reservationData.childAges) ? reservationData.childAges.slice(0, reservationData.children) : [];
-      writeReservationDraft({
-        ...reservationData,
-        id: reservationData.id,
-        title: location?.title || reservationDraft.title || "",
-        type: location?.type || reservationDraft.type || "",
-        location: location?.location || reservationDraft.location || "",
-        heroImage: location?.heroImage || reservationDraft.heroImage || "",
-        gallery: Array.isArray(location?.gallery) ? location.gallery : (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery : []),
-        priceValue: location?.priceValue ?? reservationDraft.priceValue ?? null,
-        reservation: location?.reservation || reservationDraft.reservation || null,
-        guests: reservationData.adults + reservationData.children + reservationData.babies,
-        selectedOptions: [...selectedOptionKeys],
-        activePromo,
-        paymentMethod: reservationState.selectedPaymentMethod || ""
+    const renderPaymentButtons = () => {
+      document.querySelectorAll(".payment-choice").forEach((button) => {
+        const active = button.dataset.paymentChoice === state.paymentMethod;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", active ? "true" : "false");
       });
     };
 
-    const getSelectedPayment = () =>
-      reservationState.selectedPaymentMethod === "transfer"
-        ? "Virement bancaire"
-        : reservationState.selectedPaymentMethod === "card"
-          ? "Carte bancaire"
-          : "Aucun mode sélectionné";
-
-    const renderPaymentChoiceState = () => {
-      document.querySelectorAll(".payment-choice").forEach((choice) => {
-        const input = choice.querySelector('input[type="radio"]');
-        const isActive = input?.value === reservationState.selectedPaymentMethod;
-        if (input) input.checked = isActive;
-        choice.classList.toggle("active", isActive);
-        choice.setAttribute("aria-pressed", isActive ? "true" : "false");
-        choice.setAttribute("aria-checked", isActive ? "true" : "false");
-      });
-      const staySummaryPayment = document.getElementById("staySummaryPayment");
-      if (staySummaryPayment) {
-        staySummaryPayment.textContent =
-          reservationState.selectedPaymentMethod === "card"
-            ? "Carte bancaire"
-            : reservationState.selectedPaymentMethod === "transfer"
-              ? "Virement bancaire"
-              : "À sélectionner";
-      }
-    };
-
-    const loadReservationData = () => {
-      const hasValidProperty = Boolean(normalizeListingId(reservationData.id) || normalizeListingId(location?.id));
-      const hasValidDates = Boolean(reservationData.arrive && reservationData.depart && diffNights(reservationData.arrive, reservationData.depart) > 0);
-      return {
-        ...reservationData,
-        hasProperty: hasValidProperty,
-        hasDates: hasValidDates,
-        hasTravelers: Number(reservationData.adults) > 0
-      };
-    };
-
-    const loadSelectedProperty = () => location;
-
-    const validateReservation = () => {
-      const data = loadReservationData();
-      const totalValue = Number(reservationState.lastComputedTotal || reservationData.estimatedTotal || 0);
-      const hasValidTotal = Number.isFinite(totalValue) && totalValue > 0;
-      const hasPayment = reservationState.selectedPaymentMethod === "card" || reservationState.selectedPaymentMethod === "transfer";
-      const termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
-      reservationState.termsAccepted = termsAccepted;
-      reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
+    const validateForCheckout = () => {
+      const nights = diffNights(state.data.arrive, state.data.depart);
+      const travelers = Number(state.data.adults || 0);
+      const total = Number(state.data.estimatedTotal || 0);
       const errors = [];
-      if (!data.arrive) errors.push("Date d’arrivée manquante.");
-      if (!data.depart) errors.push("Date de départ manquante.");
-      if (!data.hasDates) errors.push("Les dates sélectionnées sont incohérentes.");
-      if (!data.hasTravelers) errors.push("Au moins 1 adulte est requis.");
-      if (!hasValidTotal) errors.push("Total estimé invalide.");
-      if (!hasPayment) errors.push("Choisissez un mode de paiement (carte ou virement).");
-      return {
-        isValid: Boolean(data.hasDates && data.hasTravelers && hasValidTotal && hasPayment),
-        data,
-        hasValidTotal,
-        hasPayment,
-        termsAccepted,
-        totalValue,
-        errors
-      };
+      if (!state.data.arrive) errors.push("Date d’arrivée manquante.");
+      if (!state.data.depart) errors.push("Date de départ manquante.");
+      if (nights <= 0) errors.push("Les dates du séjour sont invalides.");
+      if (travelers <= 0) errors.push("Au moins 1 adulte est requis.");
+      if (total <= 0) errors.push("Total estimé introuvable.");
+      return errors;
     };
 
-    const updateSubmitButtonState = () => {
-      const checkoutBtn = document.getElementById("checkout-button");
-      if (!checkoutBtn) return;
-      const validation = validateReservation();
-      checkoutBtn.classList.toggle("is-disabled", !validation.isValid);
-      checkoutBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
-      checkoutBtn.style.cursor = "pointer";
-    };
-
-    const preloadReservationUi = () => {
-      const draftTitle = reservationDraft.title || "Votre réservation KD Conciergerie";
-      const draftLead = reservationDraft.location
-        ? `Logement à ${reservationDraft.location} — complétez ou modifiez votre séjour ci-dessous.`
-        : "Complétez ou modifiez les dates et le nombre de voyageurs ci-dessous.";
-      const heroSrc = reservationDraft.heroImage || (Array.isArray(reservationDraft.gallery) ? reservationDraft.gallery[0] : "") || "";
-
-      document.getElementById("reservationTitle").textContent = draftTitle;
-      document.getElementById("reservationLead").textContent = draftLead;
-      document.getElementById("heroImage").innerHTML = heroSrc
-        ? `<img src="${heroSrc}" alt="${draftTitle}" />`
-        : `<div class="hero-placeholder" role="status">Photo du bien</div>`;
-      populateStayForm();
-    };
-
-    const renderReservationHero = (property) => {
-      const data = loadReservationData();
-      const heroSrc = property?.heroImage || reservationDraft.heroImage || (Array.isArray(property?.gallery) ? property.gallery[0] : "") || "";
-      document.getElementById("heroImage").innerHTML = heroSrc
-        ? `<img src="${heroSrc}" alt="${property?.title || "Annonce KD Conciergerie"}" />`
-        : `<div class="hero-placeholder" role="status">Annonce sélectionnée</div>`;
-      document.getElementById("reservationTitle").textContent = property?.title || reservationDraft.title || "Votre séjour KD Conciergerie";
-      document.getElementById("reservationLead").textContent = property
-        ? `${property.type || "Bien"} · ${property.location || "Port-de-Bouc"}`
-        : data.hasProperty
-          ? "Les informations du logement s’affichent sur cette page."
-          : "Retournez sur l’annonce pour choisir un bien.";
-    };
-
-    const buildMailHref = ({ totalLabel, nights, selectedOptions, payment }) => {
-      const data = loadReservationData();
-      const body = encodeURIComponent([
-        `Bonjour,`,
-        ``,
-        `Je souhaite confirmer ma demande pour ${location.title}.`,
-        `Arrivée : ${formatLongDate(data.arrive)}`,
-        `Départ : ${formatLongDate(data.depart)}`,
-        `Adultes : ${data.adults}`,
-        `Enfants : ${data.children}`,
-        `Bébés : ${data.babies}`,
-        `Durée : ${nights} nuit${nights > 1 ? "s" : ""}`,
-        `Options : ${selectedOptions.length ? selectedOptions.map((item) => item.label).join(", ") : "Aucune"}`,
-        `Paiement choisi : ${payment}`,
-        `Total estimé : ${totalLabel}`
-      ].join("\n"));
-      return `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(`Demande de réservation - ${location.title}`)}&body=${body}`;
-    };
-
-    const renderReservation = () => {
-      readStayFromForm();
-      if (!location) {
-        document.getElementById("backToListing").href = buildListingBackHref();
-        document.querySelector("main").innerHTML = `<section class="card section pay-alert"><div class="section-title">Séjour introuvable</div><p class="section-note">Cette page ne correspond à aucune annonce valide. Reprenez depuis le détail du bien.</p><div><a class="secondary-button" href="${buildListingBackHref()}">Retour à l’annonce</a></div></section>`;
-        finishReservationPaint();
-        return;
-      }
-
-      const data = loadReservationData();
-      const property = loadSelectedProperty();
-      const reservation = mergeReservation(location.reservation);
-      const nights = diffNights(data.arrive, data.depart);
-      const nightlyPrice = Number(location.priceValue || reservationDraft.priceValue || 0);
-      const rentTotal = nightlyPrice * nights;
-      const cityTax = Number(reservation.cityTaxPerNightPerAdult || 0) * data.adults * nights;
-      const cleaningFee = Number(reservation.cleaningFee || 0);
-      const serviceFee = Number(reservation.serviceFee || 0);
-      const grandTotal = rentTotal + cityTax + cleaningFee + serviceFee;
-      reservationState.lastComputedTotal = grandTotal;
-      reservationData.estimatedTotal = grandTotal > 0 ? grandTotal : reservationData.estimatedTotal;
-      const payment = getSelectedPayment();
-      const totalGuests = Number(data.adults || 0) + Number(data.children || 0) + Number(data.babies || 0);
-      const hasAnyStayInfo = Boolean(data.arrive || data.depart || totalGuests > 0);
-
-      const stayAlert = document.getElementById("stayAlert");
-      const missingStayInfo = document.getElementById("missingStayInfo");
-      if (missingStayInfo) {
-        missingStayInfo.hidden = hasAnyStayInfo;
-      }
-      if (stayAlert) {
-        if (data.hasDates && data.hasTravelers) {
-          stayAlert.hidden = true;
-          stayAlert.textContent = "";
-        } else {
-          stayAlert.hidden = false;
-          stayAlert.textContent =
-            "Indiquez une arrivée, un départ (au moins une nuit) et au moins un adulte. Vos choix sont enregistrés automatiquement sur cet appareil.";
+    const bindEvents = () => {
+      document.getElementById("toggleStayEditBtn").addEventListener("click", () => {
+        const form = document.getElementById("stayForm");
+        form.hidden = !form.hidden;
+      });
+      ["stayArrive", "stayDepart", "stayAdults", "stayChildren", "stayBabies"].forEach((id) => {
+        document.getElementById(id).addEventListener("change", () => {
+          state.data.arrive = String(document.getElementById("stayArrive").value || "");
+          state.data.depart = String(document.getElementById("stayDepart").value || "");
+          state.data.adults = Math.max(1, Number(document.getElementById("stayAdults").value || 1));
+          state.data.children = Math.max(0, Number(document.getElementById("stayChildren").value || 0));
+          state.data.babies = Math.max(0, Number(document.getElementById("stayBabies").value || 0));
+          renderStay();
+        });
+      });
+      document.getElementById("saveStayBtn").addEventListener("click", () => {
+        renderStay();
+        document.getElementById("stayForm").hidden = true;
+      });
+      document.querySelectorAll(".payment-choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.paymentMethod = button.dataset.paymentChoice === "transfer" ? "transfer" : "card";
+          renderPaymentButtons();
+          saveState();
+        });
+      });
+      document.getElementById("checkout-button").addEventListener("click", async () => {
+        const errors = validateForCheckout();
+        if (errors.length) {
+          alert(`Impossible de poursuivre :\n- ${errors.join("\n- ")}`);
+          return;
         }
-      }
-
-      renderReservationHero(property);
-      document.getElementById("backToListing").href = buildListingBackHref();
-
-      const staySummaryArrive = document.getElementById("staySummaryArrive");
-      const staySummaryDepart = document.getElementById("staySummaryDepart");
-      const staySummaryGuests = document.getElementById("staySummaryGuests");
-      const staySummaryTotal = document.getElementById("staySummaryTotal");
-      if (staySummaryArrive) staySummaryArrive.textContent = data.arrive ? formatLongDate(data.arrive) : "À renseigner";
-      if (staySummaryDepart) staySummaryDepart.textContent = data.depart ? formatLongDate(data.depart) : "À renseigner";
-      if (staySummaryGuests) {
-        staySummaryGuests.textContent = totalGuests > 0
-          ? `${data.adults} adulte${data.adults > 1 ? "s" : ""}${data.children ? ` · ${data.children} enfant${data.children > 1 ? "s" : ""}` : ""}${data.babies ? ` · ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""} (${totalGuests} total)`
-          : "À renseigner";
-      }
-      if (staySummaryTotal) {
-        const totalToShow = grandTotal > 0 ? grandTotal : Number(reservationData.estimatedTotal || 0);
-        staySummaryTotal.textContent = totalToShow > 0 ? formatMoney(totalToShow) : "À calculer";
-      }
-      const staySummaryPayment = document.getElementById("staySummaryPayment");
-      if (staySummaryPayment) {
-        staySummaryPayment.textContent =
-          reservationState.selectedPaymentMethod === "card"
-            ? "Carte bancaire"
-            : reservationState.selectedPaymentMethod === "transfer"
-              ? "Virement bancaire"
-              : "À sélectionner";
-      }
-
-      const chipsEl = document.getElementById("includedChips");
-      if (chipsEl) {
-        chipsEl.textContent = "";
-        reservation.includedServices.forEach((label) => {
-          const span = document.createElement("span");
-          span.className = "chip";
-          span.textContent = label;
-          chipsEl.appendChild(span);
-        });
-      }
-
-      const asideLines = document.getElementById("asideRecapLines");
-      const asideTotal = document.getElementById("asideGrandTotal");
-      const asideHint = document.getElementById("asideHint");
-      if (asideLines) {
-        if (data.hasDates && data.hasTravelers && nights > 0) {
-          asideLines.innerHTML = [
-            `<div>${formatLongDate(data.arrive)} → ${formatLongDate(data.depart)}</div>`,
-            `<div>${nights} nuit${nights > 1 ? "s" : ""}</div>`,
-            `<div>${data.adults} adulte${data.adults > 1 ? "s" : ""}${data.children ? ` · ${data.children} enfant${data.children > 1 ? "s" : ""}` : ""}${data.babies ? ` · ${data.babies} bébé${data.babies > 1 ? "s" : ""}` : ""}</div>`
-          ].join("");
-        } else {
-          asideLines.innerHTML = "<div>Renseignez les dates et les voyageurs dans le formulaire.</div>";
-        }
-      }
-      if (asideTotal) {
-        const totalToShow = grandTotal > 0 ? grandTotal : Number(reservationData.estimatedTotal || 0);
-        asideTotal.textContent = totalToShow > 0 ? formatMoney(totalToShow) : "—";
-      }
-      if (asideHint) {
-        asideHint.textContent =
-          data.hasDates && data.hasTravelers && nights > 0
-            ? "Montant indicatif avant confirmation par KD Conciergerie."
-            : "Complétez le séjour pour afficher le total.";
-      }
-
-      document.getElementById("priceBreakdown").innerHTML = `
-        <div class="price-row">
-          <div>
-            <strong>Montant total du loyer</strong>
-            <small>${nights ? `${formatMoney(nightlyPrice)} × ${nights} nuit${nights > 1 ? "s" : ""}` : "Indiquez vos dates ci-dessus"}</small>
-          </div>
-          <strong>${formatMoney(rentTotal)}</strong>
-        </div>
-        <div class="price-row">
-          <div>
-            <strong>Frais de ménage</strong>
-            <small>Préparation et remise en état du logement</small>
-          </div>
-          <strong>${formatMoney(cleaningFee)}</strong>
-        </div>
-        <div class="price-row">
-          <div>
-            <strong>Gestion du séjour</strong>
-            <small>Suivi et coordination avant votre arrivée</small>
-          </div>
-          <strong>${formatMoney(serviceFee)}</strong>
-        </div>
-        <div class="price-row">
-          <div>
-            <strong>Taxe de séjour</strong>
-            <small>${formatMoney(reservation.cityTaxPerNightPerAdult)} × ${data.adults} adulte${data.adults > 1 ? "s" : ""} × ${nights} nuit${nights > 1 ? "s" : ""}</small>
-          </div>
-          <strong>${formatMoney(cityTax)}</strong>
-        </div>
-      `;
-
-      document.getElementById("grandTotal").textContent = formatMoney(grandTotal);
-
-      document.getElementById("notesList").innerHTML = [
-        `Heures d’arrivée : ${reservation.checkInWindow}`,
-        `Heure de départ : ${reservation.checkOutWindow}`,
-        `Remise des clés : ${reservation.keyHandover}`,
-        `Contact avant arrivée : ${reservation.contactTiming}`,
-        ...reservation.specialNotes
-      ].map((item) => `<li>${item}</li>`).join("");
-
-      document.getElementById("depositList").innerHTML = [
-        `Montant : ${formatMoney(reservation.securityDeposit)}`,
-        `Forme de paiement : ${reservation.securityDepositMethod}`,
-        `Moment du paiement : ${reservation.securityDepositDue}`,
-        `${reservation.refundTerms}`
-      ].map((item) => `<li>${item}</li>`).join("");
-
-      document.getElementById("reassuranceText").textContent =
-        payment === "Virement bancaire"
-          ? "Sous 48 h ouvrées, vous recevez les coordonnées pour le virement. Aucun paiement n’est attendu avant confirmation de votre séjour."
-          : "KD Conciergerie vérifie la disponibilité du logement. Aucun prélèvement n’est effectué tant que votre séjour n’est pas confirmé.";
-
-      const emailReservationBtn = document.getElementById("emailReservationBtn");
-      const checkoutBtn = document.getElementById("checkout-button");
-      emailReservationBtn.href = buildMailHref({
-        totalLabel: formatMoney(grandTotal),
-        nights,
-        selectedOptions: [],
-        payment
-      });
-      if (checkoutBtn) {
-        checkoutBtn.dataset.totalLabel = formatMoney(grandTotal);
-        checkoutBtn.dataset.nights = String(nights);
-      }
-
-      updateSubmitButtonState();
-
-      populateStayForm();
-      renderPaymentChoiceState();
-      finishReservationPaint();
-    };
-
-    const bindStaticEvents = () => {
-      ["stayArrive", "stayDepart", "stayAdults", "stayChildren", "stayBabies", "stayChildAges"].forEach((fieldId) => {
-        const el = document.getElementById(fieldId);
-        if (!el) return;
-        const handleStayFieldChange = () => {
-          if (fieldId === "stayArrive" || fieldId === "stayDepart") {
-            syncDateConstraints();
-          }
-          scheduleStayAutoSave();
-        };
-        el.addEventListener("change", handleStayFieldChange);
-        el.addEventListener("input", handleStayFieldChange);
-      });
-      const saveStayBtn = document.getElementById("saveStayBtn");
-      if (saveStayBtn) {
-        saveStayBtn.addEventListener("click", () => {
-          readStayFromForm();
-          persistGuestAndDates(true);
-          renderReservation();
-          const stayForm = document.getElementById("stayForm");
-          const toggleStayEditBtn = document.getElementById("toggleStayEditBtn");
-          if (stayForm) stayForm.hidden = true;
-          if (toggleStayEditBtn) toggleStayEditBtn.setAttribute("aria-expanded", "false");
-        });
-      }
-
-      const toggleStayEditBtn = document.getElementById("toggleStayEditBtn");
-      if (toggleStayEditBtn) {
-        toggleStayEditBtn.addEventListener("click", () => {
-          const stayForm = document.getElementById("stayForm");
-          if (!stayForm) return;
-          stayForm.hidden = !stayForm.hidden;
-          toggleStayEditBtn.setAttribute("aria-expanded", stayForm.hidden ? "false" : "true");
-        });
-      }
-
-      document.querySelectorAll('#paymentChoices input[name="paymentMethod"]').forEach((input) => {
-        input.addEventListener("change", () => {
-          if (!input.checked) return;
-          reservationState.selectedPaymentMethod = input.value;
-          persistGuestAndDates(false);
-          renderPaymentChoiceState();
-          updateSubmitButtonState();
-        });
-      });
-      document.querySelectorAll(".payment-choice").forEach((choice) => {
-        choice.setAttribute("tabindex", "0");
-        choice.setAttribute("role", "radio");
-        choice.addEventListener("click", () => {
-          const input = choice.querySelector('input[name="paymentMethod"]');
-          if (!input) return;
-          input.checked = true;
-          input.dispatchEvent(new Event("change", { bubbles: true }));
-        });
-        choice.addEventListener("keydown", (event) => {
-          if (event.key !== "Enter" && event.key !== " ") return;
-          event.preventDefault();
-          choice.click();
-        });
-      });
-
-      document.getElementById("acceptRequiredTerms").addEventListener("change", () => {
-        reservationState.termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
-        updateSubmitButtonState();
-      });
-      document.getElementById("acceptPromos").addEventListener("change", () => {
-        reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
-        updateSubmitButtonState();
-      });
-      document.getElementById("checkout-button").addEventListener("click", async (event) => {
-        const validation = validateReservation();
-        if (!validation.isValid || event.currentTarget.classList.contains("is-disabled")) {
-          event.preventDefault();
-          alert(`Impossible de lancer le paiement :\n- ${validation.errors.join("\n- ")}`);
+        if (state.paymentMethod === "transfer") {
+          alert("Les instructions de virement bancaire vous seront envoyées après validation de votre demande.");
           return;
         }
         try {
           const response = await fetch("http://localhost:4242/create-checkout-session", { method: "POST" });
           const data = await response.json();
-          if (data?.url) {
-            window.location.href = data.url;
-          } else {
-            alert("Erreur de connexion au paiement Stripe.");
-          }
-        } catch (error) {
-          console.error(error);
+          if (data?.url) window.location.href = data.url;
+          else alert("Erreur de connexion au paiement Stripe.");
+        } catch {
           alert("Erreur de connexion au paiement Stripe.");
         }
       });
     };
 
-    preloadReservationUi();
-    Promise.resolve(location ? location : loadRemoteLocation()).then((resolved) => {
-      if (resolved) location = resolved;
-      if (!location) location = resolveLocationFromSources(fallbackLocations);
-      sanitizeReservationData();
-      populateStayForm();
-      syncDateConstraints();
-      persistGuestAndDates(false);
-      bindStaticEvents();
-      renderPaymentChoiceState();
-      renderReservation();
-    }).catch((error) => {
-      console.error(error);
-      finishReservationPaint();
-      showFeedback("Impossible de charger les informations de réservation.");
-    });
+    const init = async () => {
+      state.location = findLocation() || await loadRemoteLocation();
+      renderProperty();
+      renderStay();
+      renderPaymentButtons();
+      bindEvents();
+      document.body.classList.remove("reservation-loading");
+    };
+
+    init();
   </script>
 
 </body>
