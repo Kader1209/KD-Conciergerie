@@ -84,10 +84,10 @@
     }
 
     .topbar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: flex-start;
+      gap: 14px;
     }
 
     .back-link {
@@ -123,7 +123,6 @@
       width: 56px;
       height: 56px;
       object-fit: contain;
-      justify-self: end;
       flex-shrink: 0;
       filter: drop-shadow(0 2px 6px rgba(20, 18, 16, 0.08));
     }
@@ -1204,8 +1203,8 @@
 <body class="reservation-loading">
   <header class="container">
     <div class="topbar">
-      <a href="./location-detail.html" class="back-link" id="backToListing">← Retour à l’annonce</a>
       <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+      <a href="./location-detail.html" class="back-link" id="backToListing">← Retour à l’annonce</a>
     </div>
   </header>
 
@@ -1262,14 +1261,14 @@
                 <span>Sélectionnez vos dates pour mettre à jour automatiquement le montant du séjour.</span>
               </div>
               <div class="field stay-date-field">
-                <label for="stayDepart">Départ</label>
-                <input id="stayDepart" name="depart" type="date" autocomplete="off" />
-                <small class="stay-date-help">Date de fin du séjour.</small>
-              </div>
-              <div class="field stay-date-field">
                 <label for="stayArrive">Arrivée</label>
                 <input id="stayArrive" name="arrive" type="date" autocomplete="off" />
                 <small class="stay-date-help">Date de début du séjour.</small>
+              </div>
+              <div class="field stay-date-field">
+                <label for="stayDepart">Départ</label>
+                <input id="stayDepart" name="depart" type="date" autocomplete="off" />
+                <small class="stay-date-help">Date de fin du séjour.</small>
               </div>
               <div class="field">
                 <label for="stayAdults">Adultes</label>
