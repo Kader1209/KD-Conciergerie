@@ -715,8 +715,7 @@
     }
 
     .is-disabled {
-      opacity: 0.5;
-      pointer-events: none;
+      opacity: 0.75;
       box-shadow: none;
     }
 
@@ -1250,6 +1249,10 @@
               <span class="stay-summary-label">Total estimé</span>
               <span class="stay-summary-value" id="staySummaryTotal">—</span>
             </div>
+            <div class="stay-summary-row">
+              <span class="stay-summary-label">Paiement</span>
+              <span class="stay-summary-value" id="staySummaryPayment">À sélectionner</span>
+            </div>
           </div>
           <div class="stay-alert" id="stayAlert" role="status" hidden></div>
           <form class="stay-form" id="stayForm" action="#" method="get" onsubmit="return false;" hidden>
@@ -1373,7 +1376,7 @@
 
         <section class="card section">
           <div class="cta-area">
-            <button type="button" class="cta-button is-disabled" id="continuePaymentBtn" aria-disabled="true">Valider le paiement</button>
+            <button type="button" class="cta-button is-disabled" id="checkout-button" aria-disabled="true">Valider le paiement</button>
             <a class="secondary-button" id="emailReservationBtn" href="mailto:kd.conciergerie13@gmail.com">Envoyer le récapitulatif par email</a>
             <p class="small-note">Le paiement s’effectue sur une page sécurisée qui s’ouvre dans un nouvel onglet.</p>
           </div>
@@ -1484,16 +1487,23 @@
       id: resolvedListingId,
       arrive: bookingMatchesListing
         ? String(bookingData?.checkIn || "")
-        : params.get("arrive") || reservationDraft.arrive || "",
+        : params.get("arrive") || params.get("checkIn") || reservationDraft.arrive || reservationDraft.checkIn || "",
       depart: bookingMatchesListing
         ? String(bookingData?.checkOut || "")
-        : params.get("depart") || reservationDraft.depart || "",
+        : params.get("depart") || params.get("checkOut") || reservationDraft.depart || reservationDraft.checkOut || "",
       adults: bookingMatchesListing
         ? Number(bookingData?.adults || 0)
-        : Number(params.get("adults") || reservationDraft.adults || params.get("guests") || reservationDraft.guests || 0),
+        : Number(
+            params.get("adults") ||
+            params.get("adultes") ||
+            reservationDraft.adults ||
+            params.get("guests") ||
+            reservationDraft.guests ||
+            0
+          ),
       children: bookingMatchesListing
         ? Number(bookingData?.children || 0)
-        : Number(params.get("children") || reservationDraft.children || 0),
+        : Number(params.get("children") || params.get("enfants") || reservationDraft.children || 0),
       babies: (() => {
         const fromParam = params.get("babies");
         if (fromParam !== null && fromParam !== "") return Math.max(0, Number(fromParam) || 0);
@@ -1510,11 +1520,16 @@
       estimatedTotal: Number(
         params.get("total") ||
         params.get("estimatedTotal") ||
+        params.get("amount") ||
         reservationDraft.estimatedTotal ||
+        reservationDraft.total ||
         bookingData?.estimatedTotal ||
         0
       ) || 0
     };
+    if (!reservationData.adults && (reservationData.arrive || reservationData.depart)) {
+      reservationData.adults = 1;
+    }
     const reservationState = {
       selectedPaymentMethod:
         reservationDraft.paymentMethod === "card" || reservationDraft.paymentMethod === "transfer"
@@ -1709,8 +1724,10 @@
       const minToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
       arriveEl.min = minToday;
       departEl.min = arriveEl.value || minToday;
-      if (arriveEl.value && departEl.value && departEl.value < arriveEl.value) {
+      if (arriveEl.value && departEl.value && arriveEl.value > departEl.value) {
+        const previousDepart = departEl.value;
         departEl.value = arriveEl.value;
+        arriveEl.value = previousDepart;
       }
     };
 
@@ -1845,6 +1862,15 @@
         choice.setAttribute("aria-pressed", isActive ? "true" : "false");
         choice.setAttribute("aria-checked", isActive ? "true" : "false");
       });
+      const staySummaryPayment = document.getElementById("staySummaryPayment");
+      if (staySummaryPayment) {
+        staySummaryPayment.textContent =
+          reservationState.selectedPaymentMethod === "card"
+            ? "Carte bancaire"
+            : reservationState.selectedPaymentMethod === "transfer"
+              ? "Virement bancaire"
+              : "À sélectionner";
+      }
     };
 
     const loadReservationData = () => {
@@ -1864,25 +1890,34 @@
       const data = loadReservationData();
       const totalValue = Number(reservationState.lastComputedTotal || reservationData.estimatedTotal || 0);
       const hasValidTotal = Number.isFinite(totalValue) && totalValue > 0;
+      const hasPayment = reservationState.selectedPaymentMethod === "card" || reservationState.selectedPaymentMethod === "transfer";
       const termsAccepted = Boolean(document.getElementById("acceptRequiredTerms")?.checked);
       reservationState.termsAccepted = termsAccepted;
       reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
+      const errors = [];
+      if (!data.arrive) errors.push("Date d’arrivée manquante.");
+      if (!data.depart) errors.push("Date de départ manquante.");
+      if (!data.hasDates) errors.push("Les dates sélectionnées sont incohérentes.");
+      if (!data.hasTravelers) errors.push("Au moins 1 adulte est requis.");
+      if (!hasValidTotal) errors.push("Total estimé invalide.");
+      if (!hasPayment) errors.push("Choisissez un mode de paiement (carte ou virement).");
       return {
-        isValid: Boolean(data.hasDates && data.hasTravelers && hasValidTotal),
+        isValid: Boolean(data.hasDates && data.hasTravelers && hasValidTotal && hasPayment),
         data,
         hasValidTotal,
+        hasPayment,
         termsAccepted,
-        totalValue
+        totalValue,
+        errors
       };
     };
 
     const updateSubmitButtonState = () => {
-      const continuePaymentBtn = document.getElementById("continuePaymentBtn");
-      if (!continuePaymentBtn) return;
+      const checkoutBtn = document.getElementById("checkout-button");
+      if (!checkoutBtn) return;
       const validation = validateReservation();
-      continuePaymentBtn.classList.toggle("is-disabled", !validation.isValid);
-      continuePaymentBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
-      continuePaymentBtn.disabled = !validation.isValid;
+      checkoutBtn.classList.toggle("is-disabled", !validation.isValid);
+      checkoutBtn.setAttribute("aria-disabled", validation.isValid ? "false" : "true");
     };
 
     const preloadReservationUi = () => {
@@ -1946,7 +1981,7 @@
       const property = loadSelectedProperty();
       const reservation = mergeReservation(location.reservation);
       const nights = diffNights(data.arrive, data.depart);
-      const nightlyPrice = Number(location.priceValue) || 0;
+      const nightlyPrice = Number(location.priceValue || reservationDraft.priceValue || 0);
       const rentTotal = nightlyPrice * nights;
       const cityTax = Number(reservation.cityTaxPerNightPerAdult || 0) * data.adults * nights;
       const cleaningFee = Number(reservation.cleaningFee || 0);
@@ -1991,6 +2026,15 @@
       if (staySummaryTotal) {
         const totalToShow = grandTotal > 0 ? grandTotal : Number(reservationData.estimatedTotal || 0);
         staySummaryTotal.textContent = totalToShow > 0 ? formatMoney(totalToShow) : "À calculer";
+      }
+      const staySummaryPayment = document.getElementById("staySummaryPayment");
+      if (staySummaryPayment) {
+        staySummaryPayment.textContent =
+          reservationState.selectedPaymentMethod === "card"
+            ? "Carte bancaire"
+            : reservationState.selectedPaymentMethod === "transfer"
+              ? "Virement bancaire"
+              : "À sélectionner";
       }
 
       const chipsEl = document.getElementById("includedChips");
@@ -2082,15 +2126,17 @@
           : "KD Conciergerie vérifie la disponibilité du logement. Aucun prélèvement n’est effectué tant que votre séjour n’est pas confirmé.";
 
       const emailReservationBtn = document.getElementById("emailReservationBtn");
-      const continuePaymentBtn = document.getElementById("continuePaymentBtn");
+      const checkoutBtn = document.getElementById("checkout-button");
       emailReservationBtn.href = buildMailHref({
         totalLabel: formatMoney(grandTotal),
         nights,
         selectedOptions: [],
         payment
       });
-      continuePaymentBtn.dataset.totalLabel = formatMoney(grandTotal);
-      continuePaymentBtn.dataset.nights = String(nights);
+      if (checkoutBtn) {
+        checkoutBtn.dataset.totalLabel = formatMoney(grandTotal);
+        checkoutBtn.dataset.nights = String(nights);
+      }
 
       updateSubmitButtonState();
 
@@ -2151,10 +2197,7 @@
           const input = choice.querySelector('input[name="paymentMethod"]');
           if (!input) return;
           input.checked = true;
-          reservationState.selectedPaymentMethod = input.value;
-          persistGuestAndDates(false);
-          renderPaymentChoiceState();
-          updateSubmitButtonState();
+          input.dispatchEvent(new Event("change", { bubbles: true }));
         });
         choice.addEventListener("keydown", (event) => {
           if (event.key !== "Enter" && event.key !== " ") return;
@@ -2171,11 +2214,11 @@
         reservationState.marketingAccepted = Boolean(document.getElementById("acceptPromos")?.checked);
         updateSubmitButtonState();
       });
-      document.getElementById("continuePaymentBtn").addEventListener("click", async (event) => {
+      document.getElementById("checkout-button").addEventListener("click", async (event) => {
         const validation = validateReservation();
         if (!validation.isValid || event.currentTarget.classList.contains("is-disabled")) {
           event.preventDefault();
-          showFeedback("Complétez les dates, les voyageurs et le total estimé pour valider.");
+          alert(`Impossible de lancer le paiement :\n- ${validation.errors.join("\n- ")}`);
           return;
         }
         try {
@@ -2184,11 +2227,11 @@
           if (data?.url) {
             window.location.href = data.url;
           } else {
-            showFeedback("Erreur : URL de paiement introuvable.");
+            alert("Erreur de connexion au paiement Stripe.");
           }
         } catch (error) {
           console.error(error);
-          showFeedback("Erreur de connexion au paiement.");
+          alert("Erreur de connexion au paiement Stripe.");
         }
       });
     };
