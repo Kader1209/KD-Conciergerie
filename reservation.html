@@ -1546,6 +1546,24 @@
         0
       ) || 0
     };
+    if (!reservationData.arrive && bookingData?.checkIn) {
+      reservationData.arrive = String(bookingData.checkIn || "");
+    }
+    if (!reservationData.depart && bookingData?.checkOut) {
+      reservationData.depart = String(bookingData.checkOut || "");
+    }
+    if (!reservationData.adults && bookingData?.adults) {
+      reservationData.adults = Math.max(0, Number(bookingData.adults) || 0);
+    }
+    if (!reservationData.children && bookingData?.children) {
+      reservationData.children = Math.max(0, Number(bookingData.children) || 0);
+    }
+    if (!reservationData.babies && bookingData?.babies) {
+      reservationData.babies = Math.max(0, Number(bookingData.babies) || 0);
+    }
+    if (!reservationData.estimatedTotal && bookingData?.estimatedTotal) {
+      reservationData.estimatedTotal = Math.max(0, Number(bookingData.estimatedTotal) || 0);
+    }
     if (!reservationData.adults && (reservationData.arrive || reservationData.depart)) {
       reservationData.adults = 1;
     }
