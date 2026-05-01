@@ -1488,6 +1488,25 @@
       return errors;
     };
 
+    const parseEuroTextToNumber = (textValue) => {
+      const normalized = String(textValue || "")
+        .replace(/\u00A0/g, " ")
+        .replace(/\s/g, "")
+        .replace(/[€]/g, "")
+        .replace(/\./g, "")
+        .replace(",", ".");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const getReservationTotalEuro = () => {
+      const stateTotal = Number(state.data.estimatedTotal || 0);
+      if (Number.isFinite(stateTotal) && stateTotal > 0) return stateTotal;
+      const totalEl = document.getElementById("grandTotal");
+      const parsedFromUi = parseEuroTextToNumber(totalEl?.textContent || "");
+      return parsedFromUi > 0 ? parsedFromUi : 0;
+    };
+
     const bindEvents = () => {
       document.getElementById("toggleStayEditBtn").addEventListener("click", () => {
         const form = document.getElementById("stayForm");
@@ -1524,8 +1543,22 @@
           alert("Les instructions de virement bancaire vous seront envoyées après validation de votre demande.");
           return;
         }
+        const totalReservation = getReservationTotalEuro();
+        if (!Number.isFinite(totalReservation) || totalReservation < 1) {
+          alert("Le montant de la réservation est invalide.");
+          return;
+        }
         try {
-          const response = await fetch("https://kd-backend-stripe-production.up.railway.app/create-checkout-session", { method: "POST" });
+          const response = await fetch("https://kd-backend-stripe-production.up.railway.app/create-checkout-session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              amount: totalReservation,
+              description: "Réservation KD Conciergerie"
+            })
+          });
           if (!response.ok) throw new Error("Stripe backend error");
           const data = await response.json();
           if (data?.url) window.location.href = data.url;
