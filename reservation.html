@@ -31,8 +31,8 @@
       --radius-lg: 24px;
       --radius-xl: 32px;
       --max: 920px;
-      --font-display: "Cormorant Garamond", "Georgia", serif;
-      --font-ui: "Inter", system-ui, sans-serif;
+      --font-display: Arial, sans-serif;
+      --font-ui: Arial, sans-serif;
     }
 
     * {
@@ -1525,7 +1525,8 @@
           return;
         }
         try {
-          const response = await fetch("http://localhost:4242/create-checkout-session", { method: "POST" });
+          const response = await fetch("https://kd-backend-stripe-production.up.railway.app/create-checkout-session", { method: "POST" });
+          if (!response.ok) throw new Error("Stripe backend error");
           const data = await response.json();
           if (data?.url) window.location.href = data.url;
           else alert("Erreur de connexion au paiement Stripe.");
