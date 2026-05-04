@@ -1534,6 +1534,8 @@
         });
       });
       document.getElementById("checkout-button").addEventListener("click", async () => {
+        const checkoutButton = document.getElementById("checkout-button");
+        if (!checkoutButton || checkoutButton.disabled) return;
         const errors = validateForCheckout();
         if (errors.length) {
           alert(`Impossible de poursuivre :\n- ${errors.join("\n- ")}`);
@@ -1548,31 +1550,50 @@
           alert("Le montant de la réservation est invalide.");
           return;
         }
+        checkoutButton.disabled = true;
+        checkoutButton.classList.add("is-disabled");
+        checkoutButton.textContent = "Redirection vers le paiement...";
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 15000);
         try {
           const response = await fetch("https://kd-backend-stripe-production.up.railway.app/create-checkout-session", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              Accept: "application/json"
             },
             body: JSON.stringify({
               amount: totalReservation,
               description: "Réservation KD Conciergerie"
-            })
+            }),
+            signal: controller.signal
           });
+          window.clearTimeout(timeoutId);
+          const contentType = response.headers.get("content-type") || "";
+          const isJson = contentType.includes("application/json");
+          const payload = isJson ? await response.json() : { error: await response.text() };
           if (!response.ok) {
-            let backendError = "";
-            try {
-              const payload = await response.json();
-              backendError = payload?.error ? ` (${payload.error})` : "";
-            } catch {}
-            throw new Error(`Stripe backend error ${response.status}${backendError}`);
+            const backendError = String(payload?.error || payload?.message || "").trim();
+            const details = backendError ? ` : ${backendError}` : "";
+            throw new Error(`Stripe backend error ${response.status}${details}`);
           }
-          const data = await response.json();
-          if (data?.url) window.location.href = data.url;
-          else alert("Erreur Stripe : URL de paiement introuvable.");
+          if (payload?.url) {
+            window.location.href = payload.url;
+            return;
+          }
+          throw new Error("Stripe URL absente dans la réponse backend.");
         } catch (error) {
+          window.clearTimeout(timeoutId);
           console.error(error);
-          alert("Le service de paiement est indisponible pour le moment. Réessayez dans quelques minutes.");
+          if (error?.name === "AbortError") {
+            alert("Le service de paiement met trop de temps à répondre. Merci de réessayer.");
+          } else {
+            alert("Le service de paiement est indisponible pour le moment. Réessayez dans quelques minutes.");
+          }
+        } finally {
+          checkoutButton.disabled = false;
+          checkoutButton.classList.remove("is-disabled");
+          checkoutButton.textContent = "Valider le paiement";
         }
       });
     };
