@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact KD Conciergerie — coordonnées, horaires et formulaire pour votre demande." />
+  <title>Contact | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/signatura" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-strong: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6878;
+      --line: #e6ebf2;
+      --blue: #1e40af;
+      --blue-deep: #0f234f;
+      --green: #0f766e;
+      --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 18px 34px rgba(15, 23, 42, 0.1);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 48px;
+      --space-6: 64px;
+      --max: 1200px;
+      --site-header-h: 80px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(30, 64, 175, 0.05), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.05), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.page-ready {
+      opacity: 1;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+    }
+
+    body.sidebar-open {
+      overflow: hidden;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: transparent;
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: transparent;
+      padding: 5px;
+      border: none;
+      box-shadow: none;
+    }
+
+    .brand-name,
+    .brand-initials,
+    .brand-word {
+      display: none !important;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(86vw, 360px);
+      height: 100dvh;
+      height: 100vh;
+      padding: 96px 18px 30px;
+      background: rgba(245, 248, 251, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(230, 235, 242, 0.9);
+      box-shadow: -10px 0 24px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transform: translate3d(100%, 0, 0);
+      pointer-events: none;
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 39;
+      overflow-y: auto;
+    }
+
+    .nav-links.active {
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 64px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(30, 64, 175, 0.08);
+      font-weight: 500;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      transform: translateX(-2px);
+      background: rgba(30, 64, 175, 0.08);
+      border-color: rgba(30, 64, 175, 0.16);
+      color: var(--blue);
+    }
+
+    .menu-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(221, 228, 239, 0.96);
+      background: rgba(255, 255, 255, 0.96);
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #0f172a;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+      z-index: 38;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    main {
+      padding: calc(var(--site-header-h) + 12px) 0 40px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .page-hero {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 20px;
+      margin-bottom: 22px;
+    }
+
+    .page-hero .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fcfdff, #eff5ff);
+      border: 1px solid #dfe8f6;
+      color: #49607f;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .page-hero .hero-text {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .contact-shell {
+      width: min(94%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .contact-panel,
+    .contact-form-panel {
+      background: var(--surface-strong);
+      border: 1px solid rgba(226, 232, 240, 0.92);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+    }
+
+    .contact-panel h3,
+    .contact-form-panel h3 {
+      font-size: 1.55rem;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .contact-row-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #eef4ff, #e8f2ff);
+      border: 1px solid #d8e7ff;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .contact-row strong {
+      display: block;
+      color: #0f172a;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .contact-row small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+
+    .contact-row a {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .hours-grid {
+      margin-top: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hours-grid div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #334155;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f8fbff;
+      border: 1px solid #e3edf8;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .contact-form .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .contact-form label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d9e5f2;
+      background: #fff;
+      padding: 10px 12px;
+      font: inherit;
+      color: #0f172a;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: rgba(31, 79, 214, 0.45);
+      box-shadow: 0 0 0 3px rgba(31, 79, 214, 0.08);
+    }
+
+    .contact-submit {
+      min-height: 52px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(130deg, #2563eb, #1e40af);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(30, 64, 175, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(30, 64, 175, 0.28);
+    }
+
+    footer {
+      padding: 14px 0 20px;
+      border-top: 1px solid rgba(230, 235, 242, 0.92);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      color: #728195;
+      font-size: 0.9rem;
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(18px);
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease-in-out, transform 0.22s ease-in-out;
+      z-index: 90;
+      backdrop-filter: blur(12px);
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .contact-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: calc(var(--site-header-h) + 8px) 0 28px;
+      }
+
+      .contact-panel,
+      .contact-form-panel {
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      .footer-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="./index.html">
+        <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Menu" aria-hidden="true">
+        <a href="./index.html">Accueil</a>
+        <a href="./estimation.html">Estimation</a>
+        <a href="./locations.html">Locations disponibles</a>
+        <a href="./favoris.html">Favoris</a>
+        <a href="./index.html#faq">FAQ</a>
+        <a href="./contact.html" class="is-active">Contact</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="container">
+    <section class="page-hero" aria-labelledby="contact-title">
+      <div class="eyebrow">Contact</div>
+      <h1 id="contact-title">Écrivez-nous ou appelez-nous</h1>
+      <p class="hero-text">Une question sur une location, une estimation ou la gestion de votre bien : indiquez votre besoin et nous vous répondons dans les meilleurs délais.</p>
+    </section>
+
+    <div class="contact-shell">
+      <aside class="contact-panel">
+        <h3>Nos coordonnées</h3>
+        <div class="contact-list">
+          <div class="contact-row">
+            <div class="contact-row-icon" aria-hidden="true">☎</div>
+            <div>
+              <strong>Téléphone</strong>
+              <a href="tel:0781957161">07 81 95 71 61</a>
+              <small>Du lundi au vendredi, 9h - 18h</small>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-row-icon" aria-hidden="true">✉</div>
+            <div>
+              <strong>Email</strong>
+              <a href="mailto:kd.conciergerie13@gmail.com">kd.conciergerie13@gmail.com</a>
+              <small>Réponse sous 24h ouvrées</small>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-row-icon" aria-hidden="true">⌂</div>
+            <div>
+              <strong>Agence</strong>
+              <span>21 rue Charles Nedelec<br />13110 Port-de-Bouc</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-top: 18px;">Horaires d'ouverture</h3>
+        <div class="hours-grid">
+          <div><span>Lundi - Vendredi</span><span>09:00 - 18:00</span></div>
+          <div><span>Samedi</span><span>09:00 - 12:00</span></div>
+          <div><span>Dimanche</span><span>Fermé</span></div>
+        </div>
+      </aside>
+
+      <section class="contact-form-panel">
+        <h3>Envoyez-nous un message</h3>
+        <form class="contact-form" id="contactRequestForm">
+          <div class="contact-form-grid">
+            <div class="field-full">
+              <label for="contactFullName">Nom complet *</label>
+              <input id="contactFullName" name="fullName" type="text" placeholder="Ex : Jean Dupont" required />
+            </div>
+            <div>
+              <label for="contactEmail">Email *</label>
+              <input id="contactEmail" name="email" type="email" placeholder="Ex : jean.dupont@email.com" required />
+            </div>
+            <div>
+              <label for="contactPhone">Téléphone</label>
+              <input id="contactPhone" name="phone" type="tel" placeholder="Ex : 07 81 95 71 61" />
+            </div>
+            <div class="field-full">
+              <label for="contactSubject">Sujet de votre demande *</label>
+              <select id="contactSubject" name="subject" required>
+                <option value="">Sélectionnez un sujet</option>
+                <option value="Location longue duree">Location longue durée</option>
+                <option value="Gestion locative / conciergerie">Gestion locative / conciergerie</option>
+                <option value="Achat immobilier">Achat immobilier</option>
+                <option value="Vendre mon bien">Vendre mon bien</option>
+                <option value="Demande d'estimation">Demande d'estimation</option>
+                <option value="Autre demande">Autre demande</option>
+              </select>
+            </div>
+            <div class="field-full">
+              <label for="contactMessage">Message *</label>
+              <textarea id="contactMessage" name="message" placeholder="Décrivez votre besoin (location, achat, gestion, vente...)." required></textarea>
+            </div>
+          </div>
+          <button type="submit" class="contact-submit">Envoyer le message</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026. Tous droits réservés.</span>
+      <span>Immobilier, locations et conciergerie premium.</span>
+    </div>
+  </footer>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const uiFeedback = document.getElementById("uiFeedback");
+    let feedbackTimeout;
+
+    const openSidebar = () => {
+      sidebarOverlay.classList.add("active");
+      document.body.classList.add("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "false");
+      menuBtn.setAttribute("aria-expanded", "true");
+      menuBtn.setAttribute("aria-label", "Fermer le menu");
+      navLinks.classList.add("active");
+    };
+
+    const closeSidebar = () => {
+      navLinks.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+      document.body.classList.remove("sidebar-open");
+      navLinks.setAttribute("aria-hidden", "true");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.setAttribute("aria-label", "Ouvrir le menu");
+    };
+
+    menuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (navLinks.classList.contains("active")) closeSidebar();
+      else openSidebar();
+    });
+
+    sidebarOverlay.addEventListener("click", closeSidebar);
+
+    document.addEventListener("click", (event) => {
+      const inside = navLinks.contains(event.target) || menuBtn.contains(event.target);
+      if (!inside && navLinks.classList.contains("active")) closeSidebar();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSidebar();
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeSidebar));
+
+    const showFeedback = (message) => {
+      uiFeedback.textContent = message;
+      uiFeedback.classList.add("visible");
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
+    };
+
+    const contactRequestForm = document.getElementById("contactRequestForm");
+    if (contactRequestForm) {
+      contactRequestForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const fullName = String(document.getElementById("contactFullName")?.value || "").trim();
+        const email = String(document.getElementById("contactEmail")?.value || "").trim();
+        const phone = String(document.getElementById("contactPhone")?.value || "").trim();
+        const subject = String(document.getElementById("contactSubject")?.value || "").trim();
+        const message = String(document.getElementById("contactMessage")?.value || "").trim();
+        if (!fullName || !email || !subject || !message) {
+          showFeedback("Merci de compléter tous les champs obligatoires.");
+          return;
+        }
+        const mailSubject = `Demande ${subject} - ${fullName}`;
+        const mailBody = [
+          `Nom: ${fullName}`,
+          `Email: ${email}`,
+          `Telephone: ${phone || "Non renseigne"}`,
+          `Sujet: ${subject}`,
+          "",
+          message
+        ].join("\n");
+        window.location.href = `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+      });
+    }
+
+    const setupPageTransitions = () => {
+      requestAnimationFrame(() => document.body.classList.add("page-ready"));
+      document.querySelectorAll('a[href$=".html"], a[href^="./"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href");
+          if (!href || href.startsWith("#") || link.target === "_blank" || event.metaKey || event.ctrlKey) return;
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 180);
+        });
+      });
+    };
+
+    setupPageTransitions();
+  </script>
+</body>
+</html>
