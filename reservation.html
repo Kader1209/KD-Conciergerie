@@ -1559,12 +1559,20 @@
               description: "Réservation KD Conciergerie"
             })
           });
-          if (!response.ok) throw new Error("Stripe backend error");
+          if (!response.ok) {
+            let backendError = "";
+            try {
+              const payload = await response.json();
+              backendError = payload?.error ? ` (${payload.error})` : "";
+            } catch {}
+            throw new Error(`Stripe backend error ${response.status}${backendError}`);
+          }
           const data = await response.json();
           if (data?.url) window.location.href = data.url;
-          else alert("Erreur de connexion au paiement Stripe.");
-        } catch {
-          alert("Erreur de connexion au paiement Stripe.");
+          else alert("Erreur Stripe : URL de paiement introuvable.");
+        } catch (error) {
+          console.error(error);
+          alert("Le service de paiement est indisponible pour le moment. Réessayez dans quelques minutes.");
         }
       });
     };

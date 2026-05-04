@@ -117,7 +117,7 @@
     }
 
     .nav {
-      min-height: 78px;
+      min-height: 84px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -126,7 +126,8 @@
 
     @media (min-width: 721px) {
       .container.nav {
-        width: min(97%, calc(var(--max) + 120px));
+        width: min(99.2%, calc(var(--max) + 280px));
+        padding-inline: clamp(6px, 1.8vw, 26px);
       }
     }
 
@@ -137,14 +138,14 @@
     }
 
     .brand-logo {
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       object-fit: contain;
       border-radius: var(--radius);
       background: transparent;
-      padding: 5px;
+      padding: 6px;
       border: none;
-      box-shadow: none;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     }
 
     .brand-name,
@@ -228,15 +229,15 @@
     .menu-btn {
       display: inline-grid;
       place-items: center;
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       border-radius: 14px;
       border: 1px solid rgba(221, 228, 239, 0.96);
       background: rgba(255, 255, 255, 0.96);
       cursor: pointer;
       font-size: 1.1rem;
       color: #0f172a;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.1);
       transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
     }
 
@@ -263,13 +264,17 @@
     }
 
     main {
-      padding: 8px 0 32px;
+      padding: calc(var(--site-header-h) + 18px) 0 34px;
       min-width: 0;
       max-width: 100%;
     }
 
     .page-hero {
-      padding-top: 0;
+      padding: clamp(16px, 2.2vw, 24px);
+      border-radius: 22px;
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.06);
     }
 
     .page-badge {
@@ -743,17 +748,163 @@
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 28px;
+      gap: 24px;
       align-items: stretch;
       width: 100%;
       max-width: 100%;
       margin: 0;
     }
 
+    .contact-shell {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.5fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .contact-panel,
+    .contact-form-panel {
+      background: #fff;
+      border: 1px solid rgba(230, 235, 242, 0.96);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+    }
+
+    .contact-panel h3,
+    .contact-form-panel h3 {
+      font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .contact-row-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #eaf2ff;
+      border: 1px solid #d7e6ff;
+      color: var(--blue);
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    .contact-row strong {
+      display: block;
+      color: #0f172a;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .contact-row small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .hours-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hours-grid div {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #e5edf8;
+      background: #f8fbff;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .contact-form .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .contact-form label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d9e5f2;
+      background: #fff;
+      padding: 10px 12px;
+      color: #0f172a;
+      font: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: rgba(30, 64, 175, 0.4);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    .contact-submit {
+      min-height: 52px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(130deg, #2563eb, #1e40af);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(30, 64, 175, 0.24);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(30, 64, 175, 0.3);
+    }
+
     .location-card {
       background: var(--surface);
       border: 1px solid rgba(230, 235, 242, 0.96);
-      border-radius: var(--radius);
+      border-radius: 20px;
       box-shadow: var(--shadow-soft);
       overflow: hidden;
       transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
@@ -766,7 +917,7 @@
     }
 
     .location-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
       box-shadow: var(--shadow-hover);
       border-color: rgba(30, 64, 175, 0.14);
     }
@@ -989,9 +1140,22 @@
     }
 
     @media (max-width: 980px) {
+      .container.nav {
+        width: min(98.8%, calc(var(--max) + 140px));
+        padding-inline: clamp(8px, 2vw, 18px);
+      }
+
+      .contact-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-form-grid {
+        grid-template-columns: 1fr;
+      }
+
       .cards-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 36px;
+        gap: 24px;
       }
 
       .filters-grid,
@@ -1003,8 +1167,13 @@
     }
 
     @media (max-width: 720px) {
+      .container.nav {
+        width: 100%;
+        padding-inline: 12px;
+      }
+
       main {
-        padding: calc(var(--site-header-h) + 8px) 0 24px;
+        padding: calc(var(--site-header-h) + 12px) 0 22px;
       }
 
       .nav-links {
@@ -1013,7 +1182,7 @@
 
       .cards-grid {
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 20px;
       }
 
       .hero-insights,
@@ -1024,6 +1193,26 @@
       .nav-links a {
         width: 100%;
         padding: 14px 16px;
+      }
+
+      .page-hero {
+        padding: 14px 14px 16px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: clamp(1.6rem, 7vw, 2rem);
+      }
+
+      .hero-text {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .contact-panel,
+      .contact-form-panel {
+        padding: 16px;
+        border-radius: 16px;
       }
 
       .footer-row {
@@ -1059,7 +1248,7 @@
         <a href="./locations.html" class="is-active">Locations disponibles</a>
         <a href="./favoris.html">Favoris</a>
         <a href="./index.html#faq">FAQ</a>
-        <a href="./index.html#contact">Contact</a>
+        <a href="#contact">Contact</a>
       </nav>
 
       <button class="menu-btn" id="menuBtn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">☰</button>
@@ -1132,6 +1321,81 @@
         <span class="section-note">Basé sur vos clics, vues et favoris.</span>
       </div>
       <div class="smart-grid" id="recommendedGrid"></div>
+    </section>
+
+    <section id="contact" class="reveal">
+      <div class="contact-shell">
+        <aside class="contact-panel">
+          <h3>Nos coordonnées</h3>
+          <div class="contact-list">
+            <div class="contact-row">
+              <div class="contact-row-icon">☎</div>
+              <div>
+                <strong>Téléphone</strong>
+                <a href="tel:0781957161">07 81 95 71 61</a>
+                <small>Du lundi au vendredi, 9h - 18h</small>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-row-icon">✉</div>
+              <div>
+                <strong>Email</strong>
+                <a href="mailto:kd.conciergerie13@gmail.com">kd.conciergerie13@gmail.com</a>
+                <small>Réponse sous 24h ouvrées</small>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-row-icon">⌂</div>
+              <div>
+                <strong>Agence</strong>
+                <span>21 rue Charles Nedelec<br />13110 Port-de-Bouc</span>
+              </div>
+            </div>
+          </div>
+          <h3 style="font-size:1.15rem;margin-top:16px;">Horaires d'ouverture</h3>
+          <div class="hours-grid">
+            <div><span>Lundi - Vendredi</span><span>09:00 - 18:00</span></div>
+            <div><span>Samedi</span><span>09:00 - 12:00</span></div>
+            <div><span>Dimanche</span><span>Fermé</span></div>
+          </div>
+        </aside>
+        <section class="contact-form-panel">
+          <h3>Envoyez-nous un message</h3>
+          <form class="contact-form" id="contactRequestForm">
+            <div class="contact-form-grid">
+              <div class="field-full">
+                <label for="contactFullName">Nom complet *</label>
+                <input id="contactFullName" name="fullName" type="text" placeholder="Ex : Jean Dupont" required />
+              </div>
+              <div>
+                <label for="contactEmail">Email *</label>
+                <input id="contactEmail" name="email" type="email" placeholder="Ex : jean.dupont@email.com" required />
+              </div>
+              <div>
+                <label for="contactPhone">Téléphone</label>
+                <input id="contactPhone" name="phone" type="tel" placeholder="Ex : 07 81 95 71 61" />
+              </div>
+              <div class="field-full">
+                <label for="contactSubject">Sujet de votre demande *</label>
+                <select id="contactSubject" name="subject" required>
+                  <option value="">Sélectionnez un sujet</option>
+                  <option value="Location longue duree">Location longue durée</option>
+                  <option value="Gestion locative / conciergerie">Gestion locative / conciergerie</option>
+                  <option value="Achat immobilier">Achat immobilier</option>
+                  <option value="Vendre mon bien">Vendre mon bien</option>
+                  <option value="Demande d'estimation">Demande d'estimation</option>
+                  <option value="Autre demande">Autre demande</option>
+                </select>
+              </div>
+              <div class="field-full">
+                <label for="contactMessage">Message *</label>
+                <textarea id="contactMessage" name="message" placeholder="Décrivez votre besoin (location, achat, gestion, vente...)." required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="contact-submit">Envoyer le message</button>
+          </form>
+        </section>
+      </div>
     </section>
   </main>
 
@@ -1286,6 +1550,32 @@
       window.clearTimeout(feedbackTimeout);
       feedbackTimeout = window.setTimeout(() => uiFeedback.classList.remove("visible"), 1600);
     };
+
+    const contactRequestForm = document.getElementById("contactRequestForm");
+    if (contactRequestForm) {
+      contactRequestForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const fullName = String(document.getElementById("contactFullName")?.value || "").trim();
+        const email = String(document.getElementById("contactEmail")?.value || "").trim();
+        const phone = String(document.getElementById("contactPhone")?.value || "").trim();
+        const subject = String(document.getElementById("contactSubject")?.value || "").trim();
+        const message = String(document.getElementById("contactMessage")?.value || "").trim();
+        if (!fullName || !email || !subject || !message) {
+          showFeedback("Merci de compléter tous les champs obligatoires.");
+          return;
+        }
+        const mailSubject = `Demande ${subject} - ${fullName}`;
+        const mailBody = [
+          `Nom: ${fullName}`,
+          `Email: ${email}`,
+          `Telephone: ${phone || "Non renseigne"}`,
+          `Sujet: ${subject}`,
+          "",
+          message
+        ].join("\n");
+        window.location.href = `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+      });
+    }
 
     const setFallback = (img) => {
       img.src = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;

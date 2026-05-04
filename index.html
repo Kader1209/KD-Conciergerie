@@ -1561,6 +1561,156 @@
       text-align: center;
     }
 
+    .contact-shell {
+      width: min(94%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .contact-panel,
+    .contact-form-panel {
+      background: var(--surface-strong);
+      border: 1px solid rgba(226, 232, 240, 0.92);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+    }
+
+    .contact-panel h3,
+    .contact-form-panel h3 {
+      font-size: 1.55rem;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .contact-row-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #eef4ff, #e8f2ff);
+      border: 1px solid #d8e7ff;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .contact-row strong {
+      display: block;
+      color: #0f172a;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .contact-row small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+
+    .hours-grid {
+      margin-top: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hours-grid div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #334155;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f8fbff;
+      border: 1px solid #e3edf8;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .contact-form .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .contact-form label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d9e5f2;
+      background: #fff;
+      padding: 10px 12px;
+      font: inherit;
+      color: #0f172a;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: rgba(31, 79, 214, 0.45);
+      box-shadow: 0 0 0 3px rgba(31, 79, 214, 0.08);
+    }
+
+    .contact-submit {
+      min-height: 52px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(130deg, #2563eb, #1e40af);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(30, 64, 175, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(30, 64, 175, 0.28);
+    }
+
     .cta p {
       color: #334155;
       margin-bottom: 16px;
@@ -1912,6 +2062,7 @@
       .stats-grid,
       .footer-grid,
       .contact-details,
+      .contact-form-grid,
       .interest-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1963,6 +2114,8 @@
       .stats-grid,
       .footer-grid,
       .contact-details,
+      .contact-shell,
+      .contact-form-grid,
       .interest-grid,
       .hero-proof,
       .proof-strip-grid,
@@ -2164,28 +2317,79 @@
     </section>
 
     <section id="contact">
-      <div class="cta reveal">
-        <h2 class="section-title">Passez à l'action avec un cadre plus clair, plus premium et plus convaincant.</h2>
-        <p>Accès 2026 ouvert en priorité pour les propriétaires qui veulent mieux présenter leur bien, rassurer plus vite et convertir davantage.</p>
-        <div class="section-cta-row" style="justify-content: center;">
-          <a class="btn btn-primary" href="./estimation.html">Demander mon estimation</a>
-          <a class="btn btn-secondary" href="./locations.html">Voir les locations</a>
-        </div>
+      <div class="contact-shell reveal">
+        <aside class="contact-panel">
+          <h3>Nos coordonnées</h3>
+          <div class="contact-list">
+            <div class="contact-row">
+              <div class="contact-row-icon">☎</div>
+              <div>
+                <strong>Téléphone</strong>
+                <a href="tel:0781957161">07 81 95 71 61</a>
+                <small>Du lundi au vendredi, 9h - 18h</small>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-row-icon">✉</div>
+              <div>
+                <strong>Email</strong>
+                <a href="mailto:kd.conciergerie13@gmail.com">kd.conciergerie13@gmail.com</a>
+                <small>Réponse sous 24h ouvrées</small>
+              </div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-row-icon">⌂</div>
+              <div>
+                <strong>Agence</strong>
+                <span>21 rue Charles Nedelec<br />13110 Port-de-Bouc</span>
+              </div>
+            </div>
+          </div>
 
-        <div class="contact-details">
-          <div class="contact-item reveal">
-            <strong>Téléphone</strong>
-            <a href="tel:0781957161">07 81 95 71 61</a>
+          <h3 style="font-size:1.2rem;margin-top:18px;">Horaires d'ouverture</h3>
+          <div class="hours-grid">
+            <div><span>Lundi - Vendredi</span><span>09:00 - 18:00</span></div>
+            <div><span>Samedi</span><span>09:00 - 12:00</span></div>
+            <div><span>Dimanche</span><span>Fermé</span></div>
           </div>
-          <div class="contact-item reveal">
-            <strong>Email</strong>
-            <a href="mailto:kd.conciergerie13@gmail.com">kd.conciergerie13@gmail.com</a>
-          </div>
-          <div class="contact-item reveal">
-            <strong>Adresse</strong>
-            <p>21 rue Charles Nedelec, 13110 Port-de-Bouc</p>
-          </div>
-        </div>
+        </aside>
+
+        <section class="contact-form-panel">
+          <h3>Envoyez-nous un message</h3>
+          <form class="contact-form" id="contactRequestForm">
+            <div class="contact-form-grid">
+              <div class="field-full">
+                <label for="contactFullName">Nom complet *</label>
+                <input id="contactFullName" name="fullName" type="text" placeholder="Ex : Jean Dupont" required />
+              </div>
+              <div>
+                <label for="contactEmail">Email *</label>
+                <input id="contactEmail" name="email" type="email" placeholder="Ex : jean.dupont@email.com" required />
+              </div>
+              <div>
+                <label for="contactPhone">Téléphone</label>
+                <input id="contactPhone" name="phone" type="tel" placeholder="Ex : 07 81 95 71 61" />
+              </div>
+              <div class="field-full">
+                <label for="contactSubject">Sujet de votre demande *</label>
+                <select id="contactSubject" name="subject" required>
+                  <option value="">Sélectionnez un sujet</option>
+                  <option value="Location longue duree">Location longue durée</option>
+                  <option value="Gestion locative / conciergerie">Gestion locative / conciergerie</option>
+                  <option value="Achat immobilier">Achat immobilier</option>
+                  <option value="Vendre mon bien">Vendre mon bien</option>
+                  <option value="Demande d'estimation">Demande d'estimation</option>
+                  <option value="Autre demande">Autre demande</option>
+                </select>
+              </div>
+              <div class="field-full">
+                <label for="contactMessage">Message *</label>
+                <textarea id="contactMessage" name="message" placeholder="Décrivez votre besoin (location, achat, gestion, vente...)." required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="contact-submit">Envoyer le message</button>
+          </form>
+        </section>
       </div>
     </section>
 
@@ -2346,6 +2550,32 @@
         uiFeedback.classList.remove("visible");
       }, 1600);
     };
+
+    const contactRequestForm = document.getElementById("contactRequestForm");
+    if (contactRequestForm) {
+      contactRequestForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const fullName = String(document.getElementById("contactFullName")?.value || "").trim();
+        const email = String(document.getElementById("contactEmail")?.value || "").trim();
+        const phone = String(document.getElementById("contactPhone")?.value || "").trim();
+        const subject = String(document.getElementById("contactSubject")?.value || "").trim();
+        const message = String(document.getElementById("contactMessage")?.value || "").trim();
+        if (!fullName || !email || !subject || !message) {
+          showFeedback("Merci de compléter tous les champs obligatoires.");
+          return;
+        }
+        const mailSubject = `Demande ${subject} - ${fullName}`;
+        const mailBody = [
+          `Nom: ${fullName}`,
+          `Email: ${email}`,
+          `Telephone: ${phone || "Non renseigne"}`,
+          `Sujet: ${subject}`,
+          "",
+          message
+        ].join("\n");
+        window.location.href = `mailto:kd.conciergerie13@gmail.com?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+      });
+    }
 
     const setFallback = (img) => {
       img.src = `data:image/svg+xml;charset=UTF-8,${fallbackSvg}`;
