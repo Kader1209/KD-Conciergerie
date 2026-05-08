@@ -1310,6 +1310,7 @@
   <script src="./locations-data.js?v=2"></script>
   <script>
     const SUPABASE_URL = "https://uaggcyfpviijylhqwihb.supabase.co";
+    const CHECKOUT_FUNCTION_URL = "https://oyhddkzdnwxbectbdzdl.supabase.co/functions/v1/create-checkout-session";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZ2djeWZwdmlpanlsaHF3aWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1NjY4ODAsImV4cCI6MjA4MjE0Mjg4MH0.3gOA-uajhVNqmbDqQFdYXvPkx-V3syVQ03Yh5SssA5Y";
     const { enrichListing } = window.KDSite;
     const params = new URLSearchParams(window.location.search);
@@ -1556,13 +1557,11 @@
         const controller = new AbortController();
         const timeoutId = window.setTimeout(() => controller.abort(), 15000);
         try {
-          const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+          const response = await fetch(CHECKOUT_FUNCTION_URL, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
-              apikey: SUPABASE_KEY,
-              Authorization: `Bearer ${SUPABASE_KEY}`
+              Accept: "application/json"
             },
             body: JSON.stringify({
               amount: totalReservation,
