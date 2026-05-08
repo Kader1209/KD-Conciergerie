@@ -57,8 +57,8 @@ Deno.serve(async (req) => {
           quantity: 1,
         },
       ],
-      success_url: "https://kader1209.github.io/KD-Conciergerie/success.html",
-      cancel_url: "https://kader1209.github.io/KD-Conciergerie/reservation.html",
+      success_url: "https://kader1209.github.io/KD-Conciergerie/paiement-valide.html",
+      cancel_url: "https://kader1209.github.io/KD-Conciergerie/paiement-refuse.html",
     });
 
     await supabase.from(checkoutTable).insert({
