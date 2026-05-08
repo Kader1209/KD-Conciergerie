@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paiement valide - KD Conciergerie</title>
+  <style>
+    :root {
+      --bg: #f7f5f2;
+      --text: #1f1f1f;
+      --muted: #666;
+      --brand: #b79065;
+      --brand-dark: #9a774f;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Inter", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .card {
+      width: min(680px, 100%);
+      background: var(--card);
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+    }
+    p {
+      margin: 10px 0;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-secondary {
+      background: #f0ebe5;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Paiement valide</h1>
+    <p>Votre paiement a bien ete confirme.</p>
+    <p>Notre equipe vous contacte rapidement pour finaliser votre reservation.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="./index.html">Retour a l'accueil</a>
+      <a class="btn btn-secondary" href="./contact.html">Nous contacter</a>
+    </div>
+  </main>
+</body>
+</html>
