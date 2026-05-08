@@ -1,0 +1,5 @@
+# Local MCP configuration can contain personal access tokens.
+.cursor/mcp.json
+supabase/.temp/
+supabase/functions/.env
+*.pdf
