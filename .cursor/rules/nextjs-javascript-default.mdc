@@ -1,0 +1,11 @@
+---
+description: Préférer Next.js JavaScript pour les nouveaux sites
+alwaysApply: true
+---
+
+# Stack par défaut pour nouveaux sites
+
+- Pour toute demande de création de nouveau site web, partir sur Next.js en JavaScript (pas en HTML statique).
+- Structure attendue : App Router Next.js avec pages, layout, composants réutilisables et styles propres.
+- Éviter de proposer une version HTML seule sauf si la demande utilisateur l'exige explicitement.
+- Si une conversion est demandée, migrer d'abord la structure HTML existante vers pages/composants Next.js JavaScript.

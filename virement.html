@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virement bancaire - KD Conciergerie</title>
+  <style>
+    :root {
+      --bg: #f8f5f1;
+      --card: #fff;
+      --text: #1f1f1f;
+      --muted: #6d6d6d;
+      --brand: #b79065;
+      --brand-dark: #9b7a54;
+      --line: #ece5dc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    .shell {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+    }
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .amount {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #f3ece4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .banner {
+      margin-top: 12px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+    .banner.test { background: #fff4d8; color: #695100; }
+    .banner.live { background: #e8f7ef; color: #16582e; }
+    .rows {
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 170px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+    }
+    .row dt {
+      font-weight: 600;
+      color: #5e5e5e;
+    }
+    .row dd {
+      margin: 0;
+      word-break: break-word;
+    }
+    .copy-btn, .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .copy-btn {
+      background: #f2ece5;
+      color: var(--text);
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+      color: #444;
+      line-height: 1.5;
+    }
+    .error {
+      margin-top: 12px;
+      color: #a12c2c;
+      font-weight: 600;
+    }
+    @media (max-width: 700px) {
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="card">
+      <h1>Paiement par virement bancaire</h1>
+      <p class="lead">Utilisez les coordonnées ci-dessous pour finaliser votre réservation. Indiquez bien la référence dans le libellé du virement.</p>
+      <div class="amount">
+        <span>Montant à virer</span>
+        <strong id="amountValue">—</strong>
+      </div>
+      <div id="modeBanner" class="banner test" hidden></div>
+      <dl class="rows" id="bankRows"></dl>
+      <div id="instructions"></div>
+      <p id="supportText"></p>
+      <p class="error" id="errorText" hidden></p>
+      <div class="actions">
+        <a class="btn btn-primary" href="./reservation.html">Retour à la réservation</a>
+        <a class="btn btn-primary" href="./contact.html">Nous contacter</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const BANK_TRANSFER_FUNCTION_URL = "https://oyhddkzdnwxbectbdzdl.supabase.co/functions/v1/bank-transfer-info";
+
+    const params = new URLSearchParams(window.location.search);
+    const amountFromQuery = Number(params.get("amount") || 0);
+    const bookingId = String(params.get("id") || "").trim() || null;
+    const adults = Number(params.get("adults") || 0);
+    const children = Number(params.get("children") || 0);
+    const babies = Number(params.get("babies") || 0);
+
+    const formatMoney = (value) =>
+      new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        .format(Number(value || 0));
+
+    const escapeHtml = (value) =>
+      String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+    const copyToClipboard = async (value, button) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = "Copié";
+        window.setTimeout(() => { button.textContent = "Copier"; }, 1300);
+      } catch {
+        button.textContent = "Erreur copie";
+        window.setTimeout(() => { button.textContent = "Copier"; }, 1300);
+      }
+    };
+
+    const render = (info) => {
+      document.getElementById("amountValue").textContent =
+        info?.amountFormatted || (Number.isFinite(amountFromQuery) && amountFromQuery > 0 ? formatMoney(amountFromQuery) : "—");
+
+      const banner = document.getElementById("modeBanner");
+      const isTest = info?.mode !== "live";
+      banner.hidden = false;
+      banner.className = `banner ${isTest ? "test" : "live"}`;
+      banner.textContent = isTest
+        ? (info?.notice || "Coordonnées de test — n'effectuez aucun virement réel.")
+        : "Coordonnées officielles — virement vers KD Conciergerie.";
+
+      const rows = [
+        { label: "Bénéficiaire", value: info?.bank?.beneficiary, copy: info?.bank?.beneficiary },
+        { label: "IBAN", value: info?.bank?.iban, copy: (info?.bank?.iban || "").replace(/\s+/g, "") },
+        { label: "BIC / SWIFT", value: info?.bank?.bic, copy: info?.bank?.bic },
+        { label: "Banque", value: info?.bank?.name, copy: info?.bank?.name },
+        { label: "Adresse banque", value: info?.bank?.address, copy: info?.bank?.address },
+        { label: "Référence", value: info?.reference, copy: info?.reference }
+      ];
+
+      const rowsEl = document.getElementById("bankRows");
+      rowsEl.innerHTML = rows.filter((r) => r.value).map((r) => `
+        <div class="row">
+          <dt>${escapeHtml(r.label)}</dt>
+          <dd>${escapeHtml(r.value)}</dd>
+          <button type="button" class="copy-btn" data-copy="${escapeHtml(r.copy || r.value)}">Copier</button>
+        </div>
+      `).join("");
+
+      rowsEl.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => copyToClipboard(btn.getAttribute("data-copy") || "", btn));
+      });
+
+      const steps = Array.isArray(info?.instructions) ? info.instructions : [];
+      document.getElementById("instructions").innerHTML = steps.length
+        ? `<ul>${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ul>`
+        : "";
+
+      const support = info?.support?.email;
+      document.getElementById("supportText").innerHTML = support
+        ? `Besoin d'aide ? Écrivez-nous à <a href="mailto:${escapeHtml(support)}">${escapeHtml(support)}</a>.`
+        : "";
+    };
+
+    const showError = (message) => {
+      const el = document.getElementById("errorText");
+      el.hidden = false;
+      el.textContent = message;
+    };
+
+    const loadTransferInfo = async () => {
+      const guests = Math.max(0, adults) + Math.max(0, children) + Math.max(0, babies);
+      const description = guests > 0
+        ? `Réservation KD Conciergerie (${guests} voyageur${guests > 1 ? "s" : ""})`
+        : "Réservation KD Conciergerie";
+
+      const response = await fetch(BANK_TRANSFER_FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          amount: Number.isFinite(amountFromQuery) && amountFromQuery > 0 ? amountFromQuery : null,
+          bookingId,
+          description
+        })
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      const payload = contentType.includes("application/json")
+        ? await response.json()
+        : { error: await response.text() };
+
+      if (!response.ok) {
+        throw new Error(String(payload?.error || payload?.message || `Erreur serveur (${response.status})`));
+      }
+      return payload;
+    };
+
+    (async () => {
+      try {
+        const info = await loadTransferInfo();
+        render(info);
+      } catch (error) {
+        console.error(error);
+        showError("Impossible de charger les coordonnées de virement pour le moment. Merci de réessayer dans quelques minutes.");
+      }
+    })();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KD Conciergerie - coordonnées de virement bancaire de test pour une réservation." />
+  <title>Virement bancaire | KD Conciergerie</title>
+  <link rel="icon" type="image/png" href="./Logo.png" />
+  <style>
+    :root {
+      --bg: #f5f5f4;
+      --surface: #ffffff;
+      --surface-2: #fafaf9;
+      --text: #1c1917;
+      --muted: #6b6560;
+      --line: rgba(28, 25, 23, 0.08);
+      --ink: #141210;
+      --bronze: #9a7349;
+      --bronze-deep: #7d5c3a;
+      --bronze-glow: rgba(154, 115, 73, 0.22);
+      --gold-line: linear-gradient(135deg, #c4a574, #9a7349 48%, #6b4f32);
+      --forest: #1e4d45;
+      --forest-soft: rgba(30, 77, 69, 0.1);
+      --shadow: 0 4px 24px rgba(20, 18, 16, 0.06);
+      --shadow-lg: 0 24px 48px rgba(20, 18, 16, 0.1);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --max: 960px;
+      --font-ui: Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 20px 0 8px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(20, 18, 16, 0.08));
+    }
+
+    .back-link,
+    .secondary-button,
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, color 0.2s ease;
+    }
+
+    .back-link {
+      min-height: 44px;
+      padding: 0 18px;
+      font-size: 0.9rem;
+    }
+
+    .back-link:hover,
+    .secondary-button:hover,
+    .copy-btn:hover {
+      border-color: rgba(154, 115, 73, 0.35);
+      box-shadow: 0 8px 28px var(--bronze-glow);
+      transform: translateY(-1px);
+    }
+
+    main {
+      padding: 8px 0 56px;
+    }
+
+    .page-shell {
+      display: grid;
+      gap: 22px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 24px;
+      right: 24px;
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: var(--gold-line);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .hero {
+      padding: 34px 30px 32px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      color: var(--bronze);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 18ch;
+      color: var(--ink);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .lead {
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .test-banner {
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      background: rgba(154, 115, 73, 0.12);
+      border: 1px solid rgba(154, 115, 73, 0.3);
+      color: var(--bronze-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .section {
+      padding: 26px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .section-title {
+      color: var(--ink);
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-note {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .amount-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 14px;
+      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      background: var(--forest-soft);
+      border: 1px solid rgba(30, 77, 69, 0.15);
+    }
+
+    .amount-card span:first-child {
+      color: var(--forest);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .amount-card span:last-child {
+      color: var(--forest);
+      font-size: 1.7rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .transfer-rows {
+      display: grid;
+      gap: 10px;
+    }
+
+    .transfer-row {
+      display: grid;
+      grid-template-columns: 132px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .transfer-row dt {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .transfer-row dd {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.96rem;
+      font-weight: 700;
+      word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .copy-btn {
+      min-height: 36px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      box-shadow: none;
+    }
+
+    .copy-btn.is-copied {
+      border-color: rgba(30, 77, 69, 0.4);
+      color: var(--forest);
+    }
+
+    .instructions {
+      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(30, 77, 69, 0.06), rgba(154, 115, 73, 0.06));
+      border: 1px solid rgba(30, 77, 69, 0.12);
+    }
+
+    .instructions ul {
+      padding-left: 1.1rem;
+      display: grid;
+      gap: 8px;
+    }
+
+    .instructions li::marker {
+      color: var(--bronze);
+    }
+
+    .side-card {
+      padding: 24px 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .side-list {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .side-list strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 52px;
+      padding: 0 20px;
+      font-size: 0.92rem;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(165deg, #b8926a, var(--bronze) 40%, var(--bronze-deep));
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 16px 40px var(--bronze-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(154, 115, 73, 0.3);
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .ui-feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(14px);
+      min-width: 220px;
+      max-width: min(92vw, 460px);
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: rgba(28, 25, 23, 0.92);
+      color: #faf7f2;
+      font-size: 0.88rem;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      z-index: 20;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .ui-feedback.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 840px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      header {
+        padding-top: 14px;
+      }
+
+      .brand-logo {
+        width: 48px;
+        height: 48px;
+      }
+
+      .hero,
+      .section {
+        padding: 24px 18px;
+      }
+
+      .transfer-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .transfer-row dt {
+        grid-column: 1 / -1;
+      }
+
+      .actions {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <div class="topbar">
+      <img class="brand-logo" src="./Logo.png" alt="Logo KD Conciergerie" />
+      <a class="back-link" id="backToReservation" href="./reservation.html">← Retour à la réservation</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-shell">
+      <section class="card hero">
+        <div class="eyebrow">Paiement par virement</div>
+        <h1>Virement bancaire</h1>
+        <p class="lead">Utilisez cette page pour retrouver les coordonnées de virement liées à votre réservation KD Conciergerie.</p>
+        <div class="test-banner" id="modeBanner">Coordonnées de TEST - n'effectuez aucun virement réel avec ces informations.</div>
+      </section>
+
+      <div class="content-grid">
+        <section class="card section" aria-labelledby="bankDetailsTitle">
+          <div>
+            <h2 class="section-title" id="bankDetailsTitle">Informations de virement TEST</h2>
+            <p class="section-note" id="statusText">Chargement des coordonnées de virement...</p>
+          </div>
+          <div class="amount-card">
+            <span>Montant à virer</span>
+            <span id="transferAmount">—</span>
+          </div>
+          <dl class="transfer-rows" id="transferRows"></dl>
+          <div class="instructions" id="transferInstructions"></div>
+        </section>
+
+        <aside class="card side-card">
+          <div>
+            <h2 class="section-title">À retenir</h2>
+            <p class="section-note">Ces données servent uniquement aux tests du parcours de réservation.</p>
+          </div>
+          <div class="side-list">
+            <div>
+              <strong>Référence</strong>
+              <span id="sideReference">—</span>
+            </div>
+            <div>
+              <strong>Support</strong>
+              <span id="supportText">contact@kd-conciergerie.example</span>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="primary-button" id="reservationButton" href="./reservation.html">Retour réservation</a>
+            <a class="secondary-button" href="./index.html">Accueil</a>
+          </div>
+          <p class="status">En production, les vraies coordonnées doivent rester configurées côté Supabase.</p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div class="ui-feedback" id="uiFeedback" aria-live="polite"></div>
+
+  <script>
+    const BANK_TRANSFER_FUNCTION_URL = "https://oyhddkzdnwxbectbdzdl.supabase.co/functions/v1/bank-transfer-info";
+    const STORAGE_KEY = "kd-reservation-draft";
+    const BOOKING_STORAGE_KEY = "kd_booking";
+    const params = new URLSearchParams(window.location.search);
+
+    const TEST_TRANSFER_FALLBACK = {
+      mode: "test",
+      currency: "EUR",
+      amount: null,
+      amountFormatted: null,
+      description: "Réservation KD Conciergerie",
+      reference: "KD-TEST-DEMO",
+      bank: {
+        beneficiary: "KD CONCIERGERIE (TEST)",
+        iban: "FR76 0000 0000 0000 0000 0000 000",
+        bic: "TESTFRP1XXX",
+        name: "Banque de Test KD",
+        address: "1 rue de la Démonstration, 75000 Paris (TEST)",
+      },
+      instructions: [
+        "Effectuez le virement depuis votre application bancaire en utilisant les coordonnées ci-dessous.",
+        "Indiquez impérativement la référence dans le libellé pour que nous puissions identifier votre paiement.",
+        "Votre réservation sera confirmée dès réception du virement (24 à 72h ouvrées).",
+      ],
+      support: { email: "contact@kd-conciergerie.example" },
+      notice: "Coordonnées de TEST affichées en fallback côté site - n'effectuez aucun virement réel.",
+    };
+
+    const readJson = (key) => {
+      try {
+        const sessionValue = window.sessionStorage.getItem(key);
+        if (sessionValue) return JSON.parse(sessionValue);
+      } catch {}
+      try {
+        const localValue = window.localStorage.getItem(key);
+        if (localValue) return JSON.parse(localValue);
+      } catch {}
+      return {};
+    };
+
+    const formatMoney = (value) =>
+      new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(Number(value || 0));
+
+    const parseEuroTextToNumber = (textValue) => {
+      const normalized = String(textValue || "")
+        .replace(/\u00A0/g, " ")
+        .replace(/\s/g, "")
+        .replace(/[€]/g, "")
+        .replace(/\./g, "")
+        .replace(",", ".");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const getReservationContext = () => {
+      const draft = readJson(STORAGE_KEY);
+      const booking = readJson(BOOKING_STORAGE_KEY);
+      const amount = Number(
+        params.get("amount") ||
+        params.get("total") ||
+        params.get("estimatedTotal") ||
+        booking.estimatedTotal ||
+        draft.estimatedTotal ||
+        parseEuroTextToNumber(draft.totalText)
+      );
+      return {
+        amount: Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) / 100 : null,
+        bookingId: params.get("bookingId") || params.get("id") || booking.propertyId || draft.id || null,
+        description: draft.title ? `Réservation KD Conciergerie - ${draft.title}` : "Réservation KD Conciergerie",
+      };
+    };
+
+    const escapeHtml = (value) =>
+      String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+    const showFeedback = (message) => {
+      const feedback = document.getElementById("uiFeedback");
+      feedback.textContent = message;
+      feedback.classList.add("visible");
+      window.clearTimeout(showFeedback.timeoutId);
+      showFeedback.timeoutId = window.setTimeout(() => feedback.classList.remove("visible"), 1700);
+    };
+
+    const buildReservationHref = () => {
+      const search = window.location.search || "";
+      return `./reservation.html${search}`;
+    };
+
+    const withFallbackAmount = (info, amount) => ({
+      ...info,
+      amount: info.amount ?? amount,
+      amountFormatted: info.amountFormatted || (amount ? formatMoney(amount) : null),
+    });
+
+    const requestTransferInfo = async (context) => {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(BANK_TRANSFER_FUNCTION_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            amount: context.amount,
+            bookingId: context.bookingId,
+            description: context.description,
+          }),
+          signal: controller.signal,
+        });
+        window.clearTimeout(timeoutId);
+        const contentType = response.headers.get("content-type") || "";
+        const payload = contentType.includes("application/json") ? await response.json() : { error: await response.text() };
+        if (!response.ok) {
+          throw new Error(payload?.error || payload?.message || `Erreur serveur (${response.status})`);
+        }
+        return payload;
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    };
+
+    const renderTransferInfo = (info, sourceLabel) => {
+      const isTest = info?.mode !== "live";
+      const banner = document.getElementById("modeBanner");
+      banner.textContent = isTest
+        ? (info.notice || "Coordonnées de TEST - n'effectuez aucun virement réel avec ces informations.")
+        : "Coordonnées officielles de virement KD Conciergerie.";
+
+      document.getElementById("statusText").textContent = sourceLabel;
+      document.getElementById("transferAmount").textContent = info.amountFormatted || (info.amount ? formatMoney(info.amount) : "Montant à confirmer");
+      document.getElementById("sideReference").textContent = info.reference || "KD-TEST-DEMO";
+
+      const supportEmail = info?.support?.email || TEST_TRANSFER_FALLBACK.support.email;
+      document.getElementById("supportText").innerHTML = `<a href="mailto:${escapeHtml(supportEmail)}">${escapeHtml(supportEmail)}</a>`;
+
+      const rows = [
+        { label: "Bénéficiaire", value: info?.bank?.beneficiary, copy: info?.bank?.beneficiary },
+        { label: "IBAN", value: info?.bank?.iban, copy: (info?.bank?.iban || "").replace(/\s+/g, "") },
+        { label: "BIC / SWIFT", value: info?.bank?.bic, copy: info?.bank?.bic },
+        { label: "Banque", value: info?.bank?.name, copy: info?.bank?.name },
+        { label: "Adresse banque", value: info?.bank?.address, copy: info?.bank?.address },
+        { label: "Référence", value: info?.reference, copy: info?.reference },
+      ];
+
+      document.getElementById("transferRows").innerHTML = rows
+        .filter((row) => row.value)
+        .map((row) => `
+          <div class="transfer-row">
+            <dt>${escapeHtml(row.label)}</dt>
+            <dd>${escapeHtml(row.value)}</dd>
+            <button type="button" class="copy-btn" data-copy="${escapeHtml(row.copy || row.value)}">Copier</button>
+          </div>
+        `)
+        .join("");
+
+      const instructions = Array.isArray(info?.instructions) && info.instructions.length
+        ? info.instructions
+        : TEST_TRANSFER_FALLBACK.instructions;
+      document.getElementById("transferInstructions").innerHTML = `<ul>${instructions.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+
+      document.querySelectorAll(".copy-btn").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const value = button.getAttribute("data-copy") || "";
+          try {
+            await navigator.clipboard.writeText(value);
+            button.textContent = "Copié";
+            button.classList.add("is-copied");
+            showFeedback("Information copiée.");
+          } catch {
+            showFeedback("Copie impossible automatiquement.");
+          } finally {
+            window.setTimeout(() => {
+              button.textContent = "Copier";
+              button.classList.remove("is-copied");
+            }, 1600);
+          }
+        });
+      });
+    };
+
+    const init = async () => {
+      const reservationHref = buildReservationHref();
+      document.getElementById("backToReservation").href = reservationHref;
+      document.getElementById("reservationButton").href = reservationHref;
+
+      const context = getReservationContext();
+      try {
+        const remoteInfo = await requestTransferInfo(context);
+        renderTransferInfo(
+          withFallbackAmount(remoteInfo, context.amount),
+          "Coordonnées récupérées depuis Supabase. Le mode TEST reste indiqué tant que la fonction n'est pas configurée en production."
+        );
+      } catch (error) {
+        console.error(error);
+        renderTransferInfo(
+          withFallbackAmount(TEST_TRANSFER_FALLBACK, context.amount),
+          "Edge Function indisponible : affichage des coordonnées TEST de fallback côté site."
+        );
+      }
+    };
+
+    init();
+  </script>
+</body>
+</html>

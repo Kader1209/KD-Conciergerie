@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.bank-transfer-info]
+verify_jwt = false
