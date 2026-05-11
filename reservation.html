@@ -450,6 +450,55 @@
       color: var(--bronze);
     }
 
+    .guest-contact-block {
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .guest-contact-block .section-note {
+      margin-bottom: 12px;
+    }
+
+    .guest-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 16px;
+    }
+
+    .guest-grid .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .guest-grid .field label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .guest-grid .field input {
+      min-height: 44px;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+
+    .guest-grid .field-guest-span-2 {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 720px) {
+      .guest-grid {
+        grid-template-columns: 1fr;
+      }
+      .guest-grid .field-guest-span-2 {
+        grid-column: span 1;
+      }
+    }
+
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1532,6 +1581,23 @@
             <div class="section-note">Sélectionnez votre mode de paiement pour finaliser.</div>
           </div>
         </div>
+        <div class="guest-contact-block">
+          <div class="section-note">Pour vous envoyer la confirmation et les consignes du séjour (e-mail et SMS).</div>
+          <div class="guest-grid">
+            <div class="field">
+              <label for="guestFirstName">Prénom</label>
+              <input id="guestFirstName" name="guestFirstName" type="text" autocomplete="given-name" placeholder="Ex. Marie" />
+            </div>
+            <div class="field field-guest-span-2">
+              <label for="guestEmail">E-mail <span aria-hidden="true">*</span></label>
+              <input id="guestEmail" name="guestEmail" type="email" autocomplete="email" inputmode="email" placeholder="vous@exemple.com" required />
+            </div>
+            <div class="field field-guest-span-2">
+              <label for="guestPhone">Téléphone <span aria-hidden="true">*</span></label>
+              <input id="guestPhone" name="guestPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="06 12 34 56 78" required />
+            </div>
+          </div>
+        </div>
         <div class="choice-grid" id="paymentChoices">
           <button type="button" class="payment-choice" data-payment-choice="card" aria-pressed="false">
             <span class="payment-choice-indicator" aria-hidden="true"></span>
@@ -1625,7 +1691,10 @@
         babies: Number(state.data.babies || 0),
         guests: Number(state.data.adults || 0) + Number(state.data.children || 0) + Number(state.data.babies || 0),
         estimatedTotal: Number(state.data.estimatedTotal || 0),
-        paymentMethod: state.paymentMethod
+        paymentMethod: state.paymentMethod,
+        guestFirstName: String(state.data.guestFirstName || "").trim(),
+        guestEmail: String(state.data.guestEmail || "").trim(),
+        guestPhone: String(state.data.guestPhone || "").trim()
       };
       try {
         const serialized = JSON.stringify(payload);
@@ -1645,7 +1714,10 @@
       adults: Number(params.get("adults") || booking.adults || draft.adults || params.get("guests") || draft.guests || 1),
       children: Number(params.get("children") || booking.children || draft.children || 0),
       babies: Number(params.get("babies") || booking.babies || draft.babies || 0),
-      estimatedTotal: Number(params.get("estimatedTotal") || params.get("total") || booking.estimatedTotal || draft.estimatedTotal || 0)
+      estimatedTotal: Number(params.get("estimatedTotal") || params.get("total") || booking.estimatedTotal || draft.estimatedTotal || 0),
+      guestFirstName: String(draft.guestFirstName || "").trim(),
+      guestEmail: String(draft.guestEmail || "").trim(),
+      guestPhone: String(draft.guestPhone || "").trim()
     };
     state.paymentMethod = draft.paymentMethod === "transfer" ? "transfer" : "card";
 
@@ -1736,6 +1808,7 @@
       adultsEl.value = String(Math.max(1, Number(state.data.adults || 1)));
       childrenEl.value = String(Math.max(0, Number(state.data.children || 0)));
       babiesEl.value = String(Math.max(0, Number(state.data.babies || 0)));
+      syncGuestInputs();
       saveState();
     };
 
@@ -1757,7 +1830,27 @@
       if (nights <= 0) errors.push("Les dates du séjour sont invalides.");
       if (travelers <= 0) errors.push("Au moins 1 adulte est requis.");
       if (total <= 0) errors.push("Total estimé introuvable.");
+      const email = String(state.data.guestEmail || "").trim();
+      const phone = String(state.data.guestPhone || "").trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (!email || !emailOk) errors.push("Adresse e-mail valide requise.");
+      if (!phone || phoneDigits.length < 10) errors.push("Numéro de téléphone valide requis (au moins 10 chiffres).");
       return errors;
+    };
+
+    const buildStaySummary = () => {
+      if (!state.data.arrive || !state.data.depart) return "";
+      return `Du ${formatDateFr(state.data.arrive)} au ${formatDateFr(state.data.depart)}`;
+    };
+
+    const syncGuestInputs = () => {
+      const first = document.getElementById("guestFirstName");
+      const mail = document.getElementById("guestEmail");
+      const tel = document.getElementById("guestPhone");
+      if (first) first.value = state.data.guestFirstName || "";
+      if (mail) mail.value = state.data.guestEmail || "";
+      if (tel) tel.value = state.data.guestPhone || "";
     };
 
     const parseEuroTextToNumber = (textValue) => {
@@ -1939,6 +2032,17 @@
         renderStay();
         document.getElementById("stayForm").hidden = true;
       });
+      ["guestFirstName", "guestEmail", "guestPhone"].forEach((fieldId) => {
+        const el = document.getElementById(fieldId);
+        if (!el) return;
+        el.addEventListener("input", () => {
+          const v = String(el.value || "");
+          if (fieldId === "guestFirstName") state.data.guestFirstName = v;
+          if (fieldId === "guestEmail") state.data.guestEmail = v;
+          if (fieldId === "guestPhone") state.data.guestPhone = v;
+          saveState();
+        });
+      });
       document.querySelectorAll(".payment-choice").forEach((button) => {
         button.addEventListener("click", () => {
           state.paymentMethod = button.dataset.paymentChoice === "transfer" ? "transfer" : "card";
@@ -1960,6 +2064,19 @@
           return;
         }
         if (state.paymentMethod === "transfer") {
+          try {
+            sessionStorage.setItem(
+              "kd-guest-contact",
+              JSON.stringify({
+                guestFirstName: String(state.data.guestFirstName || "").trim(),
+                email: String(state.data.guestEmail || "").trim(),
+                phone: String(state.data.guestPhone || "").trim(),
+                propertyTitle: String(state.location?.title || draft.title || "").trim()
+              })
+            );
+          } catch (err) {
+            console.warn(err);
+          }
           window.location.href = buildTransferPageUrl();
           return;
         }
@@ -1977,7 +2094,15 @@
             },
             body: JSON.stringify({
               amount: totalReservation,
-              description: "Réservation KD Conciergerie"
+              description: state.location?.title
+                ? `Réservation KD Conciergerie — ${state.location.title}`
+                : "Réservation KD Conciergerie",
+              customerEmail: String(state.data.guestEmail || "").trim() || null,
+              customerPhone: String(state.data.guestPhone || "").trim() || null,
+              guestFirstName: String(state.data.guestFirstName || "").trim() || null,
+              propertyTitle: String(state.location?.title || draft.title || "").trim() || null,
+              staySummary: buildStaySummary() || null,
+              bookingId: state.data.id || null
             }),
             signal: controller.signal
           });

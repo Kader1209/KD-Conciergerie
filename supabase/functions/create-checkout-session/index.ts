@@ -28,6 +28,10 @@ Deno.serve(async (req) => {
     const amount = Number(body?.amount);
     const description = String(body?.description || "Réservation KD Conciergerie").trim();
     const customerEmail = body?.customerEmail ? String(body.customerEmail).trim() : null;
+    const customerPhone = body?.customerPhone ? String(body.customerPhone).trim() : null;
+    const guestFirstName = body?.guestFirstName ? String(body.guestFirstName).trim() : null;
+    const propertyTitle = body?.propertyTitle ? String(body.propertyTitle).trim() : null;
+    const staySummary = body?.staySummary ? String(body.staySummary).trim() : null;
     const bookingId = body?.bookingId ? String(body.bookingId).trim() : null;
 
     if (!Number.isFinite(amount) || amount < 1) {
@@ -38,6 +42,10 @@ Deno.serve(async (req) => {
     }
 
     const unitAmount = Math.round(amount * 100);
+    const metaVal = (v: string | null | undefined, max = 450) => {
+      const s = (v ?? "").trim();
+      return s.length > max ? s.slice(0, max) : s;
+    };
     const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-06-20" });
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -47,6 +55,14 @@ Deno.serve(async (req) => {
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: customerEmail || undefined,
+      phone_number_collection: { enabled: true },
+      metadata: {
+        booking_id: metaVal(bookingId),
+        guest_first_name: metaVal(guestFirstName),
+        property_title: metaVal(propertyTitle),
+        stay_summary: metaVal(staySummary),
+        backup_phone: metaVal(customerPhone, 40),
+      },
       line_items: [
         {
           price_data: {

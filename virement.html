@@ -226,11 +226,31 @@
       el.textContent = message;
     };
 
+    const readGuestFromStorage = () => {
+      try {
+        const raw = window.sessionStorage.getItem("kd-guest-contact");
+        if (!raw) return {};
+        const o = JSON.parse(raw);
+        return typeof o === "object" && o ? o : {};
+      } catch {
+        return {};
+      }
+    };
+
     const loadTransferInfo = async () => {
       const guests = Math.max(0, adults) + Math.max(0, children) + Math.max(0, babies);
       const description = guests > 0
         ? `Réservation KD Conciergerie (${guests} voyageur${guests > 1 ? "s" : ""})`
         : "Réservation KD Conciergerie";
+
+      const guest = readGuestFromStorage();
+      const arrive = params.get("arrive");
+      const depart = params.get("depart");
+      let staySummary = "";
+      if (arrive && depart) {
+        const df = (d) => new Date(d).toLocaleDateString("fr-FR");
+        staySummary = `Du ${df(arrive)} au ${df(depart)}`;
+      }
 
       const response = await fetch(BANK_TRANSFER_FUNCTION_URL, {
         method: "POST",
@@ -238,7 +258,12 @@
         body: JSON.stringify({
           amount: Number.isFinite(amountFromQuery) && amountFromQuery > 0 ? amountFromQuery : null,
           bookingId,
-          description
+          description,
+          customerEmail: typeof guest.email === "string" ? guest.email.trim() : null,
+          customerPhone: typeof guest.phone === "string" ? guest.phone.trim() : null,
+          guestFirstName: typeof guest.guestFirstName === "string" ? guest.guestFirstName.trim() : null,
+          propertyTitle: typeof guest.propertyTitle === "string" ? guest.propertyTitle.trim() : null,
+          staySummary: staySummary || null
         })
       });
 

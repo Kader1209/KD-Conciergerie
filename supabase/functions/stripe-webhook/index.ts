@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.25.0?target=denonext";
+import { sendBookingWelcome } from "../_shared/send-notifications.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -50,6 +51,37 @@ Deno.serve(async (req) => {
           session_status: session.status || "complete",
         })
         .eq("stripe_session_id", session.id);
+
+      if (session.payment_status !== "unpaid") {
+        const meta = session.metadata || {};
+        const details = session.customer_details as { email?: string | null; phone?: string | null } | null | undefined;
+        const email =
+          (details?.email && String(details.email).trim()) ||
+          (session.customer_email && String(session.customer_email).trim()) ||
+          null;
+        const phoneFromDetails = details?.phone != null ? String(details.phone).trim() : "";
+        const phone =
+          phoneFromDetails ||
+          (meta.backup_phone && String(meta.backup_phone).trim()) ||
+          null;
+        const amountFormatted =
+          session.amount_total != null && session.currency
+            ? new Intl.NumberFormat("fr-FR", {
+                style: "currency",
+                currency: session.currency.toUpperCase(),
+                minimumFractionDigits: 2,
+              }).format(session.amount_total / 100)
+            : null;
+
+        await sendBookingWelcome({
+          email,
+          phone,
+          guestFirstName: meta.guest_first_name || null,
+          propertyTitle: meta.property_title || null,
+          staySummary: meta.stay_summary || null,
+          amountFormatted,
+        });
+      }
     } else if (event.type === "checkout.session.expired") {
       const session = event.data.object as Stripe.Checkout.Session;
       await supabase
