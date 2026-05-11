@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendBookingWelcome } from "../_shared/send-notifications.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -70,6 +71,10 @@ Deno.serve(async (req) => {
     let amountEur: number | null = null;
     let description = "Réservation KD Conciergerie";
     let customerEmail: string | null = null;
+    let customerPhone: string | null = null;
+    let guestFirstName: string | null = null;
+    let propertyTitle: string | null = null;
+    let staySummary: string | null = null;
 
     if (req.method === "POST") {
       try {
@@ -84,6 +89,18 @@ Deno.serve(async (req) => {
         }
         if (typeof body?.customerEmail === "string" && body.customerEmail.trim()) {
           customerEmail = body.customerEmail.trim();
+        }
+        if (typeof body?.customerPhone === "string" && body.customerPhone.trim()) {
+          customerPhone = body.customerPhone.trim();
+        }
+        if (typeof body?.guestFirstName === "string" && body.guestFirstName.trim()) {
+          guestFirstName = body.guestFirstName.trim();
+        }
+        if (typeof body?.propertyTitle === "string" && body.propertyTitle.trim()) {
+          propertyTitle = body.propertyTitle.trim();
+        }
+        if (typeof body?.staySummary === "string" && body.staySummary.trim()) {
+          staySummary = body.staySummary.trim();
         }
       } catch {
         // Body JSON optionnel : on continue avec les valeurs par défaut.
@@ -145,6 +162,17 @@ Deno.serve(async (req) => {
           ? "Coordonnées de test — n'effectuez aucun virement réel. Configurez les variables d'environnement BANK_TRANSFER_* puis BANK_TRANSFER_MODE=live pour passer en production."
           : null,
     };
+
+    if ((customerEmail || customerPhone) && amountEur != null && amountEur > 0) {
+      await sendBookingWelcome({
+        email: customerEmail,
+        phone: customerPhone,
+        guestFirstName,
+        propertyTitle,
+        staySummary,
+        amountFormatted: responseBody.amountFormatted,
+      });
+    }
 
     return new Response(JSON.stringify(responseBody), {
       status: 200,
