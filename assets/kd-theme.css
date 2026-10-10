@@ -1,0 +1,215 @@
+/* KD Conciergerie : thème commun à toutes les pages.
+   Chargé en dernier dans <head> pour remplacer les anciennes couleurs. */
+
+:root {
+  --kd-ink: #10263b;
+  --kd-sea: #1f6f8b;
+  --kd-sea-dark: #17566c;
+  --kd-gold: #ceaa53;
+  --kd-gold-dark: #a88633;
+  --kd-limestone: #f3f5f4;
+  --kd-text: #1b2430;
+  --kd-muted: #5e6b78;
+  --kd-line: #dce3e6;
+  --kd-max: 1180px;
+  --kd-display: "Marcellus", Georgia, serif;
+  --kd-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Anciennes variables des pages existantes, redirigées vers la nouvelle palette */
+  --bg: var(--kd-limestone);
+  --text: var(--kd-text);
+  --muted: var(--kd-muted);
+  --line: var(--kd-line);
+  --blue: var(--kd-sea);
+  --blue-deep: var(--kd-ink);
+  --green: var(--kd-sea);
+  --blue-soft: #e8f1f4;
+  --green-soft: #e8f1f4;
+  --cream: #eaf0f1;
+  --cream-soft: #fbfcfc;
+  --brand: var(--kd-gold-dark);
+  --brand-dark: var(--kd-ink);
+  --font-ui: var(--kd-body);
+  --font-display: var(--kd-display);
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  font-family: var(--kd-body) !important;
+  color: var(--kd-text);
+  background: var(--kd-limestone) !important;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+  font-family: var(--kd-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--kd-gold);
+  outline-offset: 3px;
+}
+
+/* ---------- Boutons ---------- */
+.kd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font: 600 1rem/1 var(--kd-body);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.kd-btn-gold { background: var(--kd-gold); color: var(--kd-ink); }
+.kd-btn-gold:hover { background: #dbbb6c; }
+.kd-btn-glass {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.kd-btn-glass:hover { background: rgba(255, 255, 255, 0.22); }
+.kd-btn-outline { background: transparent; color: var(--kd-ink); border-color: var(--kd-ink); }
+.kd-btn-outline:hover { background: var(--kd-ink); color: #fff; }
+
+/* ---------- En-tête de l'accueil ---------- */
+.kd-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.kd-header.is-solid, .kd-header.menu-open {
+  background: rgba(16, 38, 59, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(8, 20, 33, 0.18);
+}
+.kd-header-inner {
+  width: min(var(--kd-max), calc(100% - 32px));
+  margin: 0 auto;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.kd-brand img { display: block; width: 54px; height: auto; }
+.kd-nav { display: flex; align-items: center; gap: 6px; }
+.kd-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 999px;
+  text-shadow: 0 1px 8px rgba(8, 20, 33, 0.35);
+}
+.kd-nav a:hover { background: rgba(255, 255, 255, 0.14); }
+.kd-nav .kd-nav-phone {
+  margin-left: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  text-shadow: none;
+}
+.kd-menu-btn {
+  display: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  position: relative;
+}
+.kd-menu-btn span {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.25s ease, top 0.25s ease;
+}
+.kd-menu-btn span:first-child { top: 18px; }
+.kd-menu-btn span:last-child { top: 28px; }
+.kd-menu-btn[aria-expanded="true"] span:first-child { top: 23px; transform: rotate(45deg); }
+.kd-menu-btn[aria-expanded="true"] span:last-child { top: 23px; transform: rotate(-45deg); }
+
+@media (max-width: 860px) {
+  .kd-menu-btn { display: block; }
+  .kd-nav {
+    display: none;
+    position: absolute;
+    top: 84px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 8px 16px 20px;
+    background: rgba(16, 38, 59, 0.97);
+  }
+  .kd-nav.is-open { display: flex; }
+  .kd-nav a { padding: 16px; font-size: 1.08rem; border-radius: 14px; }
+  .kd-nav .kd-nav-phone { margin: 8px 0 0; text-align: center; }
+}
+
+/* ---------- Pied de page ---------- */
+.kd-footer { background: var(--kd-ink); color: rgba(255, 255, 255, 0.75); padding: 64px 0 28px; }
+.kd-footer-inner {
+  width: min(var(--kd-max), calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 40px;
+}
+.kd-footer h3 { color: #fff; font: 600 1rem var(--kd-body); margin: 6px 0 12px; }
+.kd-footer p { margin: 14px 0 0; line-height: 1.9; }
+.kd-footer a { color: rgba(255, 255, 255, 0.85); text-decoration: none; }
+.kd-footer a:hover { color: var(--kd-gold); }
+.kd-footer .kd-footer-copy {
+  width: min(var(--kd-max), calc(100% - 32px));
+  margin: 48px auto 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.9rem;
+}
+@media (max-width: 760px) { .kd-footer-inner { grid-template-columns: 1fr; gap: 28px; } }
+
+/* ---------- Pages existantes (Logements, Estimation, Contact, etc.) ---------- */
+header:not(.kd-header) {
+  background: rgba(243, 245, 244, 0.9) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom: 1px solid var(--kd-line) !important;
+}
+header:not(.kd-header) .brand-logo {
+  width: 52px !important;
+  height: auto !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+header:not(.kd-header) .menu-btn {
+  border-color: var(--kd-line);
+  background: #fff;
+  color: var(--kd-ink);
+}
+.nav-links a.is-active {
+  background: rgba(31, 111, 139, 0.1) !important;
+  color: var(--kd-sea) !important;
+  border-color: rgba(31, 111, 139, 0.25) !important;
+}
+.back-link { color: var(--kd-sea) !important; }
+
+#heroInsights[hidden] { display: none !important; }
